@@ -469,11 +469,11 @@ export const AdminDiaryMonitor: React.FC = () => {
           <p className="text-muted-foreground mt-2">Monitor all project activities, mentor performance, and student progress</p>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline">
+          <Button variant="secondary">
             <RefreshCw className="w-4 h-4 mr-2" />
             Refresh
           </Button>
-          <Button variant="outline">
+          <Button variant="secondary">
             <Download className="w-4 h-4 mr-2" />
             Export Report
           </Button>
@@ -717,13 +717,13 @@ export const AdminDiaryMonitor: React.FC = () => {
                     </div>
                     
                     <div className="flex items-center gap-2 ml-4">
-                      <Button variant="outline" size="sm">
+                      <Button variant="secondary" size="sm">
                         <Eye className="w-4 h-4" />
                       </Button>
-                      <Button variant="outline" size="sm">
+                      <Button variant="secondary" size="sm">
                         <Edit className="w-4 h-4" />
                       </Button>
-                      <Button variant="outline" size="sm">
+                      <Button variant="secondary" size="sm">
                         <Flag className="w-4 h-4" />
                       </Button>
                     </div>
@@ -776,13 +776,13 @@ export const AdminDiaryMonitor: React.FC = () => {
                   </div>
                   
                   <div className="flex items-center gap-2 ml-4">
-                    <Button variant="outline" size="sm">
+                    <Button variant="secondary" size="sm">
                       <Eye className="w-4 h-4" />
                     </Button>
-                    <Button variant="outline" size="sm">
+                    <Button variant="secondary" size="sm">
                       <MessageCircle className="w-4 h-4" />
                     </Button>
-                    <Button variant="outline" size="sm">
+                    <Button variant="secondary" size="sm">
                       <Edit className="w-4 h-4" />
                     </Button>
                   </div>
@@ -836,13 +836,13 @@ export const AdminDiaryMonitor: React.FC = () => {
                   </div>
                   
                   <div className="flex items-center gap-2 ml-4">
-                    <Button variant="outline" size="sm">
+                    <Button variant="secondary" size="sm">
                       <Eye className="w-4 h-4" />
                     </Button>
-                    <Button variant="outline" size="sm">
+                    <Button variant="secondary" size="sm">
                       <MessageCircle className="w-4 h-4" />
                     </Button>
-                    <Button variant="outline" size="sm">
+                    <Button variant="secondary" size="sm">
                       <Edit className="w-4 h-4" />
                     </Button>
                   </div>
@@ -863,5 +863,6 @@ export const AdminDiaryMonitor: React.FC = () => {
     </div>
   );
 };
+
 
 

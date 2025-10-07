@@ -28,6 +28,7 @@ import {
   Zap,
   Play,
   Image as ImageIcon,
+  Users,
   BookOpen
 } from 'lucide-react';
 import { Card, CardHeader, CardBody } from '../../components/ui/Card';

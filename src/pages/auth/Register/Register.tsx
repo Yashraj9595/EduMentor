@@ -43,6 +43,7 @@ export const Register: React.FC = () => {
       admin: { label: 'Admin', color: 'bg-accent', icon: '👑' },
       organizer: { label: 'Organizer', color: 'bg-purple-500', icon: '💻' },
       company: { label: 'Company', color: 'bg-green-500', icon: '🏢' },
+      institution: { label: 'Institution', color: 'bg-blue-500', icon: '🏫' },
     };
     return roles[role];
   };

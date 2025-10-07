@@ -1,4 +1,4 @@
-export { default } from './ForgotPassword';
+export { ForgotPassword as default } from './ForgotPassword';
 export * from './ForgotPassword.types';
 export * from './ForgotPassword.hooks';
 export * from './ForgotPassword.utils';

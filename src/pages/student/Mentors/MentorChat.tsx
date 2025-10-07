@@ -97,7 +97,7 @@ export const MentorChat: React.FC = () => {
         },
         {
           id: '2',
-          senderId: user?.id || 'student-1',
+          senderId: user?._id || 'student-1',
           senderName: user?.firstName + ' ' + user?.lastName || 'Student',
           senderType: 'student',
           content: 'Thank you Dr. Johnson! I\'ve attached my initial project proposal. Please review it.',
@@ -127,7 +127,7 @@ export const MentorChat: React.FC = () => {
 
     const message: Message = {
       id: Date.now().toString(),
-      senderId: user?.id || 'student-1',
+      senderId: user?._id || 'student-1',
       senderName: user?.firstName + ' ' + user?.lastName || 'Student',
       senderType: 'student',
       content: newMessage,
@@ -168,7 +168,7 @@ export const MentorChat: React.FC = () => {
     setTimeout(() => {
       const fileMessage: Message = {
         id: Date.now().toString(),
-        senderId: user?.id || 'student-1',
+        senderId: user?._id || 'student-1',
         senderName: user?.firstName + ' ' + user?.lastName || 'Student',
         senderType: 'student',
         content: `Shared a file: ${file.name}`,

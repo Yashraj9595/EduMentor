@@ -6,13 +6,8 @@ import {
   FileText, 
   Trophy, 
   Users, 
-  Sparkles,
   Loader,
-  CheckCircle,
-  AlertCircle,
-  Copy,
-  ThumbsUp,
-  ThumbsDown
+  Copy
 } from 'lucide-react';
 import { Card, CardHeader, CardBody } from '../../../components/ui/Card';
 import { useAuth } from '../../../contexts/AuthContext';

@@ -7,7 +7,6 @@ import { FloatingChatButton } from '../../pages/chat/components/FloatingChatButt
 import { FloatingNotification } from '../../pages/Notifications';
 import { Bell, Menu } from 'lucide-react';
 import { useNotifications } from '../../pages/Notifications';
-import { Button } from '../ui/Button';
 import { ThemeToggle } from '../ThemeToggle';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -114,10 +113,10 @@ export const MainLayout: React.FC = () => {
                   <div className="flex items-center gap-2">
                     <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
                       <span className="text-primary-foreground text-sm font-medium">
-                        {user?.name?.charAt(0) || 'U'}
+                        {user?.firstName?.charAt(0) || 'U'}
                       </span>
                     </div>
-                    <span className="text-sm font-medium text-foreground">{user?.name || 'User'}</span>
+                    <span className="text-sm font-medium text-foreground">{user?.firstName || 'User'}</span>
                   </div>
                 </div>
               </div>

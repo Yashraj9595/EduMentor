@@ -434,11 +434,11 @@ export const HackathonSubmission: React.FC = () => {
                     
                     {deliverable ? (
                       <div className="flex items-center gap-3 p-3 bg-muted rounded-lg">
-                        {getFileIcon(deliverable.type)}
+                        {getFileIcon(Array.isArray(deliverable) ? deliverable[0]?.type : deliverable.type)}
                         <div className="flex-1">
-                          <p className="font-medium">{deliverable.name}</p>
+                          <p className="font-medium">{Array.isArray(deliverable) ? deliverable[0]?.name : deliverable.name}</p>
                           <p className="text-sm text-muted-foreground">
-                            {formatFileSize(deliverable.size)} • {new Date(deliverable.uploadedAt).toLocaleDateString()}
+                            {formatFileSize(Array.isArray(deliverable) ? deliverable[0]?.size : deliverable.size)} • {new Date((Array.isArray(deliverable) ? deliverable[0]?.uploadedAt : deliverable.uploadedAt) || '').toLocaleDateString()}
                           </p>
                         </div>
                         <div className="flex items-center gap-2">
@@ -446,8 +446,8 @@ export const HackathonSubmission: React.FC = () => {
                             <Eye className="w-4 h-4" />
                           </button>
                           <a
-                            href={deliverable.url}
-                            download={deliverable.name}
+                            href={Array.isArray(deliverable) ? deliverable[0]?.url : deliverable.url}
+                            download={Array.isArray(deliverable) ? deliverable[0]?.name : deliverable.name}
                             className="p-1 text-muted-foreground hover:text-foreground"
                           >
                             <Download className="w-4 h-4" />

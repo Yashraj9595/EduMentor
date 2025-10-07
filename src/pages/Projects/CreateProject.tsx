@@ -77,6 +77,14 @@ export const CreateProject: React.FC = () => {
     }));
   };
 
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setFormData(prev => ({
@@ -393,7 +401,7 @@ export const CreateProject: React.FC = () => {
                   id="category"
                   name="category"
                   value={formData.category}
-                  onChange={handleInputChange}
+                  onChange={handleSelectChange}
                   required
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                 >
@@ -433,7 +441,7 @@ export const CreateProject: React.FC = () => {
                   id="status"
                   name="status"
                   value={formData.status}
-                  onChange={handleInputChange}
+                  onChange={handleSelectChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                 >
                   <option value="draft">Draft</option>

@@ -1,34 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Trophy, 
-  Star, 
-  Zap, 
   Target, 
   Award, 
-  BookOpen, 
-  Calendar, 
-  Users, 
-  MessageCircle,
-  TrendingUp,
-  CheckCircle,
-  Clock,
-  Heart,
-  Flame,
   Crown,
-  Gem,
-  Shield,
-  Sword,
-  Rocket,
-  Lightbulb,
-  Code,
-  Database,
-  Cpu,
-  Globe,
-  Lock,
-  Unlock,
-  Key,
-  Gift,
-  Sparkles,
   Bell,
   X
 } from 'lucide-react';
@@ -422,5 +397,6 @@ export const AchievementSystem: React.FC<AchievementSystemProps> = ({
     </div>
   );
 };
+
 
 

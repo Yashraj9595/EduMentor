@@ -176,7 +176,7 @@ export const TeamChat: React.FC = () => {
 
     const message: Message = {
       id: Date.now().toString(),
-      senderId: user?.id || '1',
+      senderId: user?._id || '1',
       senderName: user?.firstName + ' ' + user?.lastName || 'You',
       content: newMessage,
       timestamp: new Date().toISOString(),
@@ -188,7 +188,7 @@ export const TeamChat: React.FC = () => {
     setNewMessage('');
 
     // Simulate other team members typing
-    const otherMembers = team?.members.filter(m => m.id !== user?.id) || [];
+    const otherMembers = team?.members.filter(m => m.id !== user?._id) || [];
     if (otherMembers.length > 0) {
       const randomMember = otherMembers[Math.floor(Math.random() * otherMembers.length)];
       setIsTyping(prev => [...prev, randomMember.id]);
@@ -220,7 +220,7 @@ export const TeamChat: React.FC = () => {
     setTimeout(() => {
       const fileMessage: Message = {
         id: Date.now().toString(),
-        senderId: user?.id || '1',
+        senderId: user?._id || '1',
         senderName: user?.firstName + ' ' + user?.lastName || 'You',
         content: `Shared a file: ${file.name}`,
         timestamp: new Date().toISOString(),
@@ -317,7 +317,7 @@ export const TeamChat: React.FC = () => {
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
               {messages.map((message) => {
                 const member = getMemberById(message.senderId);
-                const isCurrentUser = message.senderId === user?.id;
+                const isCurrentUser = message.senderId === user?._id;
                 
                 return (
                   <div

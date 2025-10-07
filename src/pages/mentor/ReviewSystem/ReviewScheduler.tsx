@@ -20,7 +20,8 @@ import {
   User,
   BookOpen,
   Award,
-  TrendingUp
+  TrendingUp,
+  Eye
 } from 'lucide-react';
 import { Card, CardHeader, CardBody } from '../../../components/ui/Card';
 import { Button } from '../../../components/ui/Button';
@@ -163,7 +164,8 @@ export const ReviewScheduler: React.FC = () => {
             improvements: [],
             recommendations: [],
             generalComments: ''
-          }
+          },
+          isRescheduled: false
         },
         {
           _id: '2',
@@ -191,7 +193,8 @@ export const ReviewScheduler: React.FC = () => {
             generalComments: 'Excellent proposal with good technical foundation. Minor improvements needed in documentation.'
           },
           mentorNotes: 'Student shows strong understanding of the problem domain.',
-          studentResponse: 'Thank you for the feedback. I will incorporate the suggested improvements.'
+          studentResponse: 'Thank you for the feedback. I will incorporate the suggested improvements.',
+          isRescheduled: false
         },
         {
           _id: '3',
@@ -215,7 +218,8 @@ export const ReviewScheduler: React.FC = () => {
             improvements: [],
             recommendations: [],
             generalComments: ''
-          }
+          },
+          isRescheduled: false
         }
       ];
 
@@ -540,16 +544,16 @@ export const ReviewScheduler: React.FC = () => {
                 </div>
                 
                 <div className="flex items-center gap-2 ml-4">
-                  <Button variant="outline" size="sm">
+                  <Button variant="secondary" size="sm">
                     <Eye className="w-4 h-4" />
                   </Button>
-                  <Button variant="outline" size="sm" onClick={() => handleEditReview(review)}>
+                  <Button variant="secondary" size="sm" onClick={() => handleEditReview(review)}>
                     <Edit className="w-4 h-4" />
                   </Button>
-                  <Button variant="outline" size="sm">
+                  <Button variant="secondary" size="sm">
                     <Send className="w-4 h-4" />
                   </Button>
-                  <Button variant="outline" size="sm">
+                  <Button variant="secondary" size="sm">
                     <Download className="w-4 h-4" />
                   </Button>
                 </div>
@@ -578,7 +582,7 @@ export const ReviewScheduler: React.FC = () => {
                   <option value="">Select a project</option>
                   {projects.map(project => (
                     <option key={project._id} value={project._id}>
-                      {project.project.title} - {project.student.firstName} {project.student.lastName}
+                      {project.title} - {project.student.firstName} {project.student.lastName}
                     </option>
                   ))}
                 </select>
@@ -633,7 +637,7 @@ export const ReviewScheduler: React.FC = () => {
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <label className="block text-sm font-medium">Evaluation Criteria</label>
-                  <Button type="button" variant="outline" size="sm" onClick={addEvaluationCriterion}>
+                  <Button type="button" variant="secondary" size="sm" onClick={addEvaluationCriterion}>
                     <Plus className="w-4 h-4 mr-1" />
                     Add Criterion
                   </Button>
@@ -664,7 +668,7 @@ export const ReviewScheduler: React.FC = () => {
                       />
                       <Button
                         type="button"
-                        variant="outline"
+                        variant="secondary"
                         size="sm"
                         onClick={() => removeEvaluationCriterion(index)}
                         className="text-red-600 hover:text-red-700"
@@ -678,7 +682,7 @@ export const ReviewScheduler: React.FC = () => {
             </div>
 
             <div className="flex items-center justify-end gap-2 mt-6">
-              <Button variant="outline" onClick={() => setShowCreateForm(false)}>
+              <Button variant="secondary" onClick={() => setShowCreateForm(false)}>
                 Cancel
               </Button>
               <Button onClick={handleCreateReview}>
@@ -691,5 +695,6 @@ export const ReviewScheduler: React.FC = () => {
     </div>
   );
 };
+
 
 
