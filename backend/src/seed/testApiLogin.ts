@@ -1,5 +1,3 @@
-import axios from 'axios';
-
 const testApiLogin = async (): Promise<void> => {
   try {
     console.log('🧪 Testing API login endpoint...');
@@ -8,53 +6,82 @@ const testApiLogin = async (): Promise<void> => {
     
     // Test admin login
     console.log('🔍 Testing admin login...');
-    const adminResponse = await axios.post(`${baseURL}/auth/login`, {
-      email: 'admin@edumentor.dev',
-      password: 'admin123'
+    const adminResponse = await fetch(`${baseURL}/auth/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: 'admin@edumentor.dev',
+        password: 'admin123'
+      })
     });
     
-    console.log('✅ Admin login successful!');
-    console.log('Response:', {
-      success: adminResponse.data.success,
-      message: adminResponse.data.message,
-      user: adminResponse.data.data?.user,
-      hasToken: !!adminResponse.data.data?.token
-    });
+    const adminData = await adminResponse.json();
+    
+    if (adminResponse.ok) {
+      console.log('✅ Admin login successful!');
+      console.log('Response:', {
+        success: adminData.success,
+        message: adminData.message,
+        user: adminData.data?.user,
+        hasToken: !!adminData.data?.token
+      });
+    } else {
+      console.log('❌ Admin login failed:', adminData);
+    }
     
     // Test student login
     console.log('\n🔍 Testing student login...');
-    const studentResponse = await axios.post(`${baseURL}/auth/login`, {
-      email: 'student@edumentor.dev',
-      password: 'student123'
+    const studentResponse = await fetch(`${baseURL}/auth/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: 'student@edumentor.dev',
+        password: 'student123'
+      })
     });
     
-    console.log('✅ Student login successful!');
-    console.log('Response:', {
-      success: studentResponse.data.success,
-      message: studentResponse.data.message,
-      user: studentResponse.data.data?.user,
-      hasToken: !!studentResponse.data.data?.token
-    });
+    const studentData = await studentResponse.json();
+    
+    if (studentResponse.ok) {
+      console.log('✅ Student login successful!');
+      console.log('Response:', {
+        success: studentData.success,
+        message: studentData.message,
+        user: studentData.data?.user,
+        hasToken: !!studentData.data?.token
+      });
+    } else {
+      console.log('❌ Student login failed:', studentData);
+    }
     
     // Test invalid credentials
     console.log('\n🔍 Testing invalid credentials...');
-    try {
-      await axios.post(`${baseURL}/auth/login`, {
+    const invalidResponse = await fetch(`${baseURL}/auth/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
         email: 'admin@edumentor.dev',
         password: 'wrongpassword'
-      });
-    } catch (error: any) {
-      if (error.response?.status === 401) {
-        console.log('✅ Invalid credentials correctly rejected (401)');
-      } else {
-        console.log('❌ Unexpected error:', error.response?.data);
-      }
+      })
+    });
+    
+    if (invalidResponse.status === 401) {
+      console.log('✅ Invalid credentials correctly rejected (401)');
+    } else {
+      const invalidData = await invalidResponse.json();
+      console.log('❌ Unexpected response:', invalidData);
     }
     
     console.log('\n🎉 API login tests completed successfully!');
     
   } catch (error: any) {
-    console.error('❌ API login test failed:', error.response?.data || error.message);
+    console.error('❌ API login test failed:', error.message);
     throw error;
   }
 };
