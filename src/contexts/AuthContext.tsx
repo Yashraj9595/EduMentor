@@ -80,7 +80,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             } catch (refreshError) {
               console.log('Token refresh failed, clearing auth...', refreshError);
               // If refresh also fails, clear everything
-              throw refreshError;
+              apiService.clearCurrentUser();
+              localStorage.removeItem('accessToken');
+              localStorage.removeItem('refreshToken');
+              setUser(null);
             }
           }
         } else {

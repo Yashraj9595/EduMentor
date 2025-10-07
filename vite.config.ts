@@ -14,4 +14,8 @@ export default defineConfig({
     host: true,
     port: 5173,
   },
+  define: {
+    // Define environment variables at build time
+    'import.meta.env.VITE_API_URL': JSON.stringify(process.env.VITE_API_URL || 'https://your-backend-url.onrender.com/api/v1'),
+  },
 })

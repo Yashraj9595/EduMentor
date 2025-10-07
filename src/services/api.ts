@@ -3,6 +3,9 @@ import { User, } from '../types/auth.types';
 // API Configuration and Service
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
 
+// Log the API URL for debugging
+console.log('API Base URL:', API_BASE_URL);
+
 // API Response Types
 export interface ApiResponse<T = any> {
   success: boolean;
