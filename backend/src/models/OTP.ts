@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema, Model } from 'mongoose';
-import crypto from 'crypto';
+import * as crypto from 'crypto';
 import { IOTP, OTPType } from '../types';
 
 export interface IOTPDocument extends Omit<IOTP, '_id'>, Document {

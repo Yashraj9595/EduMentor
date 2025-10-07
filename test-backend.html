@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backend Test</title>
+</head>
+<body>
+    <h1>EduMentor Backend Test</h1>
+    
+    <div id="results"></div>
+    
+    <button onclick="testHealth()">Test Health Endpoint</button>
+    <button onclick="testCORS()">Test CORS</button>
+    <button onclick="testLogin()">Test Login</button>
+    
+    <script>
+        const API_BASE = 'https://edumentor-crwa.onrender.com/api/v1';
+        const results = document.getElementById('results');
+        
+        function log(message) {
+            results.innerHTML += '<p>' + message + '</p>';
+            console.log(message);
+        }
+        
+        async function testHealth() {
+            try {
+                log('Testing health endpoint...');
+                const response = await fetch('https://edumentor-crwa.onrender.com/health');
+                const data = await response.json();
+                log('Health Response: ' + JSON.stringify(data));
+            } catch (error) {
+                log('Health Error: ' + error.message);
+            }
+        }
+        
+        async function testCORS() {
+            try {
+                log('Testing CORS...');
+                const response = await fetch(API_BASE + '/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: 'test@example.com',
+                        password: 'test123'
+                    })
+                });
+                
+                if (response.ok) {
+                    log('CORS: OK - Request went through');
+                } else {
+                    log('CORS: Request failed with status ' + response.status);
+                }
+                
+                const data = await response.json();
+                log('Login Response: ' + JSON.stringify(data));
+            } catch (error) {
+                log('CORS Error: ' + error.message);
+            }
+        }
+        
+        async function testLogin() {
+            try {
+                log('Testing login endpoint...');
+                const response = await fetch(API_BASE + '/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: 'test@example.com',
+                        password: 'test123'
+                    })
+                });
+                
+                const data = await response.json();
+                log('Login Response: ' + JSON.stringify(data));
+                
+                if (data.success && data.data && data.data.token) {
+                    log('SUCCESS: Token received - ' + data.data.token.substring(0, 20) + '...');
+                } else {
+                    log('FAILED: No token in response');
+                }
+            } catch (error) {
+                log('Login Error: ' + error.message);
+            }
+        }
+    </script>
+</body>
+</html>

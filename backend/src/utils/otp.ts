@@ -1,4 +1,4 @@
-import crypto from 'crypto';
+import * as crypto from 'crypto';
 import { OTP } from '../models/OTP';
 import { config } from '../config/config';
 import { OTPType } from '../types';
