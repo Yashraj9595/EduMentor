@@ -34,6 +34,10 @@ export type OTPType = 'email_verification' | 'password_reset' | 'mobile_verifica
 
 export interface IAuthRequest extends Request {
   user?: IUser;
+  body: any;
+  params: any;
+  query: any;
+  headers: any;
 }
 
 export interface ILoginData {

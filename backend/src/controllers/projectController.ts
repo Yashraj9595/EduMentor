@@ -6,7 +6,32 @@ import { IAuthRequest } from '../types';
 // Create a new project
 export const createProject = async (req: IAuthRequest, res: Response): Promise<Response> => {
   try {
-    const { title, description, startDate, endDate, deliverables, tags } = req.body;
+    const { 
+      title, 
+      description, 
+      longDescription,
+      category,
+      technologies,
+      startDate, 
+      endDate, 
+      deliverables, 
+      milestones,
+      tags,
+      problemStatement,
+      repositoryLink,
+      liveUrl,
+      documentationUrl,
+      videoUrl,
+      teamMembers,
+      status,
+      mentorId,
+      objectives,
+      challenges,
+      achievements,
+      gallery,
+      metrics,
+      featured
+    } = req.body;
     
     // Validate required fields
     if (!title || !description || !startDate || !endDate) {
@@ -29,22 +54,48 @@ export const createProject = async (req: IAuthRequest, res: Response): Promise<R
     
     console.log('Creating project for user:', req.user?._id);
     
-    // Create project
+    // Create project with all fields
     const project = new Project({
       title,
       description,
+      longDescription,
+      category,
+      technologies: technologies || [],
       startDate: start,
       endDate: end,
       studentId: req.user?._id,
       deliverables: deliverables || [],
-      tags: tags || []
+      milestones: milestones || [],
+      tags: tags || [],
+      problemStatement,
+      repositoryLink,
+      liveUrl,
+      documentationUrl,
+      videoUrl,
+      teamMembers: teamMembers || [],
+      status: status || 'draft',
+      mentorId,
+      objectives: objectives || [],
+      challenges: challenges || [],
+      achievements: achievements || [],
+      gallery: gallery || [],
+      metrics: metrics || {
+        views: 0,
+        likes: 0,
+        comments: 0,
+        bookmarks: 0
+      },
+      featured: featured || false
     });
     
     await project.save();
     console.log('Project created with ID:', project._id);
     
-    // Populate student information
+    // Populate student and mentor information
     await project.populate('studentId', 'firstName lastName email');
+    if (mentorId) {
+      await project.populate('mentorId', 'firstName lastName email');
+    }
     
     return res.status(201).json({
       success: true,
@@ -158,7 +209,32 @@ export const getProjectById = async (req: IAuthRequest, res: Response): Promise<
 export const updateProject = async (req: IAuthRequest, res: Response): Promise<Response> => {
   try {
     const { id } = req.params;
-    const { title, description, startDate, endDate, deliverables, tags, status } = req.body;
+    const { 
+      title, 
+      description, 
+      longDescription,
+      category,
+      technologies,
+      startDate, 
+      endDate, 
+      deliverables, 
+      milestones,
+      tags,
+      problemStatement,
+      repositoryLink,
+      liveUrl,
+      documentationUrl,
+      videoUrl,
+      teamMembers,
+      status,
+      mentorId,
+      objectives,
+      challenges,
+      achievements,
+      gallery,
+      metrics,
+      featured
+    } = req.body;
     
     const project = await Project.findById(id);
     
@@ -188,20 +264,39 @@ export const updateProject = async (req: IAuthRequest, res: Response): Promise<R
       });
     }
     
-    // Update fields
-    if (title) project.title = title;
-    if (description) project.description = description;
-    if (startDate) project.startDate = new Date(startDate);
-    if (endDate) project.endDate = new Date(endDate);
-    if (deliverables) project.deliverables = deliverables;
-    if (tags) project.tags = tags;
-    if (status) project.status = status;
+    // Update all fields
+    if (title !== undefined) project.title = title;
+    if (description !== undefined) project.description = description;
+    if (longDescription !== undefined) project.longDescription = longDescription;
+    if (category !== undefined) project.category = category;
+    if (technologies !== undefined) project.technologies = technologies;
+    if (startDate !== undefined) project.startDate = new Date(startDate);
+    if (endDate !== undefined) project.endDate = new Date(endDate);
+    if (deliverables !== undefined) project.deliverables = deliverables;
+    if (milestones !== undefined) project.milestones = milestones;
+    if (tags !== undefined) project.tags = tags;
+    if (problemStatement !== undefined) project.problemStatement = problemStatement;
+    if (repositoryLink !== undefined) project.repositoryLink = repositoryLink;
+    if (liveUrl !== undefined) project.liveUrl = liveUrl;
+    if (documentationUrl !== undefined) project.documentationUrl = documentationUrl;
+    if (videoUrl !== undefined) project.videoUrl = videoUrl;
+    if (teamMembers !== undefined) project.teamMembers = teamMembers;
+    if (status !== undefined) project.status = status;
+    if (mentorId !== undefined) project.mentorId = mentorId;
+    if (objectives !== undefined) project.objectives = objectives;
+    if (challenges !== undefined) project.challenges = challenges;
+    if (achievements !== undefined) project.achievements = achievements;
+    if (gallery !== undefined) project.gallery = gallery;
+    if (metrics !== undefined) project.metrics = metrics;
+    if (featured !== undefined) project.featured = featured;
     
     await project.save();
     
     // Populate related information
     await project.populate('studentId', 'firstName lastName email');
-    await project.populate('mentorId', 'firstName lastName email');
+    if (project.mentorId) {
+      await project.populate('mentorId', 'firstName lastName email');
+    }
     
     return res.json({
       success: true,
