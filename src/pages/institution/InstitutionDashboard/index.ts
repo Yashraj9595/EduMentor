@@ -1,0 +1,1 @@
+export { InstitutionDashboard } from './InstitutionDashboard';

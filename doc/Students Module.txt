@@ -1,0 +1,193 @@
+tStudents Module (Detailed Breakdown) 🎓
+
+Students are the primary users of the platform since the entire system revolves around their projects. Below are all the features, pages, and requirements in detail.
+
+1. Student Dashboard 🖥️
+
+Purpose: A central hub where students see all their ongoing and completed projects, deadlines, mentor feedback, and notifications.
+
+Key Features:
+
+Overview Cards:
+
+Active Projects
+
+Pending Mentor Approvals
+
+Deadlines this week
+
+Hackathon invitations/events
+
+Notifications: New mentor messages, submission reminders, hackathon alerts.
+
+Quick Actions: Create Project, Join Hackathon, Upload Deliverable.
+
+2. Project Management 📂
+a) Project Creation Page
+
+Students can create a project entry with the following fields:
+
+Project Title
+
+Problem Statement (with AI-powered suggestions for improvements)
+
+Project Description (objectives, technologies used, outcomes)
+
+Tags/Keywords (AI, IoT, Web Dev, etc.)
+
+Team Members (add classmates with their emails/student IDs)
+
+Repository/Link (GitHub, Google Drive, etc.)
+
+Timeline (start/end date)
+
+b) Project Progress Tracking Page
+
+Visual timeline or Gantt chart for tasks (like Trello/Asana style).
+
+Status options: Idea Stage, In Progress, Under Review, Completed.
+
+Upload deliverables at each milestone (reports, PPTs, videos, code).
+
+Mentor approval required for milestone completion.
+
+c) Project Submission Page
+
+Upload final documents: Report, Presentation, Source Code.
+
+AI-powered pre-submission checklist (checks missing files, plagiarism check, formatting).
+
+Submit button → Notifies mentor and admin.
+
+d) Project Showcase Page (Portfolio)
+
+Each student/project gets a public page with:
+
+Project Title & Description
+
+Technologies Used
+
+Mentor’s Name & College
+
+Certificates/Badges earned
+
+GitHub/Code link, Demo Video
+
+Student ratings (by mentors/companies)
+
+Acts as a portfolio when applying for jobs/internships.
+
+3. Mentor Selection & Communication 👨‍🏫
+a) Mentor Browsing Page
+
+Students can browse available mentors by:
+
+Expertise (AI, IoT, Cloud, etc.)
+
+Department
+
+Availability (slots open or full)
+
+Ratings & past mentorship record
+
+AI-powered mentor recommendation system (best mentor fit for project).
+
+b) Mentor Request Page
+
+Students send request → Mentor accepts/rejects.
+
+Once accepted → Mentor assigned to the project.
+
+c) Mentor Communication Page
+
+Chatbox for student ↔ mentor communication.
+
+File sharing (reports, presentations, screenshots).
+
+Video call integration (optional, for remote guidance).
+
+Notifications for mentor feedback.
+
+4. Team Collaboration 👥
+a) Team Formation Page
+
+Add teammates by email/college ID.
+
+Role assignment (Leader, Developer, Designer, Researcher, etc.).
+
+Notification to teammates to accept the invitation.
+
+b) Team Chat Page
+
+Group chat with text + file sharing.
+
+Option to create private/public team chats.
+
+Request to join new groups for hackathons/events.
+
+5. Hackathon & Events 💻
+a) Hackathon Registration Page
+
+Browse upcoming hackathons (college-level, state-level, national).
+
+Register with team or individually.
+
+Fill form: Branch, Leader, Project Name, Payment (QR + Receipt Upload).
+
+b) Hackathon Submission Page
+
+Upload hackathon deliverables (Pitch Deck, Code, Demo Video).
+
+Team introduction page.
+
+AI assistant suggests improvements before submission.
+
+c) Hackathon Results Page
+
+Live judging system → Students see scores/comments from judges.
+
+Leaderboard with project rankings.
+
+Digital certificates automatically issued.
+
+6. Student Profile (Portfolio Page) 🧑‍🎓
+
+Fields Required:
+
+Name, Email, Mobile, Branch, College.
+
+Skills (AI, Python, IoT, Cloud, etc.).
+
+Certifications (upload images/certificates).
+
+Past Projects (linked to showcase page).
+
+Achievements (hackathon wins, internships).
+
+Social/Professional Links (GitHub, LinkedIn).
+
+This acts as a resume/LinkedIn alternative for companies.
+
+7. AI-Powered Student Assistance 🤖
+
+AI Project Idea Generator: Suggests trending projects based on skills.
+
+AI Abstract Helper: Formats project abstract in proper format.
+
+AI Chatbot: Answers FAQs like submission deadlines, report formats.
+
+AI Talent Recommender: Suggests students to companies for internships/jobs.
+
+8. Gamification & Recognition 🏆
+
+Project Leaderboards: Top projects by innovation, mentor rating, or votes.
+
+Milestone Badges:
+
+“Problem Statement Approved” ✅
+
+“Prototype Ready” ⚡
+
+“Final Submission Completed” 🎯
+
+Hackathon Achievements: Badges + Digital Certificates.

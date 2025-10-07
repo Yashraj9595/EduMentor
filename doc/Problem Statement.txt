@@ -1,0 +1,85 @@
+Problem Statement
+
+In today’s education system, especially in engineering and technical fields, students must complete multiple academic projects such as minor projects, major projects, hackathon projects, and industry-based problem statements. These projects are crucial for skill development, innovation, and bridging the gap between theoretical learning and real-world applications.
+
+
+However, the current process of project management and collaboration is highly fragmented and faces multiple challenges:
+
+Scattered Communication
+Students, teachers, and colleges use disconnected tools like emails, spreadsheets, or WhatsApp groups, leading to poor coordination and missed updates.
+
+Limited Mentor Access
+Students struggle to find the right mentor for their projects. Teachers are overloaded with multiple students and lack structured tools for efficient project tracking.
+
+Inefficient Evaluation
+Colleges lack a unified dashboard to track project milestones, verify submissions, or maintain structured records for future references.
+
+Poor Industry & Hackathon Integration
+Companies and hackathon organizers do not have direct visibility into student talent, making collaboration, problem-statement sharing, and talent acquisition difficult.
+
+Lack of AI-driven Support
+Students face challenges in defining problem statements, choosing relevant projects, or getting instant support for project-related queries.
+
+Target Users & Roles
+1. Students 🎓
+
+Create & submit projects with descriptions, deliverables, and reports.
+
+Select mentors and track progress with Gantt charts.
+
+Showcase skills and certifications in a portfolio page.
+
+Communication with mentors and team members via integrated chat.
+
+Pre-submission checklist to avoid missing files.
+
+2. Mentors (Teachers) 👨‍🏫
+
+Approve/reject project proposals and mentor requests.
+
+Track progress through dashboards.
+
+Provide feedback, grades, and milestones.
+
+Post problem statements for students.
+
+Activity logs for accountability.
+
+3. College Admin / HOD 🏢
+
+Manage all student/teacher accounts.
+
+Monitor project progress institution-wide.
+
+Manage hackathon events with timelines, judges, and rules.
+
+Dashboard insights: skills in demand, project counts, active mentors.
+
+4. Hackathon Organizers 💻
+
+Create hackathons with problem statements, prizes, judges, and rules.
+
+Student/team registrations with payment integration (QR code, receipts).
+
+Live judging, scoreboards, and real-time updates.
+
+5. Companies 🏭
+
+Showcase projects and solutions.
+
+Post hackathon challenges and internships.
+
+Manage events and track student engagement.
+
+Access analytics for skill mapping and recruitment.
+
+
+Proposed Solution (Our Platform)
+
+We propose to build a centralized project management platform where:
+
+✅ Students can create, manage, and showcase projects while finding mentors and collaborating with teammates.
+✅ Teachers can guide, evaluate, and manage multiple projects efficiently.
+✅ Colleges can track institution-wide progress and host hackathons/events.
+✅ Companies can connect with students for recruitment, internships, and innovation challenges.
+✅ Hackathon organizers can host end-to-end events with project submissions, team formation, and live judging.
