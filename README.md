@@ -357,3 +357,5 @@ For issues or questions:
 **Happy Coding! 🎉**
 
 Save time on your next project by using this starter template. Focus on building features, not boilerplate!
+#   D e p l o y m e n t   t r i g g e r  
+ 
