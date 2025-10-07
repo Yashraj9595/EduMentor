@@ -8,7 +8,6 @@ interface Config {
   PORT: number;
   HOST: string;
   MONGODB_URI: string;
-  MONGODB_TEST_URI: string;
   JWT_SECRET: string;
   JWT_EXPIRE: string;
   JWT_REFRESH_SECRET: string;
@@ -27,18 +26,8 @@ interface Config {
   CORS_ORIGIN: string;
   CORS_CREDENTIALS: boolean;
   BCRYPT_ROUNDS: number;
-  SESSION_SECRET: string;
-  MAX_FILE_SIZE: number;
-  UPLOAD_PATH: string;
-  REDIS_URL: string;
-  REDIS_PASSWORD: string;
-  LOG_LEVEL: string;
-  LOG_FILE: string;
   API_VERSION: string;
   API_PREFIX: string;
-  FRONTEND_URL: string;
-  ADMIN_EMAIL: string;
-  ADMIN_PASSWORD: string;
   DEBUG: boolean;
   VERBOSE_LOGGING: boolean;
 }
@@ -48,7 +37,6 @@ const config: Config = {
   PORT: parseInt(process.env.PORT || '5000', 10),
   HOST: process.env.HOST || 'localhost',
   MONGODB_URI: process.env.MONGODB_URI || 'mongodb://localhost:27017/auth-app',
-  MONGODB_TEST_URI: process.env.MONGODB_TEST_URI || 'mongodb://localhost:27017/auth-app-test',
   JWT_SECRET: process.env.JWT_SECRET || 'your-super-secret-jwt-key',
   JWT_EXPIRE: process.env.JWT_EXPIRE || '7d',
   JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET || 'your-super-secret-refresh-jwt-key',
@@ -67,18 +55,8 @@ const config: Config = {
   CORS_ORIGIN: process.env.CORS_ORIGIN || 'http://localhost:3000',
   CORS_CREDENTIALS: process.env.CORS_CREDENTIALS === 'true',
   BCRYPT_ROUNDS: parseInt(process.env.BCRYPT_ROUNDS || '12', 10),
-  SESSION_SECRET: process.env.SESSION_SECRET || 'your-session-secret-key',
-  MAX_FILE_SIZE: parseInt(process.env.MAX_FILE_SIZE || '5242880', 10),
-  UPLOAD_PATH: process.env.UPLOAD_PATH || 'uploads/',
-  REDIS_URL: process.env.REDIS_URL || 'redis://localhost:6379',
-  REDIS_PASSWORD: process.env.REDIS_PASSWORD || '',
-  LOG_LEVEL: process.env.LOG_LEVEL || 'info',
-  LOG_FILE: process.env.LOG_FILE || 'logs/app.log',
   API_VERSION: process.env.API_VERSION || 'v1',
   API_PREFIX: process.env.API_PREFIX || '/api',
-  FRONTEND_URL: process.env.FRONTEND_URL || 'http://localhost:3000',
-  ADMIN_EMAIL: process.env.ADMIN_EMAIL || 'admin@yourapp.com',
-  ADMIN_PASSWORD: process.env.ADMIN_PASSWORD || 'admin123',
   DEBUG: process.env.DEBUG === 'true',
   VERBOSE_LOGGING: process.env.VERBOSE_LOGGING === 'true'
 };

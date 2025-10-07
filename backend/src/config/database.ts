@@ -3,9 +3,7 @@ import { config } from './config';
 
 const connectDB = async (): Promise<void> => {
   try {
-    const mongoURI = config.NODE_ENV === 'test' 
-      ? config.MONGODB_TEST_URI 
-      : config.MONGODB_URI;
+    const mongoURI = config.MONGODB_URI;
 
     const conn = await mongoose.connect(mongoURI, {
       // Remove deprecated options and use modern ones
