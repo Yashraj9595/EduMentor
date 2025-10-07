@@ -20,6 +20,7 @@ router.post('/forgot-password', validateForgotPassword, AuthController.forgotPas
 router.post('/verify-otp', validateOTPVerification, AuthController.verifyOTP);
 router.post('/reset-password', validateResetPassword, AuthController.resetPassword);
 router.post('/refresh-token', AuthController.refreshToken);
+router.post('/test-email', AuthController.testEmail);
 
 // Protected routes
 router.get('/profile', authenticate, AuthController.getProfile);

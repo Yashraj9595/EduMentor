@@ -10,7 +10,10 @@
     "start:prod": "cross-env NODE_ENV=production node --max-old-space-size=512 dist/server.js",
     "test": "jest",
     "lint": "eslint src/**/*.ts",
-    "lint:fix": "eslint src/**/*.ts --fix"
+    "lint:fix": "eslint src/**/*.ts --fix",
+    "seed": "ts-node src/seed/seedUsers.ts",
+    "seed:build": "npm run build && node dist/seed/seedUsers.js",
+    "seed:test": "ts-node src/seed/testSeed.ts"
   },
   "keywords": ["nodejs", "express", "typescript", "mongodb", "authentication", "jwt", "otp"],
   "author": "Your Name",

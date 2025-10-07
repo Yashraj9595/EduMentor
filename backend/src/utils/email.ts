@@ -22,6 +22,15 @@ class EmailService {
    */
   async sendEmail(options: IEmailOptions): Promise<void> {
     try {
+      console.log('📧 Attempting to send email to:', options.to);
+      console.log('📧 Email config:', {
+        host: config.EMAIL_HOST,
+        port: config.EMAIL_PORT,
+        secure: config.EMAIL_SECURE,
+        user: config.EMAIL_USER,
+        from: config.EMAIL_FROM
+      });
+
       const mailOptions = {
         from: config.EMAIL_FROM,
         to: options.to,
@@ -31,10 +40,12 @@ class EmailService {
       };
 
       await this.transporter.sendMail(mailOptions);
-      console.log(`Email sent successfully to ${options.to}`);
+      console.log(`✅ Email sent successfully to ${options.to}`);
     } catch (error) {
-      console.error('Email sending failed:', error);
-      throw new Error('Failed to send email');
+      console.error('❌ Email sending failed:', error);
+      console.error('❌ Error details:', error.message);
+      console.error('❌ Full error:', error);
+      throw new Error(`Failed to send email: ${error.message}`);
     }
   }
 

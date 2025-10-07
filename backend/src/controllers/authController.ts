@@ -474,4 +474,45 @@ export class AuthController {
       });
     }
   }
+
+  /**
+   * Test email configuration
+   */
+  static async testEmail(req: Request, res: Response): Promise<void> {
+    try {
+      const { email = 'test@example.com' } = req.body;
+      
+      console.log('🧪 Testing email configuration...');
+      console.log('📧 Email config:', {
+        host: config.EMAIL_HOST,
+        port: config.EMAIL_PORT,
+        secure: config.EMAIL_SECURE,
+        user: config.EMAIL_USER,
+        from: config.EMAIL_FROM
+      });
+
+      await emailService.sendEmail({
+        to: email,
+        subject: 'Test Email from EduMentor',
+        html: '<h1>Test Email</h1><p>This is a test email from EduMentor backend.</p>',
+        text: 'Test Email - This is a test email from EduMentor backend.'
+      });
+
+      res.json({
+        success: true,
+        message: 'Test email sent successfully',
+        data: {
+          email,
+          timestamp: new Date().toISOString()
+        }
+      });
+    } catch (error) {
+      console.error('Test email error:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Test email failed',
+        error: error.message
+      });
+    }
+  }
 }
