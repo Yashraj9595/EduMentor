@@ -1,17 +1,14 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
-  Trophy, 
+  Search, 
+  Tag, 
   Calendar, 
   MapPin, 
   Users, 
-  Clock,
-  Tag,
-  Search,
-  Filter
-} from 'lucide-react';
+  Trophy,
+  } from 'lucide-react';
 import { Card, CardHeader, CardBody } from '../../../components/ui/Card';
-import { useAuth } from '../../../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
 
 interface Hackathon {
   id: string;
@@ -28,7 +25,6 @@ interface Hackathon {
 }
 
 export const HackathonList: React.FC = () => {
-  const { user } = useAuth();
   const navigate = useNavigate();
   const [hackathons] = useState<Hackathon[]>([
     {

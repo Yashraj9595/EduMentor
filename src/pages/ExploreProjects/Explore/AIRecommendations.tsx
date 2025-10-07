@@ -3,14 +3,11 @@ import {
   Sparkles, 
   Brain, 
   TrendingUp, 
-  Star, 
   Users, 
   Code, 
   Lightbulb,
   Target,
-  Zap,
-  Award
-} from 'lucide-react';
+  } from 'lucide-react';
 import { Card, CardHeader, CardBody } from '../../../components/ui/Card';
 
 interface AIRecommendation {
@@ -34,7 +31,7 @@ interface TrendingTech {
 export const AIRecommendations: React.FC = () => {
   const [recommendations, setRecommendations] = useState<AIRecommendation[]>([]);
   const [trendingTech, setTrendingTech] = useState<TrendingTech[]>([]);
-  const [loading, setLoading] = useState(true);
+  
 
   useEffect(() => {
     fetchAIRecommendations();

@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { RegisterProps, RegisterState } from './Register.types';
 
-export function useRegister(props: RegisterProps) {
-  const [state, setState] = useState<RegisterState>({});
+export function useRegister(_props: RegisterProps) {
+  const [state] = useState<RegisterState>({});
 
   useEffect(() => {
     // Add your effect logic here

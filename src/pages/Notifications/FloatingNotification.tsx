@@ -14,8 +14,8 @@ export const FloatingNotification: React.FC<FloatingNotificationProps> = ({
   const {
     notifications,
     unreadCount,
-    markAsRead,
-    deleteNotification
+    
+    
   } = useNotifications();
 
   if (!isOpen) return null;

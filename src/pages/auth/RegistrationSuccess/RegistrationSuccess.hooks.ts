@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { RegistrationSuccessProps, RegistrationSuccessState } from './RegistrationSuccess.types';
 
-export function useRegistrationSuccess(props: RegistrationSuccessProps) {
-  const [state, setState] = useState<RegistrationSuccessState>({});
+export function useRegistrationSuccess(_props: RegistrationSuccessProps) {
+  const [state] = useState<RegistrationSuccessState>({});
 
   useEffect(() => {
     // Add your effect logic here

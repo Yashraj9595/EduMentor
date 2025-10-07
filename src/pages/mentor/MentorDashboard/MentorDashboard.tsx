@@ -4,16 +4,12 @@ import {
   FileText, 
   MessageSquare, 
   Calendar, 
-  BarChart3, 
   CheckCircle,
   Clock,
   Target,
-  TrendingUp,
   Award,
   BookOpen,
-  Star,
-  Shield
-} from 'lucide-react';
+  } from 'lucide-react';
 import { Card, CardHeader, CardBody } from '../../../components/ui/Card';
 import { useAuth } from '../../../contexts/AuthContext';
 

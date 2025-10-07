@@ -6,11 +6,9 @@ import {
   Crown, 
   ArrowRight, 
   ArrowLeft, 
-  Users, 
   Building,
   Trophy,
-  BookOpen
-} from 'lucide-react';
+  } from 'lucide-react';
 import { Card, CardBody } from '../../../components/ui/Card';
 import { Button } from '../../../components/ui/Button';
 import { UserRole } from '../../../types/auth.types';

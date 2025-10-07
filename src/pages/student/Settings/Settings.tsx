@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useAuth } from '../../../contexts/AuthContext';
 import { User, Lock, Bell, Globe, LogOut, HelpCircle, Trash2 } from 'lucide-react';
 import { Card, CardBody } from '../../../components/ui/Card';
 import { useNavigate } from 'react-router-dom';
@@ -7,7 +8,7 @@ import { Profile } from './components/Profile';
 import { Security } from './components/Security';
 import { Notifications } from './components/Notifications';
 import { Preferences } from './components/Preferences';
-import { useAuth } from '../../../contexts/AuthContext';
+
 import { useSettings } from './Settings.hooks';
 
 export const Settings: React.FC = () => {
@@ -15,7 +16,7 @@ export const Settings: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { logout, user } = useAuth();
-  const { handleClick } = useSettings({});
+  const { } = useSettings({});
 
   useEffect(() => {
     // Track user visiting settings page

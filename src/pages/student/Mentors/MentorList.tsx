@@ -1,17 +1,13 @@
 import React, { useState } from 'react';
-import { 
-  User, 
-  Search, 
-  Filter, 
-  Star, 
-  Mail, 
-  CheckCircle,
-  Clock,
-  MessageCircle
-} from 'lucide-react';
-import { Card, CardHeader, CardBody } from '../../../components/ui/Card';
-import { useAuth } from '../../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { 
+  Search, 
+  User, 
+  Star, 
+  Mail,
+  MessageCircle
+  } from 'lucide-react';
+import { Card, CardHeader, CardBody } from '../../../components/ui/Card';
 
 interface Mentor {
   id: string;
@@ -26,7 +22,6 @@ interface Mentor {
 }
 
 export const MentorList: React.FC = () => {
-  const { user } = useAuth();
   const navigate = useNavigate();
   const [mentors] = useState<Mentor[]>([
     {

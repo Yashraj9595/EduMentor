@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { ForgotPasswordProps, ForgotPasswordState } from './ForgotPassword.types';
 
-export function useForgotPassword(props: ForgotPasswordProps) {
-  const [state, setState] = useState<ForgotPasswordState>({});
+export function useForgotPassword(_props: ForgotPasswordProps) {
+  const [state] = useState<ForgotPasswordState>({});
 
   useEffect(() => {
     // Add your effect logic here

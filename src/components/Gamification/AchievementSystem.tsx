@@ -9,7 +9,7 @@ import {
 } from 'lucide-react';
 import { Card, CardHeader, CardBody } from '../ui/Card';
 import { Button } from '../ui/Button';
-import { Badge, BadgeCollection } from './Badge';
+import { BadgeCollection } from './Badge';
 
 interface Achievement {
   id: string;

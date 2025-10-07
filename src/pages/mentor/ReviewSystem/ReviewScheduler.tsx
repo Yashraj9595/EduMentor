@@ -2,31 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { 
   Calendar, 
   Clock, 
-  Users, 
-  Target, 
-  Plus, 
-  Edit, 
-  Trash2, 
-  Send,
-  CheckCircle,
+  CheckCircle, 
   AlertTriangle,
-  Star,
-  FileText,
-  MessageCircle,
-  Download,
-  Filter,
-  Search,
-  ChevronRight,
+  Plus,
+  Edit,
+  Trash2,
+  Eye,
   User,
-  BookOpen,
-  Award,
   TrendingUp,
-  Eye
-} from 'lucide-react';
-import { Card, CardHeader, CardBody } from '../../../components/ui/Card';
+  Send,
+  Download
+  } from 'lucide-react';
+import { Card, CardBody } from '../../../components/ui/Card';
 import { Button } from '../../../components/ui/Button';
 import { Input } from '../../../components/ui/Input';
-import { useAuth } from '../../../contexts/AuthContext';
 
 interface Review {
   _id: string;
@@ -82,7 +71,6 @@ interface Project {
 }
 
 export const ReviewScheduler: React.FC = () => {
-  const { user } = useAuth();
   const [reviews, setReviews] = useState<Review[]>([]);
   const [projects, setProjects] = useState<Project[]>([]);
   const [showCreateForm, setShowCreateForm] = useState(false);
@@ -416,7 +404,7 @@ export const ReviewScheduler: React.FC = () => {
       <div className="flex items-center gap-4">
         <div className="flex-1">
           <Input
-            placeholder="Search reviews, students, or projects..."
+            placeholder="reviews, students, or projects..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full"

@@ -8,10 +8,7 @@ import {
   BookOpen, 
   CheckCircle, 
   ArrowRight,
-  Users,
-  FileText,
-  BarChart3
-} from 'lucide-react';
+  } from 'lucide-react';
 
 export const LandingPage: React.FC = () => {
   const features = [

@@ -216,7 +216,7 @@ export const BadgeCollection: React.FC<BadgeCollectionProps> = ({
   onBadgeClick
 }) => {
   const earnedBadges = badges.filter(badge => badge.isEarned);
-  const unearnedBadges = badges.filter(badge => !badge.isEarned);
+  
   const displayBadges = showUnearned ? badges : earnedBadges;
   const limitedBadges = maxDisplay ? displayBadges.slice(0, maxDisplay) : displayBadges;
 
@@ -249,6 +249,7 @@ export const BadgeCollection: React.FC<BadgeCollectionProps> = ({
     </div>
   );
 };
+
 
 
 

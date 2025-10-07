@@ -3,30 +3,17 @@ import {
   Trophy, 
   Award, 
   Star, 
-  Target, 
-  Zap, 
-  Shield, 
   Crown, 
-  Medal,
   Flame,
   Rocket,
   Diamond,
-  Gem,
   CheckCircle,
-  Clock,
   Users,
   Code,
   Heart,
-  Eye,
-  MessageCircle,
-  Bookmark,
-  Share2,
-  TrendingUp,
   BarChart3,
-  Calendar,
   Gift,
-  Sparkles
-} from 'lucide-react';
+  } from 'lucide-react';
 import { Card, CardHeader, CardBody } from '../../../components/ui/Card';
 
 interface Achievement {
@@ -46,7 +33,7 @@ interface Achievement {
     xp: number;
     coins: number;
     badge?: string;
-  };
+  }
 }
 
 interface UserStats {
@@ -210,17 +197,6 @@ export const AchievementSystem: React.FC = () => {
       case 'epic': return 'bg-purple-100 text-purple-800';
       case 'legendary': return 'bg-yellow-100 text-yellow-800';
       default: return 'bg-gray-100 text-gray-800';
-    }
-  };
-
-  const getCategoryIcon = (category: string) => {
-    switch (category) {
-      case 'project': return <Code className="w-4 h-4" />;
-      case 'social': return <Heart className="w-4 h-4" />;
-      case 'learning': return <Bookmark className="w-4 h-4" />;
-      case 'collaboration': return <Users className="w-4 h-4" />;
-      case 'innovation': return <Diamond className="w-4 h-4" />;
-      default: return <Award className="w-4 h-4" />;
     }
   };
 

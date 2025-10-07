@@ -5,7 +5,7 @@ export const RegistrationSuccessUtils = {
     return data;
   },
   
-  validate: (data: any) => {
+  validate: (_data: any) => {
     return true;
   },
   

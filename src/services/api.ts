@@ -1,4 +1,4 @@
-import { User, UserRole } from '../types/auth.types';
+import { User, } from '../types/auth.types';
 
 // API Configuration and Service
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';

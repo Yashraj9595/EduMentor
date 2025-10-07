@@ -11,7 +11,6 @@ import {
   CheckCircle,
   AlertCircle
 } from 'lucide-react';
-import { Card, CardHeader, CardBody } from '../../../components/ui/Card';
 import { useAuth } from '../../../contexts/AuthContext';
 import { useParams } from 'react-router-dom';
 

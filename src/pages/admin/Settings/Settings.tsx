@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { User, Lock, Bell, Globe, LogOut } from 'lucide-react';
-import { Card, CardHeader, CardBody } from '../../../components/ui/Card';
+import { Card, CardBody } from '../../../components/ui/Card';
 import { useNavigate } from 'react-router-dom';
 import { PageLayout } from '../../../components/layout/PageLayout';
 import { Profile } from './components/Profile';

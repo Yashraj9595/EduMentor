@@ -8,8 +8,7 @@ import {
   Code, 
   Mic, 
   X,
-  Plus
-} from 'lucide-react';
+  } from 'lucide-react';
 import { ChatAttachment } from '../Chat.types';
 
 interface MessageInputProps {

@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { SettingsProps, SettingsState } from './Settings.types';
 
-export function useSettings(props: SettingsProps) {
-  const [state, setState] = useState<SettingsState>({});
+export function useSettings(_props: SettingsProps) {
+  const [state] = useState<SettingsState>({});
 
   useEffect(() => {
     // Add your effect logic here

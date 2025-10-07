@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { User, Mail, Phone, Calendar, MapPin, Building, Shield } from 'lucide-react';
+import { Mail, Phone, Calendar, MapPin, Building, } from 'lucide-react';
 import { Card, CardHeader, CardBody } from '../../../components/ui/Card';
 import { Button } from '../../../components/ui/Button';
 import { PageLayout } from '../../../components/layout/PageLayout';
@@ -41,7 +41,7 @@ const mockUsers = [
     lastName: 'Johnson', 
     email: 'robert.johnson@example.com', 
     phone: '+1 (555) 456-7890',
-    role: 'User',
+    role: '',
     status: 'inactive',
     joinDate: '2023-07-10',
     lastActive: '2023-12-15',
@@ -61,13 +61,13 @@ export const UserDetail: React.FC = () => {
     : 'bg-red-100 text-red-800';
 
   return (
-    <PageLayout title="User Details" showBackButton>
+    <PageLayout title="Details" showBackButton>
       <div className="space-y-6">
-        {/* User Profile Card */}
+        {/* Profile Card */}
         <Card>
           <CardBody>
             <div className="flex flex-col md:flex-row gap-6">
-              {/* User Avatar */}
+              {/* Avatar */}
               <div className="flex-shrink-0">
                 <div className="w-24 h-24 rounded-full bg-primary flex items-center justify-center mx-auto md:mx-0">
                   <span className="text-primary-foreground text-3xl font-bold">
@@ -76,7 +76,7 @@ export const UserDetail: React.FC = () => {
                 </div>
               </div>
               
-              {/* User Info */}
+              {/* Info */}
               <div className="flex-1">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                   <div>
@@ -134,16 +134,16 @@ export const UserDetail: React.FC = () => {
         
         {/* Action Buttons */}
         <div className="flex flex-wrap gap-3">
-          <Button variant="primary">Edit User</Button>
+          <Button variant="primary">Edit </Button>
           <Button variant="secondary">Send Message</Button>
           {user.status === 'active' ? (
-            <Button variant="danger">Deactivate User</Button>
+            <Button variant="danger">Deactivate </Button>
           ) : (
-            <Button variant="primary">Activate User</Button>
+            <Button variant="primary">Activate </Button>
           )}
         </div>
         
-        {/* User Activity */}
+        {/* Activity */}
         <Card>
           <CardHeader>
             <h3 className="text-lg font-semibold text-card-foreground">Recent Activity</h3>

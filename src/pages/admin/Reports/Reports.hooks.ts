@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { ReportsProps, ReportsState } from './Reports.types';
 
-export function useReports(props: ReportsProps) {
-  const [state, setState] = useState<ReportsState>({});
+export function useReports(_props: ReportsProps) {
+  const [state] = useState<ReportsState>({});
 
   useEffect(() => {
     // Add your effect logic here

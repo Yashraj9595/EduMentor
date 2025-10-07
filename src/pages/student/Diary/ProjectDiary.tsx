@@ -2,34 +2,23 @@ import React, { useState, useEffect } from 'react';
 import { 
   BookOpen, 
   Plus, 
-  Calendar, 
   Target, 
   Trophy, 
   Star,
   Clock,
   CheckCircle,
   AlertCircle,
-  FileText,
-  Upload,
   MessageCircle,
   TrendingUp,
   Award,
-  Zap,
-  Users,
-  BarChart3,
-  ChevronRight,
   Edit,
-  Trash2,
   Eye,
   Lock,
-  Unlock,
   FolderOpen,
-  ArrowLeft
-} from 'lucide-react';
+  } from 'lucide-react';
 import { Card, CardHeader, CardBody } from '../../../components/ui/Card';
 import { Button } from '../../../components/ui/Button';
-import { Input } from '../../../components/ui/Input';
-import { useAuth } from '../../../contexts/AuthContext';
+
 import { useParams, useNavigate } from 'react-router-dom';
 import { ProgressTimeline } from '../../../components/Gamification/ProgressTimeline';
 
@@ -106,7 +95,6 @@ interface ProjectProgress {
 
 export const ProjectDiary: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
-  const { user } = useAuth();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<'diary' | 'milestones' | 'progress' | 'reviews'>('diary');
   const [projects, setProjects] = useState<Project[]>([]);
@@ -114,7 +102,7 @@ export const ProjectDiary: React.FC = () => {
   const [diaryEntries, setDiaryEntries] = useState<DiaryEntry[]>([]);
   const [milestones, setMilestones] = useState<Milestone[]>([]);
   const [progress, setProgress] = useState<ProjectProgress | null>(null);
-  const [showCreateEntry, setShowCreateEntry] = useState(false);
+  
   const [loading, setLoading] = useState(true);
   const [showProjectSelector, setShowProjectSelector] = useState(!projectId);
 
@@ -428,7 +416,7 @@ export const ProjectDiary: React.FC = () => {
               <Target className="w-4 h-4" />
               View Progress
             </Button>
-            <Button onClick={() => setShowCreateEntry(true)} className="flex items-center gap-2">
+            <Button onClick={() => {}} className="flex items-center gap-2">
               <Plus className="w-4 h-4" />
               New Entry
             </Button>

@@ -4,10 +4,8 @@ import {
   Trophy, 
   Calendar, 
   BarChart3, 
-  CheckCircle,
   Clock,
   Target,
-  TrendingUp,
   Award,
   MessageSquare
 } from 'lucide-react';

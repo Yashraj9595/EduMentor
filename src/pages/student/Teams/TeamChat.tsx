@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useAuth } from '../../../contexts/AuthContext';
 import { 
   Send, 
   Paperclip, 
@@ -13,8 +14,7 @@ import {
   Plus,
   Settings
 } from 'lucide-react';
-import { Card, CardHeader, CardBody } from '../../../components/ui/Card';
-import { useAuth } from '../../../contexts/AuthContext';
+
 import { useParams } from 'react-router-dom';
 
 interface Message {
@@ -316,7 +316,7 @@ export const TeamChat: React.FC = () => {
           <div className="flex-1 flex flex-col">
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
               {messages.map((message) => {
-                const member = getMemberById(message.senderId);
+                
                 const isCurrentUser = message.senderId === user?._id;
                 
                 return (

@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { CheckCircle, ArrowRight } from 'lucide-react';
 import { Card, CardBody } from '../../../components/ui/Card';
 import { Button } from '../../../components/ui/Button';
 import { useAuth } from '../../../contexts/AuthContext';
 
+
 export const RegistrationSuccess: React.FC = () => {
   const navigate = useNavigate();
-  const location = useLocation();
+  
   const { setUser } = useAuth();
-  const [isLoggingIn, setIsLoggingIn] = useState(false);
+  
 
   useEffect(() => {
     // Get user data from session storage and log them in
@@ -17,7 +18,6 @@ export const RegistrationSuccess: React.FC = () => {
     const registrationEmail = sessionStorage.getItem('registrationEmail');
     
     if (userData && registrationEmail) {
-      setIsLoggingIn(true);
       try {
         const user = JSON.parse(userData);
         setUser(user);

@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
+import { useAuth } from '../../../contexts/AuthContext';
 import { 
   Users, 
   Plus, 
-  Mail, 
   User, 
   CheckCircle,
   XCircle,
   Send
 } from 'lucide-react';
 import { Card, CardHeader, CardBody } from '../../../components/ui/Card';
-import { useAuth } from '../../../contexts/AuthContext';
 
 interface TeamMember {
   id: string;
@@ -27,9 +26,9 @@ export const TeamFormation: React.FC = () => {
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>([
     {
       id: '1',
-      name: user?.firstName + ' ' + user?.lastName,
+      name: user?.firstName + ' ' + user?.lastName || 'You',
       email: user?.email || '',
-      role: 'Team Leader',
+      role: 'Team Lead',
       status: 'accepted'
     }
   ]);
@@ -40,9 +39,10 @@ export const TeamFormation: React.FC = () => {
         id: Date.now().toString(),
         name: 'Pending Invitation',
         email: newMemberEmail,
-        role: '',
+        role: 'Member', // Added default role
         status: 'pending'
       };
+      
       setTeamMembers([...teamMembers, newMember]);
       setNewMemberEmail('');
     }
@@ -52,16 +52,10 @@ export const TeamFormation: React.FC = () => {
     setTeamMembers(teamMembers.filter(member => member.id !== id));
   };
 
-  const handleRoleChange = (id: string, role: string) => {
-    setTeamMembers(teamMembers.map(member => 
-      member.id === id ? { ...member, role } : member
-    ));
-  };
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real app, this would send invitations to team members
-    alert('Team created and invitations sent!');
+    console.log('Team created:', { teamName, teamDescription, teamMembers });
+    // Handle team creation logic here
   };
 
   return (
@@ -118,42 +112,43 @@ export const TeamFormation: React.FC = () => {
               Team Members
             </h2>
           </CardHeader>
-          <CardBody>
-            <div className="space-y-4 mb-4">
+          <CardBody className="space-y-4">
+            <div className="space-y-3">
               {teamMembers.map((member) => (
-                <div key={member.id} className="flex items-center gap-4 p-4 border border-border rounded-lg">
-                  <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
-                    <User className="w-5 h-5 text-primary" />
-                  </div>
-                  
-                  <div className="flex-1">
-                    <h3 className="font-medium">{member.name}</h3>
-                    <p className="text-sm text-muted-foreground">{member.email}</p>
-                    {member.status !== 'accepted' && (
-                      <p className="text-xs text-yellow-600 mt-1">
-                        {member.status === 'pending' ? 'Invitation sent' : 'Invitation declined'}
-                      </p>
-                    )}
-                  </div>
-                  
-                  <div className="flex items-center gap-2">
-                    {member.status === 'accepted' ? (
-                      <CheckCircle className="w-5 h-5 text-green-500" />
-                    ) : member.status === 'declined' ? (
-                      <XCircle className="w-5 h-5 text-red-500" />
-                    ) : (
-                      <Send className="w-5 h-5 text-yellow-500" />
-                    )}
+                <div key={member.id} className="flex items-center justify-between p-3 border border-border rounded-lg">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
+                      <User className="w-5 h-5 text-primary" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-medium">{member.name}</h3>
+                      <p className="text-sm text-muted-foreground">{member.email}</p>
+                      {member.status !== 'accepted' && (
+                        <p className="text-xs text-yellow-600 mt-1">
+                          {member.status === 'pending' ? 'Invitation sent' : 'Invitation declined'}
+                        </p>
+                      )}
+                    </div>
                     
-                    {member.id !== teamMembers[0].id && (
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveMember(member.id)}
-                        className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-full"
-                      >
-                        <XCircle className="w-5 h-5" />
-                      </button>
-                    )}
+                    <div className="flex items-center gap-2">
+                      {member.status === 'accepted' ? (
+                        <CheckCircle className="w-5 h-5 text-green-500" />
+                      ) : member.status === 'declined' ? (
+                        <XCircle className="w-5 h-5 text-red-500" />
+                      ) : (
+                        <Send className="w-5 h-5 text-yellow-500" />
+                      )}
+                      
+                      {member.id !== teamMembers[0].id && (
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveMember(member.id)}
+                          className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-full"
+                        >
+                          <XCircle className="w-5 h-5" />
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
               ))}
@@ -162,15 +157,13 @@ export const TeamFormation: React.FC = () => {
             <div className="border-t border-border pt-4">
               <h3 className="font-medium mb-3">Add Team Member</h3>
               <div className="flex gap-2">
-                <div className="flex-1">
-                  <input
-                    type="email"
-                    value={newMemberEmail}
-                    onChange={(e) => setNewMemberEmail(e.target.value)}
-                    placeholder="Enter teammate's email"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-                  />
-                </div>
+                <input
+                  type="email"
+                  value={newMemberEmail}
+                  onChange={(e) => setNewMemberEmail(e.target.value)}
+                  placeholder="Enter email address"
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                />
                 <button
                   type="button"
                   onClick={handleAddMember}
@@ -184,13 +177,7 @@ export const TeamFormation: React.FC = () => {
           </CardBody>
         </Card>
 
-        <div className="flex justify-end gap-4">
-          <button
-            type="button"
-            className="px-6 py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
-          >
-            Cancel
-          </button>
+        <div className="flex justify-end">
           <button
             type="submit"
             className="px-6 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"

@@ -14,7 +14,6 @@ import {
   formatMessageTime, 
   isOwnMessage, 
   getMessageStatus, 
-  shouldShowTimestamp,
   shouldShowAvatar,
   formatMessageContent,
   getReactionEmoji,
@@ -38,7 +37,6 @@ interface MessageBubbleProps {
 
 export const MessageBubble: React.FC<MessageBubbleProps> = ({
   message,
-  previousMessage,
   nextMessage,
   currentUserId,
   users,

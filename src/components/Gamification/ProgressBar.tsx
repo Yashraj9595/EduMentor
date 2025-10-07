@@ -1,5 +1,5 @@
 import React from 'react';
-import { Trophy, Star, Zap, Target, Award, TrendingUp, Calendar } from 'lucide-react';
+import { Trophy, Target, TrendingUp, Calendar } from 'lucide-react';
 
 interface ProgressBarProps {
   current: number;

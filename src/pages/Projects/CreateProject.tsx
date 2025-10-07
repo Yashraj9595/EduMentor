@@ -1,29 +1,24 @@
 import React, { useState } from 'react';
-import { 
-  FileText, 
-  Plus, 
-  Lightbulb, 
-  Users, 
-  Link, 
-  Calendar,
-  Tag,
-  AlertCircle,
-  Upload,
-  Image as ImageIcon,
-  Video,
-  Code,
-  Globe,
-  Smartphone,
-  Database,
-  Cpu,
-  Zap,
-  Award,
-  Star
-} from 'lucide-react';
-import { Card, CardHeader, CardBody } from '../../components/ui/Card';
-import { useAuth } from '../../contexts/AuthContext';
-import { apiService } from '../../services/api';
 import { useNavigate } from 'react-router-dom';
+import { apiService } from '../../services/api';
+import { 
+  Cpu, 
+  Zap, 
+  Database, 
+  Globe, 
+  Smartphone, 
+  Code,
+  Plus,
+  Upload,
+  Users,
+  Calendar,
+  AlertCircle,
+  Award,
+  FileText,
+  Lightbulb,
+  Tag
+  } from 'lucide-react';
+import { Card, CardHeader, CardBody } from '../../components/ui/Card';
 
 interface TeamMember {
   email: string;
@@ -38,7 +33,6 @@ interface Milestone {
 }
 
 export const CreateProject: React.FC = () => {
-  const { user } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -94,16 +88,12 @@ export const CreateProject: React.FC = () => {
     }
   };
 
-  const getCategoryIcon = (category: string) => {
-    switch (category) {
-      case 'AI/ML': return <Cpu className="w-4 h-4" />;
-      case 'IoT': return <Zap className="w-4 h-4" />;
-      case 'Blockchain': return <Database className="w-4 h-4" />;
-      case 'Web Development': return <Globe className="w-4 h-4" />;
-      case 'Mobile': return <Smartphone className="w-4 h-4" />;
-      default: return <Code className="w-4 h-4" />;
-    }
-  };
+
+
+
+
+
+
 
   const categories = [
     { value: '', label: 'Select Category' },
@@ -406,7 +396,7 @@ export const CreateProject: React.FC = () => {
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                 >
                   {categories.map((category) => {
-                    const Icon = category.icon;
+                    
                     return (
                       <option key={category.value} value={category.value}>
                         {category.label}
@@ -858,7 +848,7 @@ export const CreateProject: React.FC = () => {
         <Card>
           <CardHeader>
             <h2 className="text-xl font-semibold flex items-center gap-2">
-              <ImageIcon className="w-5 h-5" />
+              <Upload className="w-5 h-5" />
               Project Gallery
             </h2>
           </CardHeader>
@@ -890,7 +880,7 @@ export const CreateProject: React.FC = () => {
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                   >
                     <option value="image">Image</option>
-                    <option value="video">Video</option>
+                    <option value="video"></option>
                   </select>
                 </div>
                 
@@ -955,7 +945,7 @@ export const CreateProject: React.FC = () => {
                 <label htmlFor="thumbnail" className="cursor-pointer">
                   {formData.thumbnail ? (
                     <div className="space-y-2">
-                      <ImageIcon className="w-8 h-8 text-primary mx-auto" />
+                      <Upload className="w-8 h-8 text-primary mx-auto" />
                       <p className="text-sm text-gray-600">{formData.thumbnail.name}</p>
                     </div>
                   ) : (
@@ -970,7 +960,7 @@ export const CreateProject: React.FC = () => {
 
             <div>
               <label htmlFor="videoUrl" className="block text-sm font-medium text-gray-700 mb-1">
-                Demo Video URL
+                Demo URL
               </label>
               <input
                 type="url"
@@ -986,8 +976,7 @@ export const CreateProject: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
                 <label htmlFor="repositoryLink" className="block text-sm font-medium text-gray-700 mb-1">
-                  Repository Link
-                </label>
+                  Repository </label>
                 <input
                   type="url"
                   id="repositoryLink"

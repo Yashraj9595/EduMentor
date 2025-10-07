@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { UsersProps, UsersState } from './Users.types';
 
-export function useUsers(props: UsersProps) {
-  const [state, setState] = useState<UsersState>({});
+export function useUsers(_props: UsersProps) {
+  const [state] = useState<UsersState>({});
 
   useEffect(() => {
     // Add your effect logic here

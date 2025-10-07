@@ -3,26 +3,22 @@ import {
   Search, 
   Plus, 
   Pin, 
-  MoreVertical, 
   MessageCircle, 
   Users, 
   FolderOpen, 
   GraduationCap, 
   Calendar,
   Filter,
-  Settings
-} from 'lucide-react';
+  } from 'lucide-react';
 import { Chat, ChatUser } from '../Chat.types';
 import { 
   getChatDisplayName, 
   getChatAvatar, 
   formatTimestamp, 
-  getChatTypeIcon,
   getChatTypeColor,
   sortChats,
   filterChats,
-  getUserInitials
-} from '../Chat.utils';
+  } from '../Chat.utils';
 
 interface ChatSidebarProps {
   chats: Chat[];

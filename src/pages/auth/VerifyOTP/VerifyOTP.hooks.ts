@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { VerifyOTPProps, VerifyOTPState } from './VerifyOTP.types';
 
-export function useVerifyOTP(props: VerifyOTPProps) {
-  const [state, setState] = useState<VerifyOTPState>({});
+export function useVerifyOTP(_props: VerifyOTPProps) {
+  const [state] = useState<VerifyOTPState>({});
 
   useEffect(() => {
     // Add your effect logic here

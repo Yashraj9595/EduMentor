@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useAuth } from '../../../contexts/AuthContext';
 import { 
   FileText, 
   Clock, 
@@ -6,24 +7,16 @@ import {
   Trophy, 
   Bell,
   Plus, 
-  Calendar,
   CheckCircle,
-  AlertCircle,
-  Target,
   Award,
   BookOpen,
-  User,
   Settings,
   Search,
-  Filter,
-  BarChart3,
-  MessageSquare,
-  Link as LinkIcon,
-  TrendingUp,
+  Link as TrendingUp,
   Star
 } from 'lucide-react';
 import { Card, CardHeader, CardBody } from '../../../components/ui/Card';
-import { useAuth } from '../../../contexts/AuthContext';
+
 import { apiService } from '../../../services/api';
 
 interface Project {

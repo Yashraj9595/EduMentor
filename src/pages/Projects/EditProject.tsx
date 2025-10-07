@@ -19,7 +19,6 @@ import {
   ArrowLeft
 } from 'lucide-react';
 import { Card, CardHeader, CardBody } from '../../components/ui/Card';
-import { useAuth } from '../../contexts/AuthContext';
 import { apiService } from '../../services/api';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -453,7 +452,7 @@ export const EditProject: React.FC = () => {
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                 >
                   {categories.map((category) => {
-                    const Icon = category.icon;
+                    
                     return (
                       <option key={category.value} value={category.value}>
                         {category.label}
@@ -1107,6 +1106,7 @@ export const EditProject: React.FC = () => {
     </div>
   );
 };
+
 
 
 

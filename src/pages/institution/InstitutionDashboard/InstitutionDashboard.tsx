@@ -1,26 +1,18 @@
-import React, { useState } from 'react';
+import React, { } from 'react';
+import { useAuth } from '../../../contexts/AuthContext';
 import { 
   Building, 
   Users, 
   FileText, 
   Trophy, 
   BarChart3, 
-  Target, 
-  Award,
-  TrendingUp,
   MessageSquare,
-  Calendar,
   GraduationCap,
   UserCheck,
   Settings,
-  Database,
-  Activity,
-  Search,
-  Filter,
-  Plus
-} from 'lucide-react';
+  } from 'lucide-react';
 import { Card, CardHeader, CardBody } from '../../../components/ui/Card';
-import { useAuth } from '../../../contexts/AuthContext';
+
 
 export const InstitutionDashboard: React.FC = () => {
   const { user } = useAuth();
@@ -175,10 +167,10 @@ export const InstitutionDashboard: React.FC = () => {
         </div>
       </div>
 
-      {/* Recent Activity */}
+      {/* Recent */}
       <Card>
         <CardHeader>
-          <h2 className="text-lg font-semibold text-card-foreground">Recent Institutional Activity</h2>
+          <h2 className="text-lg font-semibold text-card-foreground">Recent Institutional </h2>
         </CardHeader>
         <CardBody>
           <div className="space-y-4">

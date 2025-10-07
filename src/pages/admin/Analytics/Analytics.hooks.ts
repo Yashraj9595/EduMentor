@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { AnalyticsProps, AnalyticsState } from './Analytics.types';
 
-export function useAnalytics(props: AnalyticsProps) {
-  const [state, setState] = useState<AnalyticsState>({});
+export function useAnalytics(_props: AnalyticsProps) {
+  const [state] = useState<AnalyticsState>({});
 
   useEffect(() => {
     // Add your effect logic here

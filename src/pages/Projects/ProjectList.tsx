@@ -1,40 +1,34 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { apiService } from '../../services/api';
 import { 
-  FileText, 
-  Plus, 
   Search, 
-  Filter, 
-  Calendar, 
-  User, 
-  Clock, 
-  CheckCircle,
+  Plus, 
+  Grid, 
+  List, 
+  Cpu, 
+  Zap, 
+  Database, 
+  Globe, 
+  Smartphone, 
+  Code,
   Eye,
-  Edit3,
+  Share2,
+  Calendar,
+  Users,
+  Play,
+  BookOpen,
+  Filter,
+  FileText,
+  Tag,
   Heart,
   MessageCircle,
-  Bookmark,
-  Share2,
-  Star,
-  Award,
+  User,
   ExternalLink,
-  Grid,
-  List,
-  Tag,
-  Code,
-  Globe,
-  Smartphone,
-  Database,
-  Cpu,
-  Zap,
-  Play,
-  Image as ImageIcon,
-  Users,
-  BookOpen
-} from 'lucide-react';
-import { Card, CardHeader, CardBody } from '../../components/ui/Card';
-import { useAuth } from '../../contexts/AuthContext';
-import { apiService } from '../../services/api';
-import { useNavigate } from 'react-router-dom';
+  Bookmark,
+  Edit3
+  } from 'lucide-react';
+import { Card, CardBody } from '../../components/ui/Card';
 
 interface Project {
   _id: string;
@@ -75,7 +69,6 @@ interface Project {
 }
 
 export const ProjectList: React.FC = () => {
-  const { user } = useAuth();
   const navigate = useNavigate();
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);

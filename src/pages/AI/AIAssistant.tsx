@@ -9,8 +9,7 @@ import {
   Loader,
   Copy
 } from 'lucide-react';
-import { Card, CardHeader, CardBody } from '../../../components/ui/Card';
-import { useAuth } from '../../../contexts/AuthContext';
+import { useAuth } from '../../contexts/AuthContext';
 
 interface ChatMessage {
   id: string;
@@ -34,7 +33,7 @@ export const AIAssistant: React.FC = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputMessage, setInputMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  const [activeFeature, setActiveFeature] = useState<string | null>(null);
+  const [activeFeature] = useState<string | null>(null);
 
   useEffect(() => {
     // Initialize with welcome message

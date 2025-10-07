@@ -4,8 +4,7 @@ import {
   FileText, 
   Video, 
   Image, 
-  Link as LinkIcon, 
-  CheckCircle,
+  Link as CheckCircle,
   AlertCircle,
   Clock,
   Trophy,
@@ -16,7 +15,7 @@ import {
   Eye
 } from 'lucide-react';
 import { Card, CardHeader, CardBody } from '../../../components/ui/Card';
-import { useAuth } from '../../../contexts/AuthContext';
+
 import { useParams, useNavigate } from 'react-router-dom';
 
 interface Hackathon {
@@ -73,7 +72,6 @@ interface FileUpload {
 }
 
 export const HackathonSubmission: React.FC = () => {
-  const { user } = useAuth();
   const navigate = useNavigate();
   const { hackathonId } = useParams<{ hackathonId: string }>();
   const [hackathon, setHackathon] = useState<Hackathon | null>(null);

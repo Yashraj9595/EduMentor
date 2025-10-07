@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { ResetPasswordProps, ResetPasswordState } from './ResetPassword.types';
 
-export function useResetPassword(props: ResetPasswordProps) {
-  const [state, setState] = useState<ResetPasswordState>({});
+export function useResetPassword(_props: ResetPasswordProps) {
+  const [state] = useState<ResetPasswordState>({});
 
   useEffect(() => {
     // Add your effect logic here

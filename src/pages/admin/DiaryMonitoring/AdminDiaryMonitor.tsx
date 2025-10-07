@@ -2,55 +2,55 @@ import React, { useState, useEffect } from 'react';
 import { 
   Users, 
   BookOpen, 
-  Calendar, 
+   
   Target, 
-  AlertTriangle,
-  CheckCircle,
-  Clock,
+  
+  
+  
   MessageCircle,
   TrendingUp,
   BarChart3,
   Eye,
   Edit,
   Download,
-  Filter,
-  Search,
+  
+  
   User,
   FileText,
   ThumbsUp,
-  ThumbsDown,
+  
   Flag,
   Activity,
   Zap,
-  Award,
+  
   Shield,
-  Database,
+  
   PieChart,
-  LineChart,
-  TrendingDown,
+  
+  
   RefreshCw,
   Settings,
-  Bell,
-  Mail,
-  Phone,
-  MapPin,
-  Globe,
-  Lock,
-  Unlock,
-  Key,
-  Star,
-  Heart,
-  Flame,
-  Crown,
-  Gem,
-  Sword,
-  Rocket,
-  Lightbulb,
-  Code,
-  Cpu,
-  Globe as GlobeIcon,
-  Gift,
-  Sparkles
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 } from 'lucide-react';
 import { Card, CardHeader, CardBody } from '../../../components/ui/Card';
 import { Button } from '../../../components/ui/Button';
@@ -141,7 +141,7 @@ interface SystemStats {
 }
 
 export const AdminDiaryMonitor: React.FC = () => {
-  const { user } = useAuth();
+  const { } = useAuth();
   const [activeTab, setActiveTab] = useState<'overview' | 'activities' | 'mentors' | 'students' | 'reports'>('overview');
   const [activities, setActivities] = useState<ProjectActivity[]>([]);
   const [mentorActivities, setMentorActivities] = useState<MentorActivity[]>([]);
@@ -151,7 +151,7 @@ export const AdminDiaryMonitor: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const [filterPriority, setFilterPriority] = useState<string>('all');
-  const [dateRange, setDateRange] = useState<string>('7d');
+  const [dateRange] = useState<string>('7d');
 
   useEffect(() => {
     fetchData();

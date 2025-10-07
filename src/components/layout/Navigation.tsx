@@ -18,8 +18,7 @@ import {
   BookOpen,
   Calendar,
   Shield,
-  Target
-} from 'lucide-react';
+  } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { ThemeToggle } from '../ThemeToggle';
 

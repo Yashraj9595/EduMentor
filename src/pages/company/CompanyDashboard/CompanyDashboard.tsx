@@ -6,8 +6,6 @@ import {
   BarChart3, 
   Target, 
   Award,
-  TrendingUp,
-  MessageSquare,
   Calendar
 } from 'lucide-react';
 import { Card, CardHeader, CardBody } from '../../../components/ui/Card';

@@ -3,14 +3,10 @@ import {
   Users, 
   BarChart3, 
   Settings, 
-  Shield, 
-  Database, 
-  Activity,
   GraduationCap,
   UserCheck,
   Calendar,
   Trophy,
-  TrendingUp,
   FileText
 } from 'lucide-react';
 import { Card, CardHeader, CardBody } from '../../../components/ui/Card';
@@ -169,10 +165,10 @@ export const AdminDashboard: React.FC = () => {
         </div>
       </div>
 
-      {/* Recent Activity */}
+      {/* Recent */}
       <Card>
         <CardHeader>
-          <h2 className="text-lg font-semibold text-card-foreground">Recent Institutional Activity</h2>
+          <h2 className="text-lg font-semibold text-card-foreground">Recent Institutional </h2>
         </CardHeader>
         <CardBody>
           <div className="space-y-4">

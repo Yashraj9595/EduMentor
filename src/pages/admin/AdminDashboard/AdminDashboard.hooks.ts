@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { AdminDashboardProps, AdminDashboardState } from './AdminDashboard.types';
 
-export function useAdminDashboard(props: AdminDashboardProps) {
-  const [state, setState] = useState<AdminDashboardState>({});
+export function useAdminDashboard(_props: AdminDashboardProps) {
+  const [state] = useState<AdminDashboardState>({});
 
   useEffect(() => {
     // Add your effect logic here

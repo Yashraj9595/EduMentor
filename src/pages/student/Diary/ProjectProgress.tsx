@@ -1,22 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Target, 
-  TrendingUp, 
-  Calendar, 
   Award, 
   Star,
   Trophy,
-  BookOpen,
-  ArrowLeft,
   BarChart3,
-  Clock,
-  CheckCircle,
-  AlertCircle
-} from 'lucide-react';
+  } from 'lucide-react';
 import { Card, CardHeader, CardBody } from '../../../components/ui/Card';
-import { Button } from '../../../components/ui/Button';
-import { useAuth } from '../../../contexts/AuthContext';
-import { useParams, useNavigate } from 'react-router-dom';
+
+import { useParams } from 'react-router-dom';
 import { ProgressTimeline } from '../../../components/Gamification/ProgressTimeline';
 
 interface ProjectProgress {
@@ -47,8 +39,7 @@ interface ProjectProgress {
 
 export const ProjectProgress: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
-  const { user } = useAuth();
-  const navigate = useNavigate();
+  
   const [progress, setProgress] = useState<ProjectProgress | null>(null);
   const [loading, setLoading] = useState(true);
 
