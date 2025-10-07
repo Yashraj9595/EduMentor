@@ -1,7 +1,7 @@
 import { User, } from '../types/auth.types';
 
 // API Configuration and Service
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://edumentor-crwa.onrender.com/api/v1';
 
 // Log the API URL for debugging
 console.log('API Base URL:', API_BASE_URL);
