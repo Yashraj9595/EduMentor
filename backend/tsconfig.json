@@ -22,7 +22,6 @@
     "noFallthroughCasesInSwitch": false,
     "moduleResolution": "node",
     "baseUrl": "./",
-    "types": ["node"],
     "paths": {
       "@/*": ["src/*"],
       "@/models/*": ["src/models/*"],
