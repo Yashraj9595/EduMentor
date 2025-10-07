@@ -4,10 +4,10 @@
   "description": "Node.js Express TypeScript backend with MongoDB and role-based authentication",
   "main": "dist/server.js",
   "scripts": {
-    "dev": "NODE_ENV=production node --max-old-space-size=512 dist/server.js",
+    "dev": "cross-env NODE_ENV=production node --max-old-space-size=512 dist/server.js",
     "build": "tsc",
-    "start": "NODE_ENV=production node --max-old-space-size=512 dist/server.js",
-    "start:prod": "NODE_ENV=production node --max-old-space-size=512 dist/server.js",
+    "start": "cross-env NODE_ENV=production node --max-old-space-size=512 dist/server.js",
+    "start:prod": "cross-env NODE_ENV=production node --max-old-space-size=512 dist/server.js",
     "test": "jest",
     "lint": "eslint src/**/*.ts",
     "lint:fix": "eslint src/**/*.ts --fix"
@@ -30,6 +30,7 @@
     "moment": "^2.29.4",
     "express-mongo-sanitize": "^2.2.0",
     "compression": "^1.7.4",
+    "cross-env": "^7.0.3",
     "@types/node": "^20.10.4"
   },
   "devDependencies": {
