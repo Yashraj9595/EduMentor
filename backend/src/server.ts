@@ -7,6 +7,16 @@ import mongoSanitize from 'express-mongo-sanitize';
 import { config } from './config/config';
 import connectDB from './config/database';
 
+// Memory optimization for production
+if (process.env.NODE_ENV === 'production') {
+  // Force garbage collection more frequently
+  if (typeof global.gc === 'function') {
+    setInterval(() => {
+      global.gc!();
+    }, 30000); // Run GC every 30 seconds
+  }
+}
+
 // Import routes
 import authRoutes from './routes/auth';
 import userRoutes from './routes/users';
