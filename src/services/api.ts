@@ -1,7 +1,7 @@
 import { User, } from '../types/auth.types';
 
 // API Configuration and Service
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://edumentor-crwa.onrender.com/api/v1';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
 
 // Log the API URL for debugging
 console.log('API Base URL:', API_BASE_URL);
@@ -40,7 +40,7 @@ export interface ResetPasswordResponse {
 
 // API Service Class
 class ApiService {
-  private baseURL: string;
+  public baseURL: string;
   private defaultHeaders: Record<string, string>;
 
   constructor() {
@@ -51,7 +51,7 @@ class ApiService {
   }
 
   // Get auth token from localStorage
-  private getAuthToken(): string | null {
+  public getAuthToken(): string | null {
     const token = localStorage.getItem('accessToken');
     console.log('Retrieved access token from localStorage:', !!token);
     return token;
@@ -147,9 +147,17 @@ class ApiService {
           data 
         });
         // Include validation errors in the error message if available
-        const errorMessage = data.message || 'Request failed';
-        const errorDetails = data.errors ? `: ${JSON.stringify(data.errors)}` : '';
-        throw new Error(errorMessage + errorDetails);
+        let errorMessage = data.message || 'Request failed';
+        if (data.errors && Array.isArray(data.errors)) {
+          errorMessage += ': ' + data.errors.join(', ');
+        } else if (data.error) {
+          errorMessage += ': ' + data.error;
+        }
+        // Make database validation errors more user-friendly
+        if (errorMessage.includes('Cast to ObjectId failed')) {
+          errorMessage = 'Invalid data format. Please check that all ID fields contain valid user IDs, not email addresses.';
+        }
+        throw new Error(errorMessage);
       }
 
       return data;
@@ -345,6 +353,176 @@ class ApiService {
       method: 'PUT',
       body: JSON.stringify(data)
     });
+  }
+
+    // Notification API Methods
+  async getNotifications(params?: { limit?: number; offset?: number; read?: boolean }): Promise<ApiResponse<any>> {
+    const queryParams = new URLSearchParams();
+    if (params?.limit) queryParams.append('limit', params.limit.toString());
+    if (params?.offset) queryParams.append('offset', params.offset.toString());
+    if (params?.read !== undefined) queryParams.append('read', params.read.toString());
+    
+    const queryString = queryParams.toString() ? `?${queryParams.toString()}` : '';
+    return this.get(`/notifications${queryString}`);
+  }
+
+  async markNotificationAsRead(id: string): Promise<ApiResponse<any>> {
+    return this.put(`/notifications/${id}/read`, {});
+  }
+
+  async markAllNotificationsAsRead(): Promise<ApiResponse<any>> {
+    return this.put(`/notifications/read-all`, {});
+  }
+
+  async deleteNotification(id: string): Promise<ApiResponse<any>> {
+    return this.delete(`/notifications/${id}`);
+  }
+
+  async getUnreadNotificationsCount(): Promise<ApiResponse<{ count: number }>> {
+    return this.get(`/notifications/unread-count`);
+  }
+
+  // Hackathon API Methods
+  async createHackathon(hackathonData: any): Promise<ApiResponse<any>> {
+    return this.post('/hackathons', hackathonData);
+  }
+
+  async getAllHackathons(params?: {
+    page?: number;
+    limit?: number;
+    status?: string;
+    organizerId?: string;
+    search?: string;
+    sortBy?: string;
+    sortOrder?: string;
+  }): Promise<ApiResponse<any>> {
+    const queryParams = new URLSearchParams();
+    if (params?.page) queryParams.append('page', params.page.toString());
+    if (params?.limit) queryParams.append('limit', params.limit.toString());
+    if (params?.status) queryParams.append('status', params.status);
+    if (params?.organizerId) queryParams.append('organizerId', params.organizerId);
+    if (params?.search) queryParams.append('search', params.search);
+    if (params?.sortBy) queryParams.append('sortBy', params.sortBy);
+    if (params?.sortOrder) queryParams.append('sortOrder', params.sortOrder);
+    
+    const queryString = queryParams.toString() ? `?${queryParams.toString()}` : '';
+    return this.get(`/hackathons${queryString}`);
+  }
+
+  async getHackathonById(id: string): Promise<ApiResponse<any>> {
+    return this.get(`/hackathons/${id}`);
+  }
+
+  async updateHackathon(id: string, hackathonData: any): Promise<ApiResponse<any>> {
+    return this.put(`/hackathons/${id}`, hackathonData);
+  }
+
+  async deleteHackathon(id: string): Promise<ApiResponse<any>> {
+    return this.delete(`/hackathons/${id}`);
+  }
+
+  async publishHackathon(id: string): Promise<ApiResponse<any>> {
+    return this.request(`/hackathons/${id}/publish`, {
+      method: 'PATCH'
+    });
+  }
+
+  async getHackathonsByOrganizer(organizerId: string, params?: {
+    page?: number;
+    limit?: number;
+    status?: string;
+  }): Promise<ApiResponse<any>> {
+    const queryParams = new URLSearchParams();
+    if (params?.page) queryParams.append('page', params.page.toString());
+    if (params?.limit) queryParams.append('limit', params.limit.toString());
+    if (params?.status) queryParams.append('status', params.status);
+    
+    const queryString = queryParams.toString() ? `?${queryParams.toString()}` : '';
+    return this.get(`/hackathons/organizer/${organizerId}${queryString}`);
+  }
+
+  async getHackathonStats(id: string): Promise<ApiResponse<any>> {
+    return this.get(`/hackathons/${id}/stats`);
+  }
+
+  // Hackathon Registration API Methods
+  async registerForHackathon(hackathonId: string, registrationData: any): Promise<ApiResponse<any>> {
+    return this.post(`/hackathon-registrations/${hackathonId}/register`, registrationData);
+  }
+
+  async getUserRegistrations(params?: {
+    page?: number;
+    limit?: number;
+    status?: string;
+  }): Promise<ApiResponse<any>> {
+    const queryParams = new URLSearchParams();
+    if (params?.page) queryParams.append('page', params.page.toString());
+    if (params?.limit) queryParams.append('limit', params.limit.toString());
+    if (params?.status) queryParams.append('status', params.status);
+    
+    const queryString = queryParams.toString() ? `?${queryParams.toString()}` : '';
+    return this.get(`/hackathon-registrations/my-registrations${queryString}`);
+  }
+
+  async cancelRegistration(hackathonId: string): Promise<ApiResponse<any>> {
+    return this.delete(`/hackathon-registrations/${hackathonId}/register`);
+  }
+
+  async getHackathonParticipants(hackathonId: string, params?: {
+    page?: number;
+    limit?: number;
+  }): Promise<ApiResponse<any>> {
+    const queryParams = new URLSearchParams();
+    if (params?.page) queryParams.append('page', params.page.toString());
+    if (params?.limit) queryParams.append('limit', params.limit.toString());
+    
+    const queryString = queryParams.toString() ? `?${queryParams.toString()}` : '';
+    return this.get(`/hackathon-registrations/${hackathonId}/participants${queryString}`);
+  }
+
+  // Hackathon Submission API Methods
+  async submitProject(hackathonId: string, submissionData: any): Promise<ApiResponse<any>> {
+    return this.post(`/hackathon-submissions/${hackathonId}/submit`, submissionData);
+  }
+
+  async getUserSubmissions(params?: {
+    page?: number;
+    limit?: number;
+    status?: string;
+  }): Promise<ApiResponse<any>> {
+    const queryParams = new URLSearchParams();
+    if (params?.page) queryParams.append('page', params.page.toString());
+    if (params?.limit) queryParams.append('limit', params.limit.toString());
+    if (params?.status) queryParams.append('status', params.status);
+    
+    const queryString = queryParams.toString() ? `?${queryParams.toString()}` : '';
+    return this.get(`/hackathon-submissions/my-submissions${queryString}`);
+  }
+
+  async updateSubmission(hackathonId: string, submissionId: string, submissionData: any): Promise<ApiResponse<any>> {
+    return this.put(`/hackathon-submissions/${hackathonId}/submissions/${submissionId}`, submissionData);
+  }
+
+  async deleteSubmission(hackathonId: string, submissionId: string): Promise<ApiResponse<any>> {
+    return this.delete(`/hackathon-submissions/${hackathonId}/submissions/${submissionId}`);
+  }
+
+  async getHackathonSubmissions(hackathonId: string, params?: {
+    page?: number;
+    limit?: number;
+    status?: string;
+  }): Promise<ApiResponse<any>> {
+    const queryParams = new URLSearchParams();
+    if (params?.page) queryParams.append('page', params.page.toString());
+    if (params?.limit) queryParams.append('limit', params.limit.toString());
+    if (params?.status) queryParams.append('status', params.status);
+    
+    const queryString = queryParams.toString() ? `?${queryParams.toString()}` : '';
+    return this.get(`/hackathon-submissions/${hackathonId}/submissions${queryString}`);
+  }
+
+  async getSubmissionDetails(hackathonId: string, submissionId: string): Promise<ApiResponse<any>> {
+    return this.get(`/hackathon-submissions/${hackathonId}/submissions/${submissionId}`);
   }
 
   // Generic DELETE request

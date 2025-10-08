@@ -16,10 +16,14 @@ import {
   Cpu,
   Zap,
   Award,
-  ArrowLeft
+  ArrowLeft,
+  X,
+  User,
+  Star
 } from 'lucide-react';
 import { Card, CardHeader, CardBody } from '../../components/ui/Card';
 import { apiService } from '../../services/api';
+import { useToast } from '../../contexts/ToastContext';
 import { useNavigate, useParams } from 'react-router-dom';
 
 interface TeamMember {
@@ -34,9 +38,18 @@ interface Milestone {
   status: 'pending' | 'in_progress' | 'completed';
 }
 
+interface Mentor {
+  id: string;
+  name: string;
+  department: string;
+  expertise: string[];
+  rating: number;
+}
+
 export const EditProject: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
+  const { showSuccess, showError } = useToast();
   const [loading, setLoading] = useState(false);
   const [fetchLoading, setFetchLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -47,6 +60,12 @@ export const EditProject: React.FC = () => {
   const [challenges, setChallenges] = useState<string[]>(['']);
   const [achievements, setAchievements] = useState<string[]>(['']);
   const [gallery, setGallery] = useState<Array<{ id: string; url: string; type: 'image' | 'video'; caption: string }>>([]);
+  const [showMentorModal, setShowMentorModal] = useState(false);
+  const [mentors, setMentors] = useState<Mentor[]>([]);
+  const [selectedMentor, setSelectedMentor] = useState<Mentor | null>(null);
+  const [mentorRequestLoading, setMentorRequestLoading] = useState(false);
+  const [mentorRequestSuccess, setMentorRequestSuccess] = useState(false);
+  const [loadingMentors, setLoadingMentors] = useState(false);
   
   const [formData, setFormData] = useState({
     title: '',
@@ -286,25 +305,58 @@ export const EditProject: React.FC = () => {
         throw new Error('End date must be after start date');
       }
 
+      // Validate required fields
+      if (!formData.title.trim()) {
+        throw new Error('Project title is required');
+      }
+      if (!formData.description.trim()) {
+        throw new Error('Project description is required');
+      }
+      if (!formData.problemStatement.trim()) {
+        throw new Error('Problem statement is required');
+      }
+      if (!formData.category) {
+        throw new Error('Project category is required');
+      }
+
+      // Process mentorId - if it's an email, we should look up the user ID
+      // For now, we'll only send mentorId if it looks like a valid ObjectId
+      let mentorIdToSend;
+      if (formData.mentorId) {
+        // Check if it's a valid ObjectId format (24-character hex string)
+        if (/^[0-9a-fA-F]{24}$/.test(formData.mentorId)) {
+          mentorIdToSend = formData.mentorId;
+        } else {
+          // If it's not a valid ObjectId, we should not send it
+          // In a real app, we would look up the user by email and get their ID
+          console.warn('Invalid mentorId format, not sending to backend:', formData.mentorId);
+        }
+      }
+
       const projectData = {
-        title: formData.title,
-        description: formData.description,
-        longDescription: formData.longDescription,
+        title: formData.title.trim(),
+        description: formData.description.trim(),
+        longDescription: formData.longDescription?.trim() || undefined,
         category: formData.category,
         technologies: formData.technologies.split(',').map(tech => tech.trim()).filter(tech => tech),
         startDate: formData.startDate,
         endDate: formData.endDate,
         deliverables: deliverables.filter(deliverable => deliverable.trim()),
-        milestones: milestones.filter(milestone => milestone.title.trim() && milestone.description.trim()),
+        milestones: milestones.filter(milestone => 
+          milestone.title.trim() && milestone.description.trim()
+        ).map(milestone => ({
+          ...milestone,
+          dueDate: milestone.dueDate || new Date().toISOString().split('T')[0]
+        })),
         tags: formData.tags.split(',').map(tag => tag.trim()).filter(tag => tag),
-        problemStatement: formData.problemStatement,
-        repositoryLink: formData.repositoryLink,
-        liveUrl: formData.liveUrl,
-        documentationUrl: formData.documentationUrl,
-        videoUrl: formData.videoUrl,
+        problemStatement: formData.problemStatement.trim(),
+        repositoryLink: formData.repositoryLink?.trim() || undefined,
+        liveUrl: formData.liveUrl?.trim() || undefined,
+        documentationUrl: formData.documentationUrl?.trim() || undefined,
+        videoUrl: formData.videoUrl?.trim() || undefined,
         teamMembers: teamMembers.filter(member => member.email && member.role),
         status: formData.status,
-        mentorId: formData.mentorId || undefined,
+        mentorId: mentorIdToSend, // Use the processed mentorId
         objectives: objectives.filter(objective => objective.trim()),
         challenges: challenges.filter(challenge => challenge.trim()),
         achievements: achievements.filter(achievement => achievement.trim()),
@@ -316,13 +368,64 @@ export const EditProject: React.FC = () => {
       console.log('Project update response:', response);
       
       // Show success message and redirect
-      alert('Project updated successfully!');
+      showSuccess('Project Updated', 'Your project has been updated successfully!');
       navigate(`/app/student/projects/${id}`);
     } catch (err) {
+      console.error('Project update error:', err);
+      showError('Project Update Failed', err instanceof Error ? err.message : 'Failed to update project');
       setError(err instanceof Error ? err.message : 'Failed to update project');
     } finally {
       setLoading(false);
     }
+  };
+
+  const fetchMentors = async () => {
+    try {
+      setLoadingMentors(true);
+      // In a real app, fetch mentors from API
+      // For now, we'll use mock data
+      const mockMentors: Mentor[] = [
+        {
+          id: '1',
+          name: 'Dr. Sarah Johnson',
+          department: 'Computer Science',
+          expertise: ['AI', 'Machine Learning'],
+          rating: 4.8
+        },
+        {
+          id: '2',
+          name: 'Prof. Michael Chen',
+          department: 'Electrical Engineering',
+          expertise: ['IoT', 'Embedded Systems'],
+          rating: 4.6
+        },
+        {
+          id: '3',
+          name: 'Dr. Emily Rodriguez',
+          department: 'Information Technology',
+          expertise: ['Web Development', 'Cloud Computing'],
+          rating: 4.9
+        }
+      ];
+      setMentors(mockMentors);
+    } catch (err) {
+      console.error('Error fetching mentors:', err);
+    } finally {
+      setLoadingMentors(false);
+    }
+  };
+
+  const handleSelectMentorClick = () => {
+    setShowMentorModal(true);
+    fetchMentors();
+  };
+
+  const handleMentorSelect = (mentor: Mentor) => {
+    setFormData(prev => ({
+      ...prev,
+      mentorId: mentor.id
+    }));
+    setShowMentorModal(false);
   };
 
   if (fetchLoading) {
@@ -499,18 +602,25 @@ export const EditProject: React.FC = () => {
               </div>
               
               <div>
-                <label htmlFor="mentorId" className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
                   Assign Mentor (Optional)
                 </label>
-                <input
-                  type="text"
-                  id="mentorId"
-                  name="mentorId"
-                  value={formData.mentorId}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-                  placeholder="Mentor ID or email"
-                />
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={formData.mentorId}
+                    readOnly
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary bg-gray-100"
+                    placeholder="No mentor assigned"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleSelectMentorClick}
+                    className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors"
+                  >
+                    Select Mentor
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -1103,6 +1213,88 @@ export const EditProject: React.FC = () => {
           </button>
         </div>
       </form>
+
+      {/* Mentor Selection Modal */}
+      {showMentorModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+            <div className="flex items-center justify-between p-4 border-b">
+              <h3 className="text-lg font-semibold">Select a Mentor</h3>
+              <button 
+                onClick={() => setShowMentorModal(false)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            
+            <div className="p-4 overflow-y-auto flex-1">
+              <p className="text-muted-foreground mb-4">
+                Choose a mentor to guide you on your project:
+              </p>
+              
+              {loadingMentors ? (
+                <div className="flex justify-center items-center h-32">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                </div>
+              ) : mentors.length === 0 ? (
+                <div className="text-center py-8">
+                  <User className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                  <h4 className="font-medium mb-1">No mentors available</h4>
+                  <p className="text-sm text-muted-foreground">
+                    Please try again later.
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {mentors.map((mentor) => (
+                    <div 
+                      key={mentor.id}
+                      onClick={() => handleMentorSelect(mentor)}
+                      className="border rounded-lg p-3 cursor-pointer hover:bg-muted transition-colors"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
+                          <User className="w-5 h-5 text-purple-600" />
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="font-medium">{mentor.name}</h4>
+                          <p className="text-sm text-muted-foreground">{mentor.department}</p>
+                          <div className="flex items-center gap-2 mt-1">
+                            <div className="flex items-center gap-1">
+                              <Star className="w-4 h-4 text-yellow-500 fill-current" />
+                              <span className="text-sm">{mentor.rating}</span>
+                            </div>
+                            <div className="flex flex-wrap gap-1">
+                              {mentor.expertise.slice(0, 2).map((exp, index) => (
+                                <span 
+                                  key={index} 
+                                  className="text-xs bg-muted px-2 py-0.5 rounded-full"
+                                >
+                                  {exp}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+            
+            <div className="p-4 border-t">
+              <button 
+                onClick={() => setShowMentorModal(false)}
+                className="w-full px-4 py-2 border border-border rounded-md hover:bg-muted transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

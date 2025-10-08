@@ -1,6 +1,7 @@
 import React from 'react';
 import { X, Bell } from 'lucide-react';
-import { useNotifications } from './Notifications.hooks';
+import { useNotifications } from '../../contexts/NotificationContext';
+import { useNavigate } from 'react-router-dom';
 
 interface FloatingNotificationProps {
   isOpen: boolean;
@@ -14,9 +15,9 @@ export const FloatingNotification: React.FC<FloatingNotificationProps> = ({
   const {
     notifications,
     unreadCount,
-    
-    
   } = useNotifications();
+
+  const navigate = useNavigate();
 
   if (!isOpen) return null;
 
@@ -63,7 +64,7 @@ export const FloatingNotification: React.FC<FloatingNotificationProps> = ({
             <div className="divide-y divide-gray-100">
               {notifications.slice(0, 4).map((notification) => (
                 <div 
-                  key={notification.id} 
+                  key={notification._id} 
                   className={`p-4 hover:bg-gray-50 transition-colors ${
                     !notification.read ? 'bg-blue-50' : ''
                   }`}
@@ -87,7 +88,7 @@ export const FloatingNotification: React.FC<FloatingNotificationProps> = ({
                             {notification.message}
                           </p>
                           <span className="text-xs text-gray-500 mt-1 block">
-                            {notification.timestamp}
+                            {new Date(notification.createdAt).toLocaleString()}
                           </span>
                         </div>
                         {!notification.read && (
@@ -110,7 +111,7 @@ export const FloatingNotification: React.FC<FloatingNotificationProps> = ({
               onClick={() => {
                 onClose();
                 // Navigate to full notifications page
-                window.location.href = '/notifications';
+                navigate('/app/notifications');
               }}
             >
               View All Notifications

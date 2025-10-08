@@ -168,6 +168,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setUser(null);
       apiService.clearCurrentUser();
       localStorage.removeItem('rememberMe');
+      
+      // Dispatch a custom event to notify other parts of the app about logout
+      window.dispatchEvent(new CustomEvent('user-logout'));
     }
   };
 

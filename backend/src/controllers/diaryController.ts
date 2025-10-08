@@ -219,6 +219,49 @@ export const updateDiaryEntry = async (req: IAuthRequest, res: Response) => {
   }
 };
 
+// Mentor access to project diary entries
+export const getDiaryEntriesByProject = async (req: IAuthRequest, res: Response) => {
+  try {
+    const { projectId } = req.params;
+    const mentorId = req.user?._id;
+
+    if (!mentorId) {
+      return res.status(401).json({ 
+        success: false,
+        message: 'Unauthorized: User not authenticated' 
+      });
+    }
+
+    // Check if project exists and is assigned to the mentor
+    const project = await Project.findOne({ _id: projectId, mentorId });
+    if (!project) {
+      return res.status(404).json({ 
+        success: false,
+        message: 'Project not found or you do not have permission to view diary entries for this project' 
+      });
+    }
+
+    const entries = await ProjectDiary.find({ projectId })
+      .sort({ entryDate: -1 })
+      .populate('projectId', 'title')
+      .populate('studentId', 'firstName lastName')
+      .exec();
+
+    return res.json({
+      success: true,
+      message: 'Diary entries retrieved successfully',
+      data: entries
+    });
+  } catch (error) {
+    console.error('Error fetching diary entries:', error);
+    return res.status(500).json({ 
+      success: false,
+      message: 'Internal server error',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
+};
+
 // Mentor Review Management
 export const createReview = async (req: IAuthRequest, res: Response) => {
   try {

@@ -24,6 +24,15 @@ import projectRoutes from './routes/projects';
 import diaryRoutes from './routes/diary';
 import notificationRoutes from './routes/notifications';
 import institutionRoutes from './routes/institutions';
+import problemStatementRoutes from './routes/problemStatements';
+import mentorAnalyticsRoutes from './routes/mentorAnalytics';
+import mentorMatchingRoutes from './routes/mentorMatching';
+import resourceLibraryRoutes from './routes/resourceLibrary';
+import mentorNetworkingRoutes from './routes/mentorNetworking';
+import schedulingRoutes from './routes/scheduling';
+import hackathonRoutes from './routes/hackathons';
+import hackathonRegistrationRoutes from './routes/hackathonRegistration';
+import hackathonSubmissionRoutes from './routes/hackathonSubmission';
 
 const app = express();
 
@@ -115,6 +124,15 @@ const startServer = async () => {
     app.use(`${config.API_PREFIX}/${config.API_VERSION}/diary`, diaryRoutes);
     app.use(`${config.API_PREFIX}/${config.API_VERSION}/notifications`, notificationRoutes);
     app.use(`${config.API_PREFIX}/${config.API_VERSION}/institutions`, institutionRoutes);
+    app.use(`${config.API_PREFIX}/${config.API_VERSION}/problem-statements`, problemStatementRoutes);
+    app.use(`${config.API_PREFIX}/${config.API_VERSION}/mentor-analytics`, mentorAnalyticsRoutes);
+    app.use(`${config.API_PREFIX}/${config.API_VERSION}/mentor-matching`, mentorMatchingRoutes);
+    app.use(`${config.API_PREFIX}/${config.API_VERSION}/resources`, resourceLibraryRoutes);
+    app.use(`${config.API_PREFIX}/${config.API_VERSION}/mentor-networking`, mentorNetworkingRoutes);
+    app.use(`${config.API_PREFIX}/${config.API_VERSION}/scheduling`, schedulingRoutes);
+    app.use(`${config.API_PREFIX}/${config.API_VERSION}/hackathons`, hackathonRoutes);
+    app.use(`${config.API_PREFIX}/${config.API_VERSION}/hackathon-registrations`, hackathonRegistrationRoutes);
+    app.use(`${config.API_PREFIX}/${config.API_VERSION}/hackathon-submissions`, hackathonSubmissionRoutes);
 
     // 404 handler
     app.use('*', (req, res) => {

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   Users, 
   Trophy, 
@@ -14,42 +15,48 @@ import { useAuth } from '../../../contexts/AuthContext';
 
 export const HackathonDashboard: React.FC = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   const organizerFeatures = [
     {
       icon: Trophy,
       title: 'Create Hackathon',
       description: 'Set up new hackathon events with rules and timelines',
-      status: 'Coming Soon',
+      status: 'Available',
       color: 'bg-primary',
+      link: '/app/organizer/hackathons/create',
     },
     {
       icon: Users,
       title: 'Team Management',
       description: 'Manage participant teams and members',
-      status: 'Coming Soon',
+      status: 'Available',
       color: 'bg-secondary',
+      link: '/app/organizer/hackathons/teams',
     },
     {
       icon: MessageSquare,
       title: 'Judging Panel',
       description: 'Coordinate judges and judging criteria',
-      status: 'Coming Soon',
+      status: 'Available',
       color: 'bg-accent',
+      link: '/app/organizer/hackathons/judging',
     },
     {
       icon: Target,
       title: 'Submissions',
       description: 'Review project submissions and progress',
-      status: 'Coming Soon',
+      status: 'Available',
       color: 'bg-purple-500',
+      link: '/app/organizer/hackathons/submissions',
     },
     {
       icon: BarChart3,
-      title: 'Live Scoreboard',
-      description: 'Monitor real-time scoring and rankings',
-      status: 'Coming Soon',
+      title: 'Analytics Dashboard',
+      description: 'Monitor real-time analytics and insights',
+      status: 'Available',
       color: 'bg-green-500',
+      link: '/app/organizer/hackathons/analytics',
     },
     {
       icon: Calendar,
@@ -57,6 +64,7 @@ export const HackathonDashboard: React.FC = () => {
       description: 'Manage hackathon timeline and activities',
       status: 'Coming Soon',
       color: 'bg-yellow-500',
+      link: '#',
     },
   ];
 
@@ -140,7 +148,13 @@ export const HackathonDashboard: React.FC = () => {
           {organizerFeatures.map((feature, index) => {
             const Icon = feature.icon;
             return (
-              <Card key={index} className="relative overflow-hidden hover:shadow-lg transition-shadow">
+              <Card 
+                key={index} 
+                className={`relative overflow-hidden hover:shadow-lg transition-shadow cursor-pointer ${
+                  feature.status === 'Available' ? 'hover:scale-105' : 'opacity-75'
+                }`}
+                onClick={() => feature.status === 'Available' && feature.link !== '#' && navigate(feature.link)}
+              >
                 <CardBody className="p-6">
                   <div className="flex items-start gap-4">
                     <div className={`${feature.color} p-3 rounded-lg`}>
@@ -153,7 +167,11 @@ export const HackathonDashboard: React.FC = () => {
                       <p className="text-sm text-muted-foreground mb-3">
                         {feature.description}
                       </p>
-                      <div className="inline-flex items-center px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-medium">
+                      <div className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
+                        feature.status === 'Available' 
+                          ? 'bg-green-100 text-green-800' 
+                          : 'bg-yellow-100 text-yellow-800'
+                      }`}>
                         {feature.status}
                       </div>
                     </div>

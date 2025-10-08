@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../../../contexts/AuthContext';
+import { apiService } from '../../../services/api';
 import { 
   Send, 
   Paperclip, 
@@ -64,9 +65,20 @@ export const TeamChat: React.FC = () => {
   useEffect(() => {
     fetchTeamDetails();
     fetchMessages();
-    // Simulate real-time updates
-    const interval = setInterval(fetchMessages, 3000);
-    return () => clearInterval(interval);
+    
+    // Only set up interval if user is authenticated
+    let intervalId: any = null;
+    if (apiService.isAuthenticated()) {
+      intervalId = setInterval(() => {
+        if (apiService.isAuthenticated()) {
+          fetchMessages();
+        }
+      }, 3000);
+    }
+    
+    return () => {
+      if (intervalId) clearInterval(intervalId);
+    };
   }, [teamId]);
 
   useEffect(() => {

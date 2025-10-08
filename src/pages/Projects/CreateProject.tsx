@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { apiService } from '../../services/api';
+import { useToast } from '../../contexts/ToastContext';
 import { 
   Cpu, 
   Zap, 
@@ -34,6 +35,7 @@ interface Milestone {
 
 export const CreateProject: React.FC = () => {
   const navigate = useNavigate();
+  const { showSuccess, showError } = useToast();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>([{ email: '', role: '' }]);
@@ -240,25 +242,58 @@ export const CreateProject: React.FC = () => {
         throw new Error('End date must be after start date');
       }
 
+      // Validate required fields
+      if (!formData.title.trim()) {
+        throw new Error('Project title is required');
+      }
+      if (!formData.description.trim()) {
+        throw new Error('Project description is required');
+      }
+      if (!formData.problemStatement.trim()) {
+        throw new Error('Problem statement is required');
+      }
+      if (!formData.category) {
+        throw new Error('Project category is required');
+      }
+
+      // Process mentorId - if it's an email, we should look up the user ID
+      // For now, we'll only send mentorId if it looks like a valid ObjectId
+      let mentorIdToSend;
+      if (formData.mentorId) {
+        // Check if it's a valid ObjectId format (24-character hex string)
+        if (/^[0-9a-fA-F]{24}$/.test(formData.mentorId)) {
+          mentorIdToSend = formData.mentorId;
+        } else {
+          // If it's not a valid ObjectId, we should not send it
+          // In a real app, we would look up the user by email and get their ID
+          console.warn('Invalid mentorId format, not sending to backend:', formData.mentorId);
+        }
+      }
+
       const projectData = {
-        title: formData.title,
-        description: formData.description,
-        longDescription: formData.longDescription,
+        title: formData.title.trim(),
+        description: formData.description.trim(),
+        longDescription: formData.longDescription?.trim() || undefined,
         category: formData.category,
         technologies: formData.technologies.split(',').map(tech => tech.trim()).filter(tech => tech),
         startDate: formData.startDate,
         endDate: formData.endDate,
         deliverables: deliverables.filter(deliverable => deliverable.trim()),
-        milestones: milestones.filter(milestone => milestone.title.trim() && milestone.description.trim()),
+        milestones: milestones.filter(milestone => 
+          milestone.title.trim() && milestone.description.trim()
+        ).map(milestone => ({
+          ...milestone,
+          dueDate: milestone.dueDate || new Date().toISOString().split('T')[0]
+        })),
         tags: formData.tags.split(',').map(tag => tag.trim()).filter(tag => tag),
-        problemStatement: formData.problemStatement,
-        repositoryLink: formData.repositoryLink,
-        liveUrl: formData.liveUrl,
-        documentationUrl: formData.documentationUrl,
-        videoUrl: formData.videoUrl,
+        problemStatement: formData.problemStatement.trim(),
+        repositoryLink: formData.repositoryLink?.trim() || undefined,
+        liveUrl: formData.liveUrl?.trim() || undefined,
+        documentationUrl: formData.documentationUrl?.trim() || undefined,
+        videoUrl: formData.videoUrl?.trim() || undefined,
         teamMembers: teamMembers.filter(member => member.email && member.role),
         status: formData.status,
-        mentorId: formData.mentorId || undefined,
+        mentorId: mentorIdToSend, // Use the processed mentorId
         objectives: objectives.filter(objective => objective.trim()),
         challenges: challenges.filter(challenge => challenge.trim()),
         achievements: achievements.filter(achievement => achievement.trim()),
@@ -278,9 +313,11 @@ export const CreateProject: React.FC = () => {
       console.log('Project creation response:', response);
       
       // Show success message and redirect
-      alert('Project created successfully!');
+      showSuccess('Project Created', 'Your project has been created successfully!');
       navigate('/app/student/projects');
     } catch (err) {
+      console.error('Project creation error:', err);
+      showError('Project Creation Failed', err instanceof Error ? err.message : 'Failed to create project');
       setError(err instanceof Error ? err.message : 'Failed to create project');
     } finally {
       setLoading(false);
@@ -453,7 +490,7 @@ export const CreateProject: React.FC = () => {
                   value={formData.mentorId}
                   onChange={handleInputChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-                  placeholder="Mentor ID or email"
+                  placeholder="Mentor User ID (not email)"
                 />
               </div>
             </div>

@@ -11,6 +11,9 @@ router.use(authenticate);
 // Public mentor routes
 router.get('/mentors', UserController.getMentors);
 
+// Route for users to get their own profile (accessible by all authenticated users)
+router.get('/me', UserController.getUserById);
+
 // Admin only routes
 router.get('/', adminOnly, validateUserQuery, UserController.getAllUsers);
 router.get('/stats', adminOnly, UserController.getUserStats);

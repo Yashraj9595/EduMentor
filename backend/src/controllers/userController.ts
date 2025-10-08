@@ -82,6 +82,28 @@ export class UserController {
    */
   static async getUserById(req: Request, res: Response): Promise<void> {
     try {
+      // Check if this is a request for the current user's own profile
+      const isOwnProfile = req.path === '/me' || req.params.id === 'me';
+      
+      if (isOwnProfile) {
+        // Return the current user's own profile
+        if (!req.user) {
+          res.status(401).json({
+            success: false,
+            message: 'Authentication required'
+          });
+          return;
+        }
+        
+        res.json({
+          success: true,
+          message: 'Profile retrieved successfully',
+          data: { user: req.user }
+        });
+        return;
+      }
+      
+      // For specific user ID requests, only allow admin access
       const { id } = req.params;
 
       const user = await User.findById(id).select('-password');

@@ -19,11 +19,14 @@ import {
   Cpu,
   Zap,
   Brain,
-  Sparkles
+  Sparkles,
+  Plus
 } from 'lucide-react';
 import { Card, CardBody } from '../../../components/ui/Card';
 import { useAuth } from '../../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { apiService } from '../../../services/api';
+import { ExpandableDescription } from '../../../components/ExpandableDescription';
 
 interface Project {
   id: string;
@@ -46,6 +49,13 @@ interface Project {
       role: string;
     }>;
     size: number;
+    mentor?: {
+      id: string;
+      name: string;
+      avatar: string;
+      role: string;
+      email: string;
+    } | null;
   };
   technologies: string[];
   category: string;
@@ -93,7 +103,7 @@ export const ExploreProjects: React.FC = () => {
 
   useEffect(() => {
     fetchProjects();
-  }, []);
+  }, [filters]);
 
   const generateAIRecommendations = () => {
     console.log('generateAIRecommendations called, user:', user);
@@ -168,288 +178,167 @@ export const ExploreProjects: React.FC = () => {
   const fetchProjects = async () => {
     try {
       setLoading(true);
-      // Mock data - in real app, fetch from API
-// Mock data - Extended Projects with Unsplash thumbnails
-const mockProjects: Project[] = [
-  {
-    id: '4',
-    title: 'AI Mental Health Companion',
-    description: 'An AI chatbot that provides emotional support, mindfulness exercises, and connects users with licensed therapists when needed.',
-    thumbnail: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b', // mental health / therapy
-    student: {
-      id: 'student4',
-      name: 'Rohan Mehta',
-      avatar: '/api/placeholder/40/40',
-      college: 'IIT Bombay',
-      year: 'Sophomore'
-    },
-    team: {
-      members: [
-        { id: '10', name: 'Rohan Mehta', avatar: '/api/placeholder/32/32', role: 'AI Developer' },
-        { id: '11', name: 'Ananya Sharma', avatar: '/api/placeholder/32/32', role: 'Psychology Researcher' }
-      ],
-      size: 2
-    },
-    technologies: ['Python', 'TensorFlow', 'React Native', 'Firebase'],
-    category: 'AI/Healthcare',
-    status: 'in_progress',
-    createdAt: '2024-03-01T12:00:00Z',
-    updatedAt: '2024-04-12T18:20:00Z',
-    metrics: { views: 560, likes: 48, comments: 12, bookmarks: 20 },
-    tags: ['ai', 'mental-health', 'chatbot', 'react-native'],
-    repositoryUrl: 'https://github.com/rohan/ai-mental-companion',
-    duration: '5 months',
-    featured: false
-  },
-  {
-    id: '5',
-    title: 'EcoTrack – Smart Waste Management',
-    description: 'IoT-enabled smart bins with sensors that notify authorities when full, helping cities reduce overflow and improve recycling efficiency.',
-    thumbnail: 'https://images.unsplash.com/photo-1528323273322-d81458248d40', // recycling bins
-    student: {
-      id: 'student5',
-      name: 'Maria Gonzales',
-      avatar: '/api/placeholder/40/40',
-      college: 'Harvard',
-      year: 'Junior'
-    },
-    team: {
-      members: [
-        { id: '12', name: 'Maria Gonzales', avatar: '/api/placeholder/32/32', role: 'IoT Engineer' },
-        { id: '13', name: 'Daniel Lee', avatar: '/api/placeholder/32/32', role: 'Backend Developer' }
-      ],
-      size: 2
-    },
-    technologies: ['Arduino', 'MQTT', 'React', 'MongoDB'],
-    category: 'IoT/Environment',
-    status: 'completed',
-    createdAt: '2023-09-18T08:00:00Z',
-    updatedAt: '2023-12-10T10:30:00Z',
-    metrics: { views: 980, likes: 120, comments: 25, bookmarks: 50 },
-    tags: ['iot', 'waste-management', 'smart-city'],
-    repositoryUrl: 'https://github.com/maria/ecotrack',
-    duration: '3 months',
-    featured: true
-  },
-  {
-    id: '6',
-    title: 'AgroSense – AI Crop Monitoring',
-    description: 'A drone-based system that uses AI to detect crop diseases early and provide fertilizer recommendations.',
-    thumbnail: 'https://images.unsplash.com/photo-1504198453319-5ce911bafcde', // drone in agriculture
-    student: {
-      id: 'student6',
-      name: 'Chen Wei',
-      avatar: '/api/placeholder/40/40',
-      college: 'Tsinghua University',
-      year: 'Senior'
-    },
-    team: {
-      members: [
-        { id: '14', name: 'Chen Wei', avatar: '/api/placeholder/32/32', role: 'Drone Engineer' },
-        { id: '15', name: 'Li Na', avatar: '/api/placeholder/32/32', role: 'Data Scientist' },
-        { id: '16', name: 'Raj Verma', avatar: '/api/placeholder/32/32', role: 'ML Engineer' }
-      ],
-      size: 3
-    },
-    technologies: ['Python', 'OpenCV', 'TensorFlow', 'DroneKit'],
-    category: 'AI/Agriculture',
-    status: 'completed',
-    createdAt: '2024-01-10T07:15:00Z',
-    updatedAt: '2024-03-02T12:30:00Z',
-    metrics: { views: 1500, likes: 135, comments: 40, bookmarks: 75 },
-    tags: ['ai', 'agriculture', 'drones', 'opencv'],
-    repositoryUrl: 'https://github.com/chen/agrosense',
-    duration: '4 months',
-    featured: true
-  },
-  {
-    id: '7',
-    title: 'EduMatch – Personalized Learning',
-    description: 'An AI platform that recommends personalized study material and mock tests for students preparing for competitive exams.',
-    thumbnail: 'https://images.unsplash.com/photo-1588072432836-e10032774350', // studying students
-    student: {
-      id: 'student7',
-      name: 'Aisha Khan',
-      avatar: '/api/placeholder/40/40',
-      college: 'Delhi University',
-      year: 'Graduate'
-    },
-    team: {
-      members: [
-        { id: '17', name: 'Aisha Khan', avatar: '/api/placeholder/32/32', role: 'ML Engineer' },
-        { id: '18', name: 'Omar Ali', avatar: '/api/placeholder/32/32', role: 'Frontend Developer' }
-      ],
-      size: 2
-    },
-    technologies: ['Python', 'Flask', 'React', 'PostgreSQL'],
-    category: 'EdTech',
-    status: 'in_progress',
-    createdAt: '2024-04-01T10:45:00Z',
-    updatedAt: '2024-04-20T13:10:00Z',
-    metrics: { views: 300, likes: 25, comments: 8, bookmarks: 15 },
-    tags: ['education', 'ai', 'recommendation', 'edtech'],
-    repositoryUrl: 'https://github.com/aisha/edumatch',
-    duration: '8 months',
-    featured: false
-  },
-  {
-    id: '8',
-    title: 'MedScan XR – AR-based Surgery Assistance',
-    description: 'An AR platform for surgeons to visualize 3D scans in real-time during operations, improving accuracy and reducing errors.',
-    thumbnail: 'https://images.unsplash.com/photo-1581091012184-5c56d06b7c49', // healthcare AR
-    student: {
-      id: 'student8',
-      name: 'John Carter',
-      avatar: '/api/placeholder/40/40',
-      college: 'Oxford',
-      year: 'Senior'
-    },
-    team: {
-      members: [
-        { id: '19', name: 'John Carter', avatar: '/api/placeholder/32/32', role: 'AR Developer' },
-        { id: '20', name: 'Sophia Williams', avatar: '/api/placeholder/32/32', role: 'Medical Consultant' }
-      ],
-      size: 2
-    },
-    technologies: ['Unity', 'C#', 'ARKit', 'Azure'],
-    category: 'Healthcare/AR',
-    status: 'completed',
-    createdAt: '2023-10-12T11:00:00Z',
-    updatedAt: '2024-01-05T15:00:00Z',
-    metrics: { views: 1750, likes: 145, comments: 38, bookmarks: 82 },
-    tags: ['ar', 'healthcare', 'surgery', '3d-visualization'],
-    repositoryUrl: 'https://github.com/john/medscan-xr',
-    duration: '6 months',
-    featured: true
-  },
-  {
-    id: '9',
-    title: 'FinGuard – Fraud Detection System',
-    description: 'An AI-powered system that monitors financial transactions in real-time to detect and prevent fraud.',
-    thumbnail: 'https://images.unsplash.com/photo-1605902711622-cfb43c44367d', // fintech security
-    student: {
-      id: 'student9',
-      name: 'Kavya Reddy',
-      avatar: '/api/placeholder/40/40',
-      college: 'BITS Pilani',
-      year: 'Junior'
-    },
-    team: {
-      members: [
-        { id: '21', name: 'Kavya Reddy', avatar: '/api/placeholder/32/32', role: 'Lead Developer' },
-        { id: '22', name: 'Arjun Menon', avatar: '/api/placeholder/32/32', role: 'Data Scientist' }
-      ],
-      size: 2
-    },
-    technologies: ['Python', 'Scikit-learn', 'Kafka', 'React'],
-    category: 'FinTech',
-    status: 'in_progress',
-    createdAt: '2024-05-01T09:10:00Z',
-    updatedAt: '2024-05-15T16:45:00Z',
-    metrics: { views: 420, likes: 37, comments: 10, bookmarks: 18 },
-    tags: ['fintech', 'fraud-detection', 'ai', 'realtime'],
-    repositoryUrl: 'https://github.com/kavya/finguard',
-    duration: '5 months',
-    featured: false
-  },
-  {
-    id: '10',
-    title: 'SafeRide – Women Safety App',
-    description: 'A safety app with AI anomaly detection, live GPS tracking, SOS alerts, and auto-recording during emergencies.',
-    thumbnail: 'https://images.unsplash.com/photo-1518186285589-2f7649de83e0', // women safety / night travel
-    student: {
-      id: 'student10',
-      name: 'Neha Singh',
-      avatar: '/api/placeholder/40/40',
-      college: 'Pune University',
-      year: 'Senior'
-    },
-    team: {
-      members: [
-        { id: '23', name: 'Neha Singh', avatar: '/api/placeholder/32/32', role: 'Mobile Developer' },
-        { id: '24', name: 'Rahul Gupta', avatar: '/api/placeholder/32/32', role: 'Security Analyst' }
-      ],
-      size: 2
-    },
-    technologies: ['React Native', 'Firebase', 'Python', 'Twilio API'],
-    category: 'Safety/Mobile App',
-    status: 'completed',
-    createdAt: '2023-08-20T07:30:00Z',
-    updatedAt: '2023-11-12T14:40:00Z',
-    metrics: { views: 2100, likes: 160, comments: 55, bookmarks: 95 },
-    tags: ['safety', 'women', 'gps', 'mobile-app'],
-    repositoryUrl: 'https://github.com/neha/saferide',
-    liveUrl: 'https://saferide.app',
-    duration: '4 months',
-    featured: true
-  },
-  {
-    id: '11',
-    title: 'GreenLedger – Carbon Credit Tracker',
-    description: 'A blockchain-based solution for tracking carbon credits and promoting sustainability among industries.',
-    thumbnail: 'https://images.unsplash.com/photo-1523978591478-c753949ff840', // environment green
-    student: {
-      id: 'student11',
-      name: 'Oliver Smith',
-      avatar: '/api/placeholder/40/40',
-      college: 'Cambridge',
-      year: 'Graduate'
-    },
-    team: {
-      members: [
-        { id: '25', name: 'Oliver Smith', avatar: '/api/placeholder/32/32', role: 'Blockchain Developer' },
-        { id: '26', name: 'Emma Johnson', avatar: '/api/placeholder/32/32', role: 'Environment Analyst' }
-      ],
-      size: 2
-    },
-    technologies: ['Solidity', 'Ethereum', 'React', 'Node.js'],
-    category: 'Blockchain/Environment',
-    status: 'completed',
-    createdAt: '2023-07-05T12:10:00Z',
-    updatedAt: '2023-10-28T17:25:00Z',
-    metrics: { views: 1320, likes: 98, comments: 22, bookmarks: 44 },
-    tags: ['blockchain', 'sustainability', 'carbon-credits'],
-    repositoryUrl: 'https://github.com/oliver/greenledger',
-    duration: '6 months',
-    featured: false
-  },
-  {
-    id: '12',
-    title: 'FoodShare – Zero Hunger Platform',
-    description: 'A mobile platform that connects restaurants with NGOs to donate leftover food in real time.',
-    thumbnail: 'https://images.unsplash.com/photo-1600891964599-f61ba0e24092', // food donation
-    student: {
-      id: 'student12',
-      name: 'Fatima Noor',
-      avatar: '/api/placeholder/40/40',
-      college: 'UCLA',
-      year: 'Junior'
-    },
-    team: {
-      members: [
-        { id: '27', name: 'Fatima Noor', avatar: '/api/placeholder/32/32', role: 'Fullstack Developer' },
-        { id: '28', name: 'Mohammed Ali', avatar: '/api/placeholder/32/32', role: 'Backend Developer' }
-      ],
-      size: 2
-    },
-    technologies: ['React Native', 'Node.js', 'MongoDB', 'Google Maps API'],
-    category: 'Social Impact',
-    status: 'completed',
-    createdAt: '2023-09-01T11:00:00Z',
-    updatedAt: '2023-12-05T18:00:00Z',
-    metrics: { views: 1980, likes: 175, comments: 60, bookmarks: 102 },
-    tags: ['food-donation', 'ngo', 'social-good', 'mobile-app'],
-    repositoryUrl: 'https://github.com/fatima/foodshare',
-    liveUrl: 'https://foodshare.org',
-    duration: '3 months',
-    featured: true
-  }
-];
-
+      console.log('Fetching projects from API...');
       
-      setProjects(mockProjects);
+      // Build query parameters
+      const queryParams = new URLSearchParams();
+      if (filters.category !== 'all') queryParams.append('category', filters.category);
+      if (filters.technology !== 'all') queryParams.append('technology', filters.technology);
+      if (filters.status !== 'all') queryParams.append('status', filters.status);
+      if (filters.sortBy !== 'trending') queryParams.append('sortBy', filters.sortBy);
+      queryParams.append('limit', '50');
+      
+      const queryString = queryParams.toString();
+      const endpoint = `/projects/explore${queryString ? `?${queryString}` : ''}`;
+      
+      console.log('API endpoint:', endpoint);
+      
+      const response = await apiService.get(endpoint);
+      console.log('API response:', response);
+      
+      if (response.success && response.data && Array.isArray(response.data)) {
+        console.log('Raw API data:', response.data);
+        
+        // Transform the API data to match the expected format
+        const transformedProjects = response.data.map((project: any) => ({
+          id: project._id,
+          title: project.title,
+          description: project.description,
+          thumbnail: project.thumbnail || 'https://images.unsplash.com/photo-1518186285589-2f7649de83e0',
+          videoUrl: project.videoUrl,
+    student: {
+            id: project.studentId?._id || project.studentId,
+            name: project.studentId?.firstName && project.studentId?.lastName 
+              ? `${project.studentId.firstName} ${project.studentId.lastName}`
+              : 'Unknown Student',
+      avatar: '/api/placeholder/40/40',
+            college: 'University', // This would need to be added to the user model
+            year: 'Student'
+    },
+    team: {
+            members: Array.isArray(project.teamMembers) 
+              ? project.teamMembers.map((member: any, index: number) => ({
+                  id: `member-${index}`,
+                  name: member.email?.split('@')[0] || 'Team Member',
+                  avatar: '/api/placeholder/32/32',
+                  role: member.role || 'Team Member'
+                }))
+              : [],
+            size: Array.isArray(project.teamMembers) ? project.teamMembers.length : 1,
+            mentor: project.mentorId ? {
+              id: project.mentorId._id || project.mentorId,
+              name: project.mentorId.firstName && project.mentorId.lastName 
+                ? `${project.mentorId.firstName} ${project.mentorId.lastName}`
+                : 'Mentor',
+              avatar: '/api/placeholder/32/32',
+              role: 'Mentor',
+              email: project.mentorId.email
+            } : null
+          },
+          technologies: project.technologies || [],
+          category: project.category || 'Other',
+          status: project.status || 'draft',
+          createdAt: project.createdAt,
+          updatedAt: project.updatedAt,
+          metrics: project.metrics || { views: 0, likes: 0, comments: 0, bookmarks: 0 },
+          tags: project.tags || [],
+          repositoryUrl: project.repositoryLink,
+          liveUrl: project.liveUrl,
+          duration: project.startDate && project.endDate 
+            ? `${Math.ceil((new Date(project.endDate).getTime() - new Date(project.startDate).getTime()) / (1000 * 60 * 60 * 24 * 30))} months`
+            : 'Unknown',
+          featured: project.featured || false
+        }));
+        
+        console.log('Transformed projects:', transformedProjects);
+        setProjects(transformedProjects);
+      } else {
+        console.error('API response not successful:', response);
+        setProjects([]);
+      }
     } catch (error) {
       console.error('Error fetching projects:', error);
+      
+      // Show user-friendly error message
+      if (error instanceof Error && error.message.includes('Invalid data format')) {
+        console.log('Database contains invalid data. This might be due to corrupted project records.');
+        console.log('Showing fallback data while we fix the database issue...');
+        
+        // Show some fallback data while we debug
+        setProjects([{
+          id: 'fallback-1',
+          title: 'Sample AI Project',
+          description: 'This is a sample project to demonstrate the interface while we fix the database issue.',
+          thumbnail: 'https://images.unsplash.com/photo-1518186285589-2f7649de83e0',
+          student: {
+            id: 'student-1',
+            name: 'Sample Student',
+            avatar: '/api/placeholder/40/40',
+            college: 'University',
+            year: 'Student'
+          },
+          team: {
+            members: [{
+              id: 'member-1',
+              name: 'Team Member',
+              avatar: '/api/placeholder/32/32',
+              role: 'Developer'
+            }],
+            size: 1
+          },
+          technologies: ['React', 'Node.js', 'MongoDB'],
+          category: 'Web Development',
+          status: 'completed',
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          metrics: { views: 100, likes: 10, comments: 5, bookmarks: 3 },
+          tags: ['web', 'react', 'node'],
+          repositoryUrl: 'https://github.com/sample/project',
+          liveUrl: 'https://sample-project.com',
+          duration: '3 months',
+          featured: false
+        }]);
+      } else if (error instanceof Error && error.message.includes('Route not found')) {
+        console.log('Backend server is not running with the new code. Please restart the backend server.');
+        console.log('Showing fallback data while we restart the backend...');
+        
+        // Show some fallback data while we restart the backend
+        setProjects([{
+          id: 'fallback-2',
+          title: 'Backend Restart Required',
+          description: 'The backend server needs to be restarted to apply the new code changes. Please restart the backend server.',
+          thumbnail: 'https://images.unsplash.com/photo-1518186285589-2f7649de83e0',
+          student: {
+            id: 'system-1',
+            name: 'System Message',
+            avatar: '/api/placeholder/40/40',
+            college: 'System',
+            year: 'Admin'
+          },
+          team: {
+            members: [{
+              id: 'admin-1',
+              name: 'Admin',
+              avatar: '/api/placeholder/32/32',
+              role: 'System Administrator'
+            }],
+            size: 1
+          },
+          technologies: ['Backend', 'Node.js', 'Express'],
+          category: 'System',
+          status: 'in_progress',
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          metrics: { views: 1, likes: 0, comments: 0, bookmarks: 0 },
+          tags: ['backend', 'restart', 'maintenance'],
+          repositoryUrl: '',
+          liveUrl: '',
+          duration: '1 minute',
+          featured: false
+        }]);
+      } else {
+        setProjects([]);
+      }
     } finally {
       setLoading(false);
     }
@@ -593,6 +482,42 @@ const mockProjects: Project[] = [
           >
             <Brain className="w-5 h-5" />
             AI Recommendations
+          </button>
+          
+          {/* Test Project Button */}
+          <button
+            onClick={async () => {
+              try {
+                console.log('Creating test project...');
+                const response = await apiService.post('/projects/test', {});
+                console.log('Test project created:', response);
+                // Refresh the projects list
+                fetchProjects();
+              } catch (error) {
+                console.error('Error creating test project:', error);
+              }
+            }}
+            className="flex items-center gap-2 px-4 py-3 border border-green-500 text-green-600 rounded-lg hover:bg-green-50 transition-colors"
+          >
+            <Plus className="w-5 h-5" />
+            Create Test Project
+          </button>
+          
+          {/* Debug Button */}
+          <button
+            onClick={async () => {
+              try {
+                console.log('Testing debug endpoint...');
+                const response = await apiService.get('/projects/debug');
+                console.log('Debug response:', response);
+              } catch (error) {
+                console.error('Error testing debug endpoint:', error);
+              }
+            }}
+            className="flex items-center gap-2 px-4 py-3 border border-blue-500 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors"
+          >
+            <Code className="w-5 h-5" />
+            Debug Database
           </button>
           
           {/* View Mode Toggle */}
@@ -811,7 +736,7 @@ const mockProjects: Project[] = [
           : 'space-y-4'
         }>
           {sortedProjects.map((project) => (
-            <Card key={project.id} className="hover:shadow-lg transition-shadow cursor-pointer group">
+            <Card key={project.id} className="hover:shadow-lg transition-shadow group">
               {/* Thumbnail */}
               <div className="relative aspect-video bg-muted rounded-t-lg overflow-hidden">
                 <img
@@ -819,11 +744,25 @@ const mockProjects: Project[] = [
                   alt={project.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
-                {project.videoUrl && (
+                {project.videoUrl && project.videoUrl.trim() !== '' ? (
                   <div className="absolute inset-0 flex items-center justify-center bg-black/20">
-                    <button className="w-12 h-12 bg-white/90 rounded-full flex items-center justify-center hover:bg-white transition-colors">
+                    <button 
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        window.open(project.videoUrl, '_blank');
+                      }}
+                      className="w-12 h-12 bg-white/90 rounded-full flex items-center justify-center hover:bg-white transition-colors"
+                    >
                       <Play className="w-6 h-6 text-black ml-1" />
                     </button>
+                  </div>
+                ) : (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/10">
+                    <div className="text-center text-muted-foreground">
+                      <ImageIcon className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                      <p className="text-xs">No video available</p>
+                    </div>
                   </div>
                 )}
                 {project.featured && (
@@ -845,7 +784,10 @@ const mockProjects: Project[] = [
                 <div className="space-y-3">
                   <div>
                     <h3 className="font-semibold text-lg line-clamp-2 mb-1">{project.title}</h3>
-                    <p className="text-sm text-muted-foreground line-clamp-2">{project.description}</p>
+                    <ExpandableDescription 
+                      description={project.description}
+                      maxLines={2}
+                    />
                   </div>
 
                   {/* Student Info */}
@@ -862,6 +804,23 @@ const mockProjects: Project[] = [
                       </p>
                     </div>
                   </div>
+
+                  {/* Team/Mentor Info */}
+                  {project.team.mentor && (
+                    <div className="flex items-center gap-3 p-2 bg-muted/50 rounded-lg">
+                      <img
+                        src={project.team.mentor.avatar}
+                        alt={project.team.mentor.name}
+                        className="w-6 h-6 rounded-full"
+                      />
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-xs truncate">{project.team.mentor.name}</p>
+                        <p className="text-xs text-muted-foreground truncate">
+                          {project.team.mentor.role}
+                        </p>
+                      </div>
+                    </div>
+                  )}
 
                   {/* Technologies */}
                   <div className="flex flex-wrap gap-1">

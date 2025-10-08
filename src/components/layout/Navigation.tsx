@@ -1,7 +1,7 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { 
-  LayoutDashboard, 
+  Home, 
   Users, 
   Settings, 
   FileText, 
@@ -11,6 +11,7 @@ import {
   Menu,
   Trophy,
   User,
+  Search,
   Compass,
   MessageCircle,
   Award,
@@ -18,58 +19,119 @@ import {
   BookOpen,
   Calendar,
   Shield,
+  Scale,
+  FileCheck,
+  History,
+  GraduationCap,
   } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { ThemeToggle } from '../ThemeToggle';
 
 interface NavigationProps {
   isOpen: boolean;
-  onToggle: () => void;
+  toggleSidebar: () => void;
   isMobile?: boolean;
 }
 
-export const Navigation: React.FC<NavigationProps> = ({ isOpen, onToggle, isMobile = false }) => {
+export const Navigation: React.FC<NavigationProps> = ({ 
+  isOpen, 
+  toggleSidebar,
+  isMobile 
+}) => {
   const { user, logout } = useAuth();
+  const location = useLocation();
+  
+  // Define navigation items based on user role
+  const getNavItems = () => {
+    const baseItems = [
+      { path: '/app/dashboard', icon: Home, label: 'Dashboard', mobileLabel: 'Home', roles: ['admin'] },
+      { path: '/app/user-dashboard', icon: Home, label: 'Dashboard', mobileLabel: 'Home', roles: ['student'] },
+      { path: '/app/mentor-dashboard', icon: Home, label: 'Dashboard', mobileLabel: 'Home', roles: ['mentor'] },
+      { path: '/app/hackathon-dashboard', icon: Home, label: 'Dashboard', mobileLabel: 'Home', roles: ['organizer'] },
+      { path: '/app/company-dashboard', icon: Home, label: 'Dashboard', mobileLabel: 'Home', roles: ['company'] },
+      { path: '/app/institution-dashboard', icon: Home, label: 'Dashboard', mobileLabel: 'Home', roles: ['institution'] },
+      { path: '/app/institution-dashboard/students', icon: GraduationCap, label: 'Student Accounts', mobileLabel: 'Students', roles: ['institution'] },
+      { path: '/app/institution-dashboard/teachers', icon: Users, label: 'Teacher Accounts', mobileLabel: 'Teachers', roles: ['institution'] },
+      
+      // Institution Analytics
+      { path: '/app/institution-dashboard/analytics', icon: BarChart3, label: 'Analytics', mobileLabel: 'Analytics', roles: ['institution'] },
+      
+      // Institution Hackathon Management
+      { path: '/app/institution-dashboard/hackathons', icon: Trophy, label: 'Hackathon Management', mobileLabel: 'Hackathons', roles: ['institution'] },
+      
+      // Student Project Management
+      { path: '/app/student/projects', icon: FileText, label: 'My Projects', mobileLabel: 'Projects', roles: ['student'] },
+      { path: '/app/student/explore', icon: Search, label: 'Explore Projects', mobileLabel: 'Explore', roles: ['student'] },
+      
+      // Mentor Profile
+      { path: '/app/mentor-profile', icon: User, label: 'My Profile', mobileLabel: 'Profile', roles: ['mentor'] },
+      
+      // Student Mentor Interaction
+      { path: '/app/student/mentors', icon: Users, label: 'Find Mentors', mobileLabel: 'Mentors', roles: ['student'] },
+      
+      // Team Collaboration
+      { path: '/app/student/teams/create', icon: Users, label: 'Create Team', mobileLabel: 'Teams', roles: ['student'] },
+      
+      // Student Hackathons
+      { path: '/app/student/hackathons', icon: Trophy, label: 'Hackathons', mobileLabel: 'Hackathons', roles: ['student'] },
+      
+      // Hackathon Management (Organizer)
+      { path: '/app/hackathons', icon: Trophy, label: 'Hackathons', mobileLabel: 'Hackathons', roles: ['organizer'] },
+      
+      // Student Profile & Settings
+      { path: '/app/user-settings', icon: Settings, label: 'Settings', mobileLabel: 'Settings', roles: ['student', 'mentor', 'organizer', 'company'] },
+      
+      // Student Diary Management
+      { path: '/app/student/diary', icon: BookOpen, label: 'Project Diary', mobileLabel: 'Diary', roles: ['student'] },
+      
+      // Report Generation
+      { path: '/app/student/report-generation', icon: Scale, label: 'Report Generation', mobileLabel: 'Reports', roles: ['student'] },
+      { path: '/project-report', icon: FileCheck, label: 'Create Report', mobileLabel: 'Create', roles: ['student'] },
+      { path: '/project-report/history', icon: History, label: 'Report History', mobileLabel: 'History', roles: ['student'] },
+    ];
 
-  const navItems = [
-    { path: '/app/dashboard', icon: LayoutDashboard, label: 'Admin Dashboard', mobileLabel: 'Admin', roles: ['admin'] },
-    { path: '/app/user-dashboard', icon: LayoutDashboard, label: 'Student Dashboard', mobileLabel: 'Student', roles: ['student'] },
-    { path: '/app/mentor-dashboard', icon: LayoutDashboard, label: 'Mentor Dashboard', mobileLabel: 'Mentor', roles: ['mentor'] },
-    { path: '/app/hackathon-dashboard', icon: LayoutDashboard, label: 'Hackathon Dashboard', mobileLabel: 'Events', roles: ['organizer'] },
-    { path: '/app/company-dashboard', icon: LayoutDashboard, label: 'Company Dashboard', mobileLabel: 'Company', roles: ['company'] },
-    { path: '/app/institution-dashboard', icon: LayoutDashboard, label: 'Institution Dashboard', mobileLabel: 'Institution', roles: ['institution'] },
-    
-  // Student-specific navigation
-  { path: '/app/student/projects', icon: FileText, label: 'My Projects', mobileLabel: 'Projects', roles: ['student'] },
-  { path: '/app/student/explore', icon: Compass, label: 'Explore Projects', mobileLabel: 'Explore', roles: ['student'] },
-  { path: '/app/student/mentors', icon: Users, label: 'Find Mentors', mobileLabel: 'Mentors', roles: ['student'] },
-  { path: '/app/student/hackathons', icon: Trophy, label: 'Hackathons', mobileLabel: 'Events', roles: ['student'] },
-  { path: '/app/student/teams/create', icon: Users, label: 'Create Team', mobileLabel: 'Teams', roles: ['student'] },
-  { path: '/app/student/profile', icon: User, label: 'My Portfolio', mobileLabel: 'Profile', roles: ['student'] },
-  
-  // Diary Management for Students
-  { path: '/app/student/diary', icon: BookOpen, label: 'Project Diary', mobileLabel: 'Diary', roles: ['student'] },
-  
-  // Advanced Features (AI Recommendations removed)
-  { path: '/app/student/achievements', icon: Award, label: 'Achievements', mobileLabel: 'Rewards', roles: ['student'] },
-  { path: '/app/student/features', icon: Sparkles, label: 'Feature Guide', mobileLabel: 'Features', roles: ['student'] },
-  
-  // Mentor Diary Management
-  { path: '/app/mentor-diary', icon: BookOpen, label: 'Diary Management', mobileLabel: 'Diary', roles: ['mentor'] },
-  { path: '/app/mentor-reviews', icon: Calendar, label: 'Review Scheduler', mobileLabel: 'Reviews', roles: ['mentor'] },
-  
-  // Admin Diary Monitoring
-  { path: '/app/diary-monitor', icon: Shield, label: 'Diary Monitor', mobileLabel: 'Monitor', roles: ['admin'] },
-  
-  // Chat - Available for all roles
-  { path: '/app/chat', icon: MessageCircle, label: 'Chat', mobileLabel: 'Chat', roles: ['student', 'mentor', 'organizer', 'company', 'admin'] },
-    
-    { path: '/app/users', icon: Users, label: 'Users', mobileLabel: 'Users', roles: ['admin'] },
-    { path: '/app/analytics', icon: BarChart3, label: 'Analytics', mobileLabel: 'Analytics', roles: ['admin', 'mentor'] },
-    { path: '/app/reports', icon: FileText, label: 'Reports', mobileLabel: 'Reports', roles: ['admin', 'mentor'] },
-    { path: '/app/admin-settings', icon: Settings, label: 'Admin Settings', mobileLabel: 'Settings', roles: ['admin'] },
-    { path: '/app/user-settings', icon: Settings, label: 'Settings', mobileLabel: 'Settings', roles: ['student', 'mentor', 'organizer', 'company'] },
-  ];
+    // Add advanced features for students
+    if (user?.role === 'student') {
+      baseItems.push(
+        { path: '/app/student/achievements', icon: Award, label: 'Achievements', mobileLabel: 'Rewards', roles: ['student'] },
+        { path: '/app/student/features', icon: Sparkles, label: 'Feature Guide', mobileLabel: 'Features', roles: ['student'] },
+      );
+    }
+
+    // Add mentor diary management for mentors
+    if (user?.role === 'mentor') {
+      baseItems.push(
+        { path: '/app/mentor-diary', icon: BookOpen, label: 'Diary Management', mobileLabel: 'Diary', roles: ['mentor'] },
+        { path: '/app/mentor-reviews', icon: Calendar, label: 'Review Scheduler', mobileLabel: 'Reviews', roles: ['mentor'] },
+      );
+    }
+
+    // Add admin diary monitoring for admins
+    if (user?.role === 'admin') {
+      baseItems.push(
+        { path: '/app/diary-monitor', icon: Shield, label: 'Diary Monitor', mobileLabel: 'Monitor', roles: ['admin'] },
+      );
+    }
+
+    // Add chat for all roles
+    baseItems.push(
+      { path: '/app/chat', icon: MessageCircle, label: 'Chat', mobileLabel: 'Chat', roles: ['student', 'mentor', 'organizer', 'company', 'admin'] },
+    );
+
+    // Add admin-specific navigation
+    if (user?.role === 'admin') {
+      baseItems.push(
+        { path: '/app/users', icon: Users, label: 'Users', mobileLabel: 'Users', roles: ['admin'] },
+        { path: '/app/analytics', icon: BarChart3, label: 'Analytics', mobileLabel: 'Analytics', roles: ['admin', 'mentor'] },
+        { path: '/app/reports', icon: FileText, label: 'Reports', mobileLabel: 'Reports', roles: ['admin', 'mentor'] },
+        { path: '/app/admin-settings', icon: Settings, label: 'Admin Settings', mobileLabel: 'Settings', roles: ['admin'] },
+      );
+    }
+
+    return baseItems;
+  };
+
+  const navItems = getNavItems();
 
   const filteredNavItems = navItems.filter(item => 
     user && item.roles.includes(user.role)
@@ -116,7 +178,7 @@ export const Navigation: React.FC<NavigationProps> = ({ isOpen, onToggle, isMobi
       {isOpen && (
         <div 
           className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
-          onClick={onToggle}
+          onClick={toggleSidebar}
         />
       )}
 
@@ -145,7 +207,7 @@ export const Navigation: React.FC<NavigationProps> = ({ isOpen, onToggle, isMobi
               </div>
             )}
             <button
-              onClick={onToggle}
+              onClick={toggleSidebar}
               className="p-2 rounded-lg hover:bg-accent text-muted-foreground hidden lg:block"
             >
               {isOpen ? <ChevronLeft size={20} /> : <Menu size={20} />}

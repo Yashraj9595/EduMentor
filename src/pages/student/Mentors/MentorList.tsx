@@ -1,13 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { apiService } from '../../../services/api';
 import { 
   Search, 
   User, 
   Star, 
   Mail,
-  MessageCircle
-  } from 'lucide-react';
+  MessageCircle,
+  X,
+  BookOpen,
+  Calendar,
+  Tag
+} from 'lucide-react';
 import { Card, CardHeader, CardBody } from '../../../components/ui/Card';
+import { Button } from '../../../components/ui/Button';
 
 interface Mentor {
   id: string;
@@ -21,62 +27,79 @@ interface Mentor {
   bio: string;
 }
 
+interface Project {
+  _id: string;
+  title: string;
+  description: string;
+  startDate: string;
+  endDate: string;
+  tags: string[];
+  status: string;
+  category: string;
+}
+
 export const MentorList: React.FC = () => {
   const navigate = useNavigate();
-  const [mentors] = useState<Mentor[]>([
-    {
-      id: '1',
-      name: 'Dr. Sarah Johnson',
-      email: 's.johnson@university.edu',
-      department: 'Computer Science',
-      expertise: ['AI', 'Machine Learning', 'Data Science'],
-      rating: 4.8,
-      projectsMentored: 24,
-      availability: 'available',
-      bio: 'Specialized in artificial intelligence and machine learning with 10+ years of industry experience.'
-    },
-    {
-      id: '2',
-      name: 'Prof. Michael Chen',
-      email: 'm.chen@university.edu',
-      department: 'Electrical Engineering',
-      expertise: ['IoT', 'Embedded Systems', 'Robotics'],
-      rating: 4.6,
-      projectsMentored: 18,
-      availability: 'limited',
-      bio: 'Expert in Internet of Things and embedded systems with multiple patents in smart devices.'
-    },
-    {
-      id: '3',
-      name: 'Dr. Emily Rodriguez',
-      email: 'e.rodriguez@university.edu',
-      department: 'Information Technology',
-      expertise: ['Web Development', 'Cloud Computing', 'Cybersecurity'],
-      rating: 4.9,
-      projectsMentored: 32,
-      availability: 'full',
-      bio: 'Cloud computing specialist with experience in enterprise solutions and cybersecurity.'
-    },
-    {
-      id: '4',
-      name: 'Prof. David Wilson',
-      email: 'd.wilson@university.edu',
-      department: 'Software Engineering',
-      expertise: ['Mobile Apps', 'UI/UX', 'Agile Development'],
-      rating: 4.7,
-      projectsMentored: 27,
-      availability: 'available',
-      bio: 'Mobile application development expert with a focus on user experience and agile methodologies.'
-    }
-  ]);
+  const [mentors, setMentors] = useState<Mentor[]>([]);
+  const [loading, setLoading] = useState(true);
   
   const [searchTerm, setSearchTerm] = useState('');
   const [filterDepartment, setFilterDepartment] = useState('all');
   const [filterExpertise, setFilterExpertise] = useState('all');
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loadingProjects, setLoadingProjects] = useState(false);
+
+  useEffect(() => {
+    fetchMentors();
+  }, []);
+
+  const fetchMentors = async () => {
+    try {
+      setLoading(true);
+      const response = await apiService.get('/users/mentors');
+      if (response.success && response.data) {
+        // Transform API data to match our interface
+        const transformedMentors = response.data.map((mentor: any) => ({
+          id: mentor.id,
+          name: mentor.name,
+          email: mentor.email,
+          department: mentor.department,
+          expertise: mentor.expertise,
+          rating: mentor.rating,
+          projectsMentored: Math.floor(Math.random() * 30) + 5, // Mock data for now
+          availability: ['available', 'limited', 'full'][Math.floor(Math.random() * 3)] as 'available' | 'limited' | 'full',
+          bio: mentor.bio
+        }));
+        setMentors(transformedMentors);
+      }
+    } catch (error) {
+      console.error('Error fetching mentors:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  const [selectedMentor, setSelectedMentor] = useState<Mentor | null>(null);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [showProjectModal, setShowProjectModal] = useState(false);
+  const [requestLoading, setRequestLoading] = useState(false);
+  const [requestSuccess, setRequestSuccess] = useState(false);
 
   // Get unique departments and expertise areas
   const departments = Array.from(new Set(mentors.map(m => m.department)));
   const expertiseAreas = Array.from(new Set(mentors.flatMap(m => m.expertise)));
+
+  // Fetch student projects when modal opens
+  const fetchProjects = async () => {
+    try {
+      setLoadingProjects(true);
+      const response = await apiService.get<any>('/projects/my-projects');
+      setProjects(response.data || []);
+    } catch (err) {
+      console.error('Error fetching projects:', err);
+    } finally {
+      setLoadingProjects(false);
+    }
+  };
 
   const filteredMentors = mentors.filter(mentor => {
     const matchesSearch = mentor.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
@@ -95,6 +118,39 @@ export const MentorList: React.FC = () => {
       case 'limited': return 'bg-yellow-100 text-yellow-800';
       case 'full': return 'bg-red-100 text-red-800';
       default: return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const handleRequestMentor = (mentor: Mentor) => {
+    setSelectedMentor(mentor);
+    setSelectedProject(null);
+    setShowProjectModal(true);
+    setRequestSuccess(false);
+    fetchProjects();
+  };
+
+  const handleSendRequest = async () => {
+    if (!selectedMentor || !selectedProject) return;
+    
+    try {
+      setRequestLoading(true);
+      // Update the project with the selected mentor
+      const response = await apiService.put(`/projects/${selectedProject._id}`, {
+        mentorId: selectedMentor.id
+      });
+      
+      if (response.success) {
+        setRequestSuccess(true);
+        // Close modal after 2 seconds
+        setTimeout(() => {
+          setShowProjectModal(false);
+          setRequestSuccess(false);
+        }, 2000);
+      }
+    } catch (err) {
+      console.error('Error sending mentor request:', err);
+    } finally {
+      setRequestLoading(false);
     }
   };
 
@@ -162,7 +218,11 @@ export const MentorList: React.FC = () => {
       </div>
 
       {/* Mentors Grid */}
-      {filteredMentors.length === 0 ? (
+      {loading ? (
+        <div className="flex justify-center items-center py-12">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        </div>
+      ) : filteredMentors.length === 0 ? (
         <Card>
           <CardBody className="text-center py-12">
             <User className="mx-auto h-12 w-12 text-gray-400 mb-4" />
@@ -213,7 +273,10 @@ export const MentorList: React.FC = () => {
                 </div>
                 
                 <div className="flex gap-2">
-                  <button className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors text-sm">
+                  <button 
+                    onClick={() => handleRequestMentor(mentor)}
+                    className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors text-sm"
+                  >
                     <Mail className="w-4 h-4" />
                     Request
                   </button>
@@ -224,7 +287,10 @@ export const MentorList: React.FC = () => {
                     <MessageCircle className="w-4 h-4" />
                     Chat
                   </button>
-                  <button className="flex items-center justify-center gap-2 px-3 py-2 border border-border rounded-md hover:bg-muted transition-colors text-sm">
+                  <button 
+                    onClick={() => navigate(`/app/student/mentors/${mentor.id}/profile`)}
+                    className="flex items-center justify-center gap-2 px-3 py-2 border border-border rounded-md hover:bg-muted transition-colors text-sm"
+                  >
                     <User className="w-4 h-4" />
                     Profile
                   </button>
@@ -232,6 +298,165 @@ export const MentorList: React.FC = () => {
               </CardBody>
             </Card>
           ))}
+        </div>
+      )}
+
+      {/* Project Selection Modal */}
+      {showProjectModal && selectedMentor && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+            <div className="flex items-center justify-between p-4 border-b">
+              <h3 className="text-lg font-semibold">
+                Request {selectedMentor.name} as Mentor
+              </h3>
+              <button 
+                onClick={() => setShowProjectModal(false)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            
+            <div className="p-4 overflow-y-auto flex-1">
+              <p className="text-muted-foreground mb-4">
+                Select a project you'd like {selectedMentor.name} to mentor:
+              </p>
+              
+              {requestSuccess ? (
+                <div className="bg-green-100 border border-green-200 rounded-lg p-4 text-center">
+                  <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <Mail className="w-6 h-6 text-white" />
+                  </div>
+                  <h4 className="font-medium text-green-800 mb-1">Request Sent!</h4>
+                  <p className="text-sm text-green-600">
+                    Your mentor request has been sent to {selectedMentor.name}.
+                  </p>
+                </div>
+              ) : (
+                <>
+                  {loadingProjects ? (
+                    <div className="flex justify-center items-center h-32">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                    </div>
+                  ) : projects.length === 0 ? (
+                    <div className="text-center py-8">
+                      <BookOpen className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                      <h4 className="font-medium mb-1">No projects found</h4>
+                      <p className="text-sm text-muted-foreground mb-4">
+                        You don't have any projects yet.
+                      </p>
+                      <Button 
+                        onClick={() => {
+                          setShowProjectModal(false);
+                          navigate('/app/student/projects/create');
+                        }}
+                      >
+                        Create Your First Project
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {projects.map((project) => (
+                        <div 
+                          key={project._id}
+                          onClick={() => setSelectedProject(project)}
+                          className={`border rounded-lg p-3 cursor-pointer transition-colors ${
+                            selectedProject?._id === project._id 
+                              ? 'border-primary bg-primary/10' 
+                              : 'border-border hover:bg-muted'
+                          }`}
+                        >
+                          <div className="flex items-start gap-3">
+                            <div className="mt-1">
+                              <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${
+                                selectedProject?._id === project._id 
+                                  ? 'border-primary bg-primary' 
+                                  : 'border-gray-300'
+                              }`}>
+                                {selectedProject?._id === project._id && (
+                                  <div className="w-2 h-2 bg-white rounded-full"></div>
+                                )}
+                              </div>
+                            </div>
+                            <div className="flex-1">
+                              <h4 className="font-medium">{project.title}</h4>
+                              <p className="text-sm text-muted-foreground line-clamp-2 mt-1">
+                                {project.description}
+                              </p>
+                              <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
+                                <div className="flex items-center gap-1">
+                                  <Calendar className="w-3 h-3" />
+                                  <span>{new Date(project.startDate).toLocaleDateString()}</span>
+                                </div>
+                                <span className="px-2 py-0.5 bg-muted rounded-full">
+                                  {project.category}
+                                </span>
+                                <span className={`px-2 py-0.5 rounded-full text-xs ${
+                                    project.status === 'completed' ? 'bg-green-100 text-green-800' :
+                                    project.status === 'in_progress' ? 'bg-blue-100 text-blue-800' :
+                                    project.status === 'draft' ? 'bg-gray-100 text-gray-800' :
+                                    'bg-yellow-100 text-yellow-800'
+                                  }`}>
+                                  {project.status.replace('_', ' ')}
+                                </span>
+                              </div>
+                              {project.tags.length > 0 && (
+                                <div className="flex flex-wrap gap-1 mt-2">
+                                  {project.tags.slice(0, 3).map((tag) => (
+                                    <span 
+                                      key={tag} 
+                                      className="inline-flex items-center gap-1 px-2 py-0.5 bg-muted text-muted-foreground rounded-full text-xs"
+                                    >
+                                      <Tag className="w-2.5 h-2.5" />
+                                      {tag}
+                                    </span>
+                                  ))}
+                                  {project.tags.length > 3 && (
+                                    <span className="text-xs text-muted-foreground">
+                                      +{project.tags.length - 3}
+                                    </span>
+                                  )}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+            
+            {!requestSuccess && projects.length > 0 && (
+              <div className="p-4 border-t flex justify-end gap-3">
+                <Button 
+                  variant="secondary" 
+                  onClick={() => setShowProjectModal(false)}
+                  disabled={requestLoading}
+                >
+                  Cancel
+                </Button>
+                <Button 
+                  onClick={handleSendRequest}
+                  disabled={!selectedProject || requestLoading}
+                  className="flex items-center gap-2"
+                >
+                  {requestLoading ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      <Mail className="w-4 h-4" />
+                      Send Request
+                    </>
+                  )}
+                </Button>
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>

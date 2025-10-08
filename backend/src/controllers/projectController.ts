@@ -534,9 +534,31 @@ export const getMentorProjects = async (req: IAuthRequest, res: Response): Promi
       });
     }
     
-    const projects = await Project.find({ mentorId: req.user?._id })
+    console.log('Fetching mentor projects for user:', req.user?._id);
+    
+    // Validate that req.user._id is a valid ObjectId
+    if (!req.user?._id) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid user ID'
+      });
+    }
+    
+    // Ensure the user ID is a string and looks like a valid ObjectId
+    const userId = req.user._id.toString();
+    if (!/^[0-9a-fA-F]{24}$/.test(userId)) {
+      console.error('Invalid user ID format:', userId);
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid user ID format'
+      });
+    }
+    
+    const projects = await Project.find({ mentorId: userId })
       .populate('studentId', 'firstName lastName email')
       .sort({ createdAt: -1 });
+    
+    console.log('Found mentor projects:', projects.length);
     
     return res.json({
       success: true,

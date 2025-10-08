@@ -22,7 +22,7 @@ interface TimelineStep {
   id: string;
   title: string;
   description: string;
-  icon: React.ComponentType<any>;
+  icon: string;
   status: 'completed' | 'current' | 'upcoming';
   color: string;
   borderColor: string;
@@ -32,6 +32,8 @@ interface TimelineStep {
   gems: number;
   level: number;
   specialEffect?: 'sparkle' | 'crown' | 'diamond' | 'gem' | 'trophy';
+  completedAt?: string;
+  startedAt?: string;
 }
 
 interface ProgressTimelineProps {
@@ -41,6 +43,26 @@ interface ProgressTimelineProps {
   showProgress?: boolean;
   animated?: boolean;
 }
+
+// Map icon names to actual components
+const iconMap: Record<string, React.ComponentType<any>> = {
+  User,
+  Lightbulb,
+  Clock,
+  Settings,
+  Users,
+  TrendingUp,
+  Globe,
+  CheckCircle,
+  Star,
+  Target,
+  Zap,
+  Sparkles,
+  Crown,
+  Gem,
+  Trophy,
+  Diamond
+};
 
 export const ProgressTimeline: React.FC<ProgressTimelineProps> = ({
   steps,
@@ -54,7 +76,7 @@ export const ProgressTimeline: React.FC<ProgressTimelineProps> = ({
       id: 'planning',
       title: 'Project Planning',
       description: 'Define project scope, objectives, and create detailed project plan with timelines and deliverables.',
-      icon: User,
+      icon: 'User',
       status: 'completed',
       color: 'from-blue-500 to-teal-500',
       borderColor: 'border-blue-500',
@@ -69,7 +91,7 @@ export const ProgressTimeline: React.FC<ProgressTimelineProps> = ({
       id: 'research',
       title: 'Research & Analysis',
       description: 'Conduct thorough research, gather requirements, and analyze existing solutions and best practices.',
-      icon: Lightbulb,
+      icon: 'Lightbulb',
       status: 'completed',
       color: 'from-teal-500 to-green-500',
       borderColor: 'border-teal-500',
@@ -84,7 +106,7 @@ export const ProgressTimeline: React.FC<ProgressTimelineProps> = ({
       id: 'design',
       title: 'Design & Architecture',
       description: 'Create system architecture, database design, and user interface mockups and prototypes.',
-      icon: Clock,
+      icon: 'Clock',
       status: 'completed',
       color: 'from-green-500 to-lime-500',
       borderColor: 'border-green-500',
@@ -99,7 +121,7 @@ export const ProgressTimeline: React.FC<ProgressTimelineProps> = ({
       id: 'development',
       title: 'Development Phase',
       description: 'Implement core functionality, develop APIs, and build the main application features.',
-      icon: Settings,
+      icon: 'Settings',
       status: 'current',
       color: 'from-lime-500 to-yellow-500',
       borderColor: 'border-lime-500',
@@ -114,7 +136,7 @@ export const ProgressTimeline: React.FC<ProgressTimelineProps> = ({
       id: 'testing',
       title: 'Testing & Review',
       description: 'Conduct comprehensive testing, code reviews, and mentor feedback sessions.',
-      icon: Users,
+      icon: 'Users',
       status: 'upcoming',
       color: 'from-yellow-500 to-orange-500',
       borderColor: 'border-yellow-500',
@@ -129,7 +151,7 @@ export const ProgressTimeline: React.FC<ProgressTimelineProps> = ({
       id: 'deployment',
       title: 'Deployment & Launch',
       description: 'Deploy the application, conduct final testing, and prepare for production launch.',
-      icon: TrendingUp,
+      icon: 'TrendingUp',
       status: 'upcoming',
       color: 'from-orange-500 to-red-500',
       borderColor: 'border-orange-500',
@@ -144,7 +166,7 @@ export const ProgressTimeline: React.FC<ProgressTimelineProps> = ({
       id: 'completion',
       title: 'Project Completion',
       description: 'Final documentation, project presentation, and handover to stakeholders.',
-      icon: Globe,
+      icon: 'Globe',
       status: 'upcoming',
       color: 'from-red-500 to-purple-500',
       borderColor: 'border-red-500',
@@ -174,7 +196,7 @@ export const ProgressTimeline: React.FC<ProgressTimelineProps> = ({
 
 
   const getStepIcon = (step: TimelineStep) => {
-    const Icon = step.icon;
+    const IconComponent = iconMap[step.icon] || User;
     return (
       <div className={`w-8 h-8 rounded-full flex items-center justify-center relative ${
         step.status === 'completed' ? 'bg-green-100 text-green-600' :
@@ -184,7 +206,7 @@ export const ProgressTimeline: React.FC<ProgressTimelineProps> = ({
         {step.status === 'completed' ? (
           <CheckCircle className="w-5 h-5" />
         ) : (
-          <Icon className="w-5 h-5" />
+          <IconComponent className="w-5 h-5" />
         )}
         
         {/* Special Effects */}

@@ -1,5 +1,2 @@
-export { MentorDiaryDashboard } from './MentorDiaryDashboard';
-
-
-
-
+export * from './MentorDiaryDashboard';
+export { default as ProjectDiaryView } from './ProjectDiaryView';

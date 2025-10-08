@@ -12,6 +12,19 @@ export interface User {
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
+  // Student-specific fields
+  university?: string;
+  major?: string;
+  year?: string;
+  gpa?: string;
+  studentId?: string;
+  graduationYear?: string;
+  bio?: string;
+  skills?: string[];
+  interests?: string[];
+  linkedin?: string;
+  github?: string;
+  portfolio?: string;
 }
 
 export interface RegisterData {

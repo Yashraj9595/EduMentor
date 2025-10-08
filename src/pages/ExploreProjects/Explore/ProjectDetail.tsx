@@ -23,6 +23,8 @@ import {
 import { Card, CardHeader, CardBody } from '../../../components/ui/Card';
 import { useAuth } from '../../../contexts/AuthContext';
 import { useParams, useNavigate } from 'react-router-dom';
+import { apiService } from '../../../services/api';
+import { YouTubeVideo } from '../../../components/YouTubeVideo';
 
 interface ProjectDetail {
   _id: string;
@@ -124,13 +126,47 @@ export const ExploreProjectDetail: React.FC = () => {
   const fetchProjectDetail = async () => {
     try {
       setLoading(true);
-      // Fetch real project data from API
-      const response = await fetch(`/api/v1/projects/${id}`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch project');
+      console.log('Fetching project detail for ID:', id);
+      
+      // Use the proper API service with authentication
+      const response = await apiService.get(`/projects/${id}`);
+      console.log('Project detail response:', response);
+      
+      if (response.success && response.data) {
+        // Transform the API response to match the expected format
+        const projectData = response.data as any; // Type assertion for API response
+        const transformedProject: ProjectDetail = {
+          _id: projectData._id,
+          title: projectData.title,
+          description: projectData.description,
+          longDescription: projectData.longDescription,
+          thumbnail: projectData.thumbnail || '/api/placeholder/800/450',
+          videoUrl: projectData.videoUrl,
+          gallery: projectData.gallery || [],
+          studentId: projectData.studentId,
+          teamMembers: projectData.teamMembers || [],
+          technologies: projectData.technologies || [],
+          category: projectData.category,
+          status: projectData.status,
+          startDate: projectData.startDate,
+          endDate: projectData.endDate,
+          deliverables: projectData.deliverables || [],
+          tags: projectData.tags || [],
+          problemStatement: projectData.problemStatement,
+          repositoryLink: projectData.repositoryLink,
+          liveUrl: projectData.liveUrl,
+          documentationUrl: projectData.documentationUrl,
+          metrics: projectData.metrics || { views: 0, likes: 0, comments: 0, bookmarks: 0 },
+          featured: projectData.featured || false,
+          createdAt: projectData.createdAt,
+          updatedAt: projectData.updatedAt
+        };
+        
+        console.log('Transformed project:', transformedProject);
+        setProject(transformedProject);
+      } else {
+        throw new Error(response.message || 'Failed to fetch project');
       }
-      const data = await response.json();
-      setProject(data.data);
     } catch (error) {
       console.error('Error fetching project detail:', error);
       // Fallback to mock data if API fails
@@ -377,17 +413,30 @@ Our team spent over 6 months developing this solution, conducting extensive rese
         <div className="lg:col-span-2 space-y-6">
           {/* Video/Thumbnail */}
           <Card>
-            <div className="relative aspect-video bg-muted rounded-t-lg overflow-hidden">
-              <img
-                src={project.thumbnail}
-                alt={project.title}
-                className="w-full h-full object-cover"
-              />
-              {project.videoUrl && (
-                <div className="absolute inset-0 flex items-center justify-center bg-black/20">
-                  <button className="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center hover:bg-white transition-colors">
-                    <Play className="w-8 h-8 text-black ml-1" />
-                  </button>
+            <div className="relative">
+              {project.videoUrl && project.videoUrl.trim() !== '' ? (
+                <YouTubeVideo 
+                  videoUrl={project.videoUrl} 
+                  title={project.title}
+                  className="rounded-t-lg"
+                />
+              ) : (
+                <div className="relative aspect-video bg-muted rounded-t-lg overflow-hidden">
+                  <img
+                    src={project.thumbnail}
+                    alt={project.title}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/10">
+                    <div className="text-center text-muted-foreground">
+                      <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                        </svg>
+                      </div>
+                      <p className="text-sm">No video available</p>
+                    </div>
+                  </div>
                 </div>
               )}
               {project.featured && (

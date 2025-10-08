@@ -1,1 +1,1 @@
-export { MentorDashboard } from './MentorDashboard';
+export * from './MentorDashboard';

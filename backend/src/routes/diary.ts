@@ -13,7 +13,8 @@ import {
   getProjectProgress,
   getProjectProgressTimeline,
   updateProjectProgressTimeline,
-  getMentorDashboard
+  getMentorDashboard,
+  getDiaryEntriesByProject
 } from '../controllers/diaryController';
 import { authenticate } from '../middleware/auth';
 
@@ -27,6 +28,9 @@ router.post('/entries', createDiaryEntry);
 router.get('/entries/:projectId', getDiaryEntries);
 router.get('/entry/:entryId', getDiaryEntry);
 router.put('/entry/:entryId', updateDiaryEntry);
+
+// Mentor Diary Entry Routes
+router.get('/project/:projectId', getDiaryEntriesByProject);
 
 // Review Routes
 router.post('/reviews', createReview);

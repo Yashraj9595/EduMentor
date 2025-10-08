@@ -1,5 +1,1 @@
-export { ReviewScheduler } from './ReviewScheduler';
-
-
-
-
+export * from './ReviewScheduler';
