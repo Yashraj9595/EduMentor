@@ -85,7 +85,10 @@ export const authenticate = async (
  */
 export const authorize = (...roles: UserRole[]) => {
   return (req: IAuthRequest, res: Response, next: NextFunction): void => {
+    console.log('Authorization check - User:', req.user?.email, 'Role:', req.user?.role, 'Allowed roles:', roles);
+    
     if (!req.user) {
+      console.log('Authorization failed - No user found');
       res.status(401).json({
         success: false,
         message: 'Authentication required'
@@ -94,13 +97,15 @@ export const authorize = (...roles: UserRole[]) => {
     }
 
     if (!roles.includes(req.user.role)) {
+      console.log('Authorization failed - Role not allowed. User role:', req.user.role, 'Allowed roles:', roles);
       res.status(403).json({
         success: false,
-        message: 'Insufficient permissions'
+        message: `Insufficient permissions. Your role: ${req.user.role}. Required roles: ${roles.join(', ')}.`
       });
       return;
     }
 
+    console.log('Authorization successful');
     next();
   };
 };
@@ -111,6 +116,12 @@ export const authorize = (...roles: UserRole[]) => {
 export const adminOnly = authorize('admin');
 
 /**
+ * Institution admin middleware
+ */
+// Institution admin middleware - allows both admin and institution roles
+export const institutionAdmin = authorize('admin', 'institution');
+
+/**
  * Manager and Admin middleware
  */
 export const managerAndAdmin = authorize('admin', 'mentor');
@@ -118,7 +129,7 @@ export const managerAndAdmin = authorize('admin', 'mentor');
 /**
  * All authenticated users middleware
  */
-export const allUsers = authorize('admin', 'mentor', 'student', 'organizer', 'company');
+export const allUsers = authorize('admin', 'mentor', 'student', 'organizer', 'company', 'institution');
 
 /**
  * Optional authentication middleware

@@ -8,6 +8,9 @@ const router = Router();
 // All routes require authentication
 router.use(authenticate);
 
+// Public mentor routes
+router.get('/mentors', UserController.getMentors);
+
 // Admin only routes
 router.get('/', adminOnly, validateUserQuery, UserController.getAllUsers);
 router.get('/stats', adminOnly, UserController.getUserStats);

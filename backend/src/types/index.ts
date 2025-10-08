@@ -14,9 +14,24 @@ export interface IUser {
   lastLogin?: Date;
   createdAt?: Date;
   updatedAt?: Date;
+  // Student-specific fields
+  university?: string;
+  major?: string;
+  year?: string;
+  gpa?: string;
+  studentId?: string;
+  graduationYear?: string;
+  bio?: string;
+  skills?: string[];
+  interests?: string[];
+  linkedin?: string;
+  github?: string;
+  portfolio?: string;
+  // Mentor-specific fields
+  department?: string;
 }
 
-export type UserRole = 'admin' | 'mentor' | 'student' | 'organizer' | 'company';
+export type UserRole = 'admin' | 'mentor' | 'student' | 'organizer' | 'company' | 'institution';
 
 export interface IOTP {
   _id?: string;
@@ -221,4 +236,20 @@ export interface IMilestone {
   dueDate: Date;
   status: 'pending' | 'in_progress' | 'completed';
   completedAt?: Date;
+}
+
+export interface INotification {
+  _id?: string;
+  title: string;
+  message: string;
+  userId: string;
+  senderId?: string;
+  type: 'info' | 'success' | 'warning' | 'error' | 'mentor_request' | 'project_update';
+  priority: 'low' | 'medium' | 'high';
+  read: boolean;
+  relatedProjectId?: string;
+  relatedEntityId?: string;
+  relatedEntityType?: 'project' | 'mentor_request' | 'diary' | 'review';
+  createdAt?: Date;
+  updatedAt?: Date;
 }

@@ -22,6 +22,8 @@ import authRoutes from './routes/auth';
 import userRoutes from './routes/users';
 import projectRoutes from './routes/projects';
 import diaryRoutes from './routes/diary';
+import notificationRoutes from './routes/notifications';
+import institutionRoutes from './routes/institutions';
 
 const app = express();
 
@@ -111,6 +113,8 @@ const startServer = async () => {
     app.use(`${config.API_PREFIX}/${config.API_VERSION}/users`, userRoutes);
     app.use(`${config.API_PREFIX}/${config.API_VERSION}/projects`, projectRoutes);
     app.use(`${config.API_PREFIX}/${config.API_VERSION}/diary`, diaryRoutes);
+    app.use(`${config.API_PREFIX}/${config.API_VERSION}/notifications`, notificationRoutes);
+    app.use(`${config.API_PREFIX}/${config.API_VERSION}/institutions`, institutionRoutes);
 
     // 404 handler
     app.use('*', (req, res) => {

@@ -39,7 +39,7 @@ const userSchema = new Schema<IUserDocument>({
   },
   role: {
     type: String,
-    enum: ['admin', 'mentor', 'student', 'organizer', 'company'],
+    enum: ['admin', 'mentor', 'student', 'organizer', 'company', 'institution'],
     default: 'student',
     required: true
   },
@@ -63,6 +63,61 @@ const userSchema = new Schema<IUserDocument>({
   },
   lastLogin: {
     type: Date
+  },
+  // Student-specific fields
+  university: {
+    type: String,
+    trim: true
+  },
+  major: {
+    type: String,
+    trim: true
+  },
+  year: {
+    type: String,
+    trim: true
+  },
+  gpa: {
+    type: String,
+    trim: true
+  },
+  studentId: {
+    type: String,
+    trim: true
+  },
+  graduationYear: {
+    type: String,
+    trim: true
+  },
+  bio: {
+    type: String,
+    trim: true,
+    maxlength: [500, 'Bio cannot exceed 500 characters']
+  },
+  skills: [{
+    type: String,
+    trim: true
+  }],
+  interests: [{
+    type: String,
+    trim: true
+  }],
+  linkedin: {
+    type: String,
+    trim: true
+  },
+  github: {
+    type: String,
+    trim: true
+  },
+  portfolio: {
+    type: String,
+    trim: true
+  },
+  // Mentor-specific fields
+  department: {
+    type: String,
+    trim: true
   }
 }, {
   timestamps: true,

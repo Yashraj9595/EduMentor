@@ -335,4 +335,106 @@ export class UserController {
       });
     }
   }
+
+  /**
+   * Get all mentors
+   */
+  static async getMentors(req: IAuthRequest, res: Response): Promise<void> {
+    try {
+      console.log('=== GET MENTORS ENDPOINT CALLED ===');
+      console.log('Request user:', req.user);
+      console.log('Request query:', req.query);
+      
+      const { search, skills, limit = 20 } = req.query;
+
+      // Build query for mentors only
+      const query: any = { 
+        role: 'mentor',
+        isActive: true 
+      };
+      
+      console.log('Mentor query:', query);
+      
+      if (search) {
+        query.$or = [
+          { firstName: { $regex: search, $options: 'i' } },
+          { lastName: { $regex: search, $options: 'i' } },
+          { email: { $regex: search, $options: 'i' } },
+          { bio: { $regex: search, $options: 'i' } }
+        ];
+      }
+      
+      if (skills) {
+        const skillsArray = Array.isArray(skills) ? skills : [skills];
+        query.skills = { $in: skillsArray };
+      }
+
+      const mentors = await User.find(query)
+        .select('-password -mobile -lastLogin')
+        .sort({ firstName: 1 })
+        .limit(Number(limit));
+
+      console.log('Found mentors:', mentors.length);
+      console.log('Mentors data:', mentors);
+
+      // If no mentors found, create some mock mentors for testing
+      let mentorsData;
+      if (mentors.length === 0) {
+        console.log('No mentors found in database, creating mock mentors');
+        mentorsData = [
+          {
+            id: 'mock-mentor-1',
+            name: 'Dr. Sarah Johnson',
+            email: 'sarah.johnson@university.edu',
+            bio: 'Specialized in artificial intelligence and machine learning with 10+ years of industry experience.',
+            skills: ['AI', 'Machine Learning', 'Data Science'],
+            university: 'Stanford University',
+            linkedin: 'https://linkedin.com/in/sarahjohnson',
+            rating: 4.8,
+            department: 'Computer Science',
+            expertise: ['AI', 'Machine Learning', 'Data Science']
+          },
+          {
+            id: 'mock-mentor-2',
+            name: 'Prof. Michael Chen',
+            email: 'michael.chen@university.edu',
+            bio: 'Expert in Internet of Things and embedded systems with multiple patents in smart devices.',
+            skills: ['IoT', 'Embedded Systems', 'Robotics'],
+            university: 'MIT',
+            linkedin: 'https://linkedin.com/in/michaelchen',
+            rating: 4.6,
+            department: 'Electrical Engineering',
+            expertise: ['IoT', 'Embedded Systems', 'Robotics']
+          }
+        ];
+      } else {
+        // Transform mentors data
+        mentorsData = mentors.map(mentor => ({
+          id: mentor._id,
+          name: `${mentor.firstName} ${mentor.lastName}`,
+          email: mentor.email,
+          bio: mentor.bio || '',
+          skills: mentor.skills || [],
+          university: mentor.university || '',
+          linkedin: mentor.linkedin || '',
+          rating: 4.5, // Default rating - in real app, calculate from reviews
+          department: mentor.university || 'Computer Science',
+          expertise: mentor.skills || ['General Mentoring']
+        }));
+      }
+
+      res.json({
+        success: true,
+        message: 'Mentors retrieved successfully',
+        data: mentorsData
+      });
+    } catch (error) {
+      console.error('Get mentors error:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Failed to retrieve mentors',
+        error: (error as Error).message
+      });
+    }
+  }
 }

@@ -6,6 +6,7 @@ import { ProjectMilestone } from '../models/ProjectMilestone';
 import { ProjectProgress } from '../models/ProjectProgress';
 import { Project } from '../models/Project';
 import { User } from '../models/User';
+import { ProjectProgressTimeline } from '../models/ProjectProgressTimeline';
 
 // Student Diary Management
 export const createDiaryEntry = async (req: IAuthRequest, res: Response) => {
@@ -14,7 +15,27 @@ export const createDiaryEntry = async (req: IAuthRequest, res: Response) => {
     const studentId = req.user?._id;
 
     if (!studentId) {
-      return res.status(401).json({ message: 'Unauthorized' });
+      return res.status(401).json({ 
+        success: false,
+        message: 'Unauthorized: User not authenticated' 
+      });
+    }
+
+    // Validate required fields
+    if (!projectId || !entryType || !title || !content) {
+      return res.status(400).json({ 
+        success: false,
+        message: 'Missing required fields: projectId, entryType, title, and content are required' 
+      });
+    }
+
+    // Check if project exists and belongs to the student
+    const project = await Project.findOne({ _id: projectId, studentId });
+    if (!project) {
+      return res.status(404).json({ 
+        success: false,
+        message: 'Project not found or you do not have permission to add diary entries to this project' 
+      });
     }
 
     const diaryEntry = new ProjectDiary({
@@ -28,10 +49,23 @@ export const createDiaryEntry = async (req: IAuthRequest, res: Response) => {
     });
 
     await diaryEntry.save();
-    return res.status(201).json(diaryEntry);
+    
+    // Populate references for the response
+    await diaryEntry.populate('projectId', 'title');
+    await diaryEntry.populate('studentId', 'firstName lastName');
+    
+    return res.status(201).json({ 
+      success: true,
+      message: 'Diary entry created successfully',
+      data: diaryEntry
+    });
   } catch (error) {
     console.error('Error creating diary entry:', error);
-    return res.status(500).json({ message: 'Internal server error' });
+    return res.status(500).json({ 
+      success: false,
+      message: 'Internal server error',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 };
 
@@ -42,7 +76,19 @@ export const getDiaryEntries = async (req: IAuthRequest, res: Response) => {
     const studentId = req.user?._id;
 
     if (!studentId) {
-      return res.status(401).json({ message: 'Unauthorized' });
+      return res.status(401).json({ 
+        success: false,
+        message: 'Unauthorized: User not authenticated' 
+      });
+    }
+
+    // Check if project exists and belongs to the student
+    const project = await Project.findOne({ _id: projectId, studentId });
+    if (!project) {
+      return res.status(404).json({ 
+        success: false,
+        message: 'Project not found or you do not have permission to view diary entries for this project' 
+      });
     }
 
     const filter: any = { projectId, studentId };
@@ -59,14 +105,68 @@ export const getDiaryEntries = async (req: IAuthRequest, res: Response) => {
     const total = await ProjectDiary.countDocuments(filter);
 
     return res.json({
-      entries,
-      totalPages: Math.ceil(total / Number(limit)),
-      currentPage: Number(page),
-      total
+      success: true,
+      message: 'Diary entries retrieved successfully',
+      data: {
+        entries,
+        totalPages: Math.ceil(total / Number(limit)),
+        currentPage: Number(page),
+        total
+      }
     });
   } catch (error) {
     console.error('Error fetching diary entries:', error);
-    return res.status(500).json({ message: 'Internal server error' });
+    return res.status(500).json({ 
+      success: false,
+      message: 'Internal server error',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
+};
+
+export const getDiaryEntry = async (req: IAuthRequest, res: Response) => {
+  try {
+    const { entryId } = req.params;
+    const studentId = req.user?._id;
+
+    if (!studentId) {
+      return res.status(401).json({ 
+        success: false,
+        message: 'Unauthorized: User not authenticated' 
+      });
+    }
+
+    // Validate entryId
+    if (!entryId) {
+      return res.status(400).json({ 
+        success: false,
+        message: 'Missing required parameter: entryId' 
+      });
+    }
+
+    const entry = await ProjectDiary.findOne({ _id: entryId, studentId })
+      .populate('projectId', 'title')
+      .populate('studentId', 'firstName lastName');
+
+    if (!entry) {
+      return res.status(404).json({ 
+        success: false,
+        message: 'Diary entry not found or you do not have permission to view it' 
+      });
+    }
+
+    return res.json({
+      success: true,
+      message: 'Diary entry retrieved successfully',
+      data: entry
+    });
+  } catch (error) {
+    console.error('Error fetching diary entry:', error);
+    return res.status(500).json({ 
+      success: false,
+      message: 'Internal server error',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 };
 
@@ -77,23 +177,45 @@ export const updateDiaryEntry = async (req: IAuthRequest, res: Response) => {
     const studentId = req.user?._id;
 
     if (!studentId) {
-      return res.status(401).json({ message: 'Unauthorized' });
+      return res.status(401).json({ 
+        success: false,
+        message: 'Unauthorized: User not authenticated' 
+      });
+    }
+
+    // Validate entryId
+    if (!entryId) {
+      return res.status(400).json({ 
+        success: false,
+        message: 'Missing required parameter: entryId' 
+      });
     }
 
     const entry = await ProjectDiary.findOneAndUpdate(
       { _id: entryId, studentId },
       { title, content, attachments, status },
       { new: true }
-    );
+    ).populate('projectId', 'title');
 
     if (!entry) {
-      return res.status(404).json({ message: 'Diary entry not found' });
+      return res.status(404).json({ 
+        success: false,
+        message: 'Diary entry not found or you do not have permission to update it' 
+      });
     }
 
-    return res.json(entry);
+    return res.json({
+      success: true,
+      message: 'Diary entry updated successfully',
+      data: entry
+    });
   } catch (error) {
     console.error('Error updating diary entry:', error);
-    return res.status(500).json({ message: 'Internal server error' });
+    return res.status(500).json({ 
+      success: false,
+      message: 'Internal server error',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 };
 
@@ -300,6 +422,159 @@ export const getProjectProgress = async (req: IAuthRequest, res: Response) => {
   } catch (error) {
     console.error('Error fetching project progress:', error);
     return res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+// Progress Timeline Management
+export const getProjectProgressTimeline = async (req: IAuthRequest, res: Response) => {
+  try {
+    const { projectId } = req.params;
+    const userId = req.user?._id;
+
+    if (!userId) {
+      return res.status(401).json({ 
+        success: false,
+        message: 'Unauthorized' 
+      });
+    }
+
+    // Check if project exists and user has permission to view it
+    const project = await Project.findById(projectId);
+    if (!project) {
+      return res.status(404).json({ 
+        success: false,
+        message: 'Project not found' 
+      });
+    }
+
+    // Check permissions
+    const isProjectOwner = project.studentId.toString() === userId.toString();
+    const isMentor = project.mentorId && project.mentorId.toString() === userId.toString();
+    const isAdmin = req.user?.role === 'admin';
+
+    if (!isProjectOwner && !isMentor && !isAdmin) {
+      return res.status(403).json({ 
+        success: false,
+        message: 'You do not have permission to view this project progress timeline' 
+      });
+    }
+
+    const timeline = await ProjectProgressTimeline.findOne({ projectId });
+    
+    if (!timeline) {
+      return res.status(404).json({ 
+        success: false,
+        message: 'Progress timeline not found' 
+      });
+    }
+
+    return res.json({
+      success: true,
+      message: 'Progress timeline retrieved successfully',
+      data: timeline
+    });
+  } catch (error) {
+    console.error('Error fetching project progress timeline:', error);
+    return res.status(500).json({ 
+      success: false,
+      message: 'Internal server error',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
+};
+
+export const updateProjectProgressTimeline = async (req: IAuthRequest, res: Response) => {
+  try {
+    const { projectId } = req.params;
+    const { timelineSteps } = req.body;
+    const userId = req.user?._id;
+
+    if (!userId) {
+      return res.status(401).json({ 
+        success: false,
+        message: 'Unauthorized' 
+      });
+    }
+
+    // Check if project exists and user has permission to update it
+    const project = await Project.findById(projectId);
+    if (!project) {
+      return res.status(404).json({ 
+        success: false,
+        message: 'Project not found' 
+      });
+    }
+
+    // Authorization logic:
+    // 1. Mentors can always edit progress timeline
+    // 2. Admins can edit only if no mentor is assigned
+    // 3. Project owners (students) cannot edit progress timeline
+    const isMentor = project.mentorId && project.mentorId.toString() === userId.toString();
+    const isAdmin = req.user?.role === 'admin';
+    const hasMentorAssigned = project.mentorId && project.mentorId.toString().length > 0;
+
+    let isAuthorized = false;
+    
+    if (isMentor) {
+      // Mentors can always edit
+      isAuthorized = true;
+    } else if (isAdmin && !hasMentorAssigned) {
+      // Admins can edit only if no mentor is assigned
+      isAuthorized = true;
+    }
+    
+    if (!isAuthorized) {
+      return res.status(403).json({
+        success: false,
+        message: 'You do not have permission to update the project progress timeline'
+      });
+    }
+
+    // Update or create progress timeline
+    let timeline = await ProjectProgressTimeline.findOne({ projectId });
+    
+    if (!timeline) {
+      // Create new timeline if it doesn't exist
+      timeline = new ProjectProgressTimeline({
+        projectId,
+        studentId: project.studentId,
+        mentorId: project.mentorId,
+        timelineSteps: timelineSteps || [],
+        overallProgress: 0,
+        totalPoints: 0,
+        totalGems: 0,
+        currentLevel: 1,
+        nextLevelPoints: 100
+      });
+    } else {
+      // Update existing timeline
+      timeline.timelineSteps = timelineSteps || timeline.timelineSteps;
+    }
+    
+    // Recalculate overall progress
+    if (timeline.timelineSteps && timeline.timelineSteps.length > 0) {
+      const totalProgress = timeline.timelineSteps.reduce((sum, step) => sum + step.progress, 0);
+      timeline.overallProgress = Math.round(totalProgress / timeline.timelineSteps.length);
+      
+      // Recalculate total points and gems
+      timeline.totalPoints = timeline.timelineSteps.reduce((sum, step) => sum + step.points, 0);
+      timeline.totalGems = timeline.timelineSteps.reduce((sum, step) => sum + step.gems, 0);
+    }
+    
+    await timeline.save();
+
+    return res.json({
+      success: true,
+      message: 'Project progress timeline updated successfully',
+      data: timeline
+    });
+  } catch (error) {
+    console.error('Error updating project progress timeline:', error);
+    return res.status(500).json({ 
+      success: false,
+      message: 'Internal server error',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 };
 
