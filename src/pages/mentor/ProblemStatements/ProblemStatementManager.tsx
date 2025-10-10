@@ -4,16 +4,14 @@ import {
   Plus, 
   Edit, 
   Trash2, 
-  Eye, 
   Search, 
   Filter, 
   Download, 
-  Upload,
   Star,
   Clock,
   Users
 } from 'lucide-react';
-import { Card, CardHeader, CardBody } from '../../../components/ui/Card';
+import { Card, CardBody } from '../../../components/ui/Card';
 import { Button } from '../../../components/ui/Button';
 import { Input } from '../../../components/ui/Input';
 import { Textarea } from '../../../components/ui/Textarea';

@@ -62,9 +62,6 @@ export const EditProject: React.FC = () => {
   const [gallery, setGallery] = useState<Array<{ id: string; url: string; type: 'image' | 'video'; caption: string }>>([]);
   const [showMentorModal, setShowMentorModal] = useState(false);
   const [mentors, setMentors] = useState<Mentor[]>([]);
-  const [selectedMentor, setSelectedMentor] = useState<Mentor | null>(null);
-  const [mentorRequestLoading, setMentorRequestLoading] = useState(false);
-  const [mentorRequestSuccess, setMentorRequestSuccess] = useState(false);
   const [loadingMentors, setLoadingMentors] = useState(false);
   
   const [formData, setFormData] = useState({

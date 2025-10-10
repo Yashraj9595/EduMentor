@@ -59,7 +59,7 @@ export const MentorList: React.FC = () => {
       const response = await apiService.get('/users/mentors');
       if (response.success && response.data) {
         // Transform API data to match our interface
-        const transformedMentors = response.data.map((mentor: any) => ({
+        const transformedMentors = Array.isArray(response.data) ? response.data.map((mentor: any) => ({
           id: mentor.id,
           name: mentor.name,
           email: mentor.email,
@@ -69,7 +69,7 @@ export const MentorList: React.FC = () => {
           projectsMentored: Math.floor(Math.random() * 30) + 5, // Mock data for now
           availability: ['available', 'limited', 'full'][Math.floor(Math.random() * 3)] as 'available' | 'limited' | 'full',
           bio: mentor.bio
-        }));
+        })) : [];
         setMentors(transformedMentors);
       }
     } catch (error) {

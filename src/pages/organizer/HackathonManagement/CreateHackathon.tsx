@@ -15,9 +15,8 @@ import { Input } from '../../../components/ui/Input';
 import { Label } from '../../../components/ui/Label';
 import { Textarea } from '../../../components/ui/Textarea';
 import { Badge } from '../../../components/ui/Badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../components/ui/SelectNew';
+import { Select } from '../../../components/ui/SelectNew';
 import { Progress } from '../../../components/ui/Progress';
-import { useAuth } from '../../../contexts/AuthContext';
 import { useToast } from '../../../contexts/ToastContext';
 import { apiService } from '../../../services/api';
 
@@ -114,7 +113,6 @@ interface HackathonForm {
 
 export const CreateHackathon: React.FC = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
   const { showToast } = useToast();
   const [formData, setFormData] = useState<HackathonForm>({
     title: '',
@@ -386,14 +384,14 @@ export const CreateHackathon: React.FC = () => {
       const response = await apiService.createHackathon(hackathonData);
       
       if (response.success) {
-        showToast('Hackathon created successfully!', 'success');
+        showToast({ type: 'success', title: 'Hackathon created successfully!' });
         navigate('/app/organizer/hackathons');
       } else {
-        showToast('Failed to create hackathon. Please try again.', 'error');
+        showToast({ type: 'error', title: 'Failed to create hackathon. Please try again.' });
       }
     } catch (error: any) {
       console.error('Error creating hackathon:', error);
-      showToast(error.message || 'Failed to create hackathon. Please try again.', 'error');
+      showToast({ type: 'error', title: error.message || 'Failed to create hackathon. Please try again.' });
     } finally {
       setIsSubmitting(false);
     }
@@ -422,13 +420,13 @@ export const CreateHackathon: React.FC = () => {
       const response = await apiService.createHackathon(hackathonData);
       
       if (response.success) {
-        showToast('Draft saved successfully!', 'success');
+        showToast({ type: 'success', title: 'Draft saved successfully!' });
       } else {
-        showToast('Failed to save draft. Please try again.', 'error');
+        showToast({ type: 'error', title: 'Failed to save draft. Please try again.' });
       }
     } catch (error: any) {
       console.error('Error saving draft:', error);
-      showToast(error.message || 'Failed to save draft. Please try again.', 'error');
+      showToast({ type: 'error', title: error.message || 'Failed to save draft. Please try again.' });
     } finally {
       setIsDraft(false);
     }

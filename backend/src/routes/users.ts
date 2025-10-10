@@ -12,16 +12,16 @@ router.use(authenticate);
 router.get('/mentors', UserController.getMentors);
 
 // Route for users to get their own profile (accessible by all authenticated users)
-router.get('/me', UserController.getUserById);
+router.get('/me', UserController.getUserById as any);
 
 // Admin only routes
-router.get('/', adminOnly, validateUserQuery, UserController.getAllUsers);
-router.get('/stats', adminOnly, UserController.getUserStats);
-router.get('/search', adminOnly, UserController.searchUsers);
-router.get('/:id', adminOnly, validateUserId, UserController.getUserById);
-router.put('/:id', adminOnly, validateUserId, UserController.updateUser);
-router.delete('/:id', adminOnly, validateUserId, UserController.deleteUser);
-router.patch('/:id/deactivate', adminOnly, validateUserId, UserController.deactivateUser);
-router.patch('/:id/activate', adminOnly, validateUserId, UserController.activateUser);
+router.get('/', adminOnly, validateUserQuery, UserController.getAllUsers as any);
+router.get('/stats', adminOnly, UserController.getUserStats as any);
+router.get('/search', adminOnly, UserController.searchUsers as any);
+router.get('/:id', adminOnly, validateUserId, UserController.getUserById as any);
+router.put('/:id', adminOnly, validateUserId, UserController.updateUser as any);
+router.delete('/:id', adminOnly, validateUserId, UserController.deleteUser as any);
+router.patch('/:id/deactivate', adminOnly, validateUserId, UserController.deactivateUser as any);
+router.patch('/:id/activate', adminOnly, validateUserId, UserController.activateUser as any);
 
 export default router;

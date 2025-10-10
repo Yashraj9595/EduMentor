@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { MentorConnection, MentorGroup, MentorDiscussion } from '../models/MentorNetworking';
 import { User } from '../models/User';
 import { IAuthRequest } from '../types';
+import mongoose from 'mongoose';
 
 export class MentorNetworkingController {
   /**
@@ -317,8 +318,8 @@ export class MentorNetworkingController {
         name,
         description,
         createdBy: userId,
-        members: [userId], // Add creator as first member
-        admins: [userId], // Add creator as admin
+        members: [new mongoose.Types.ObjectId(userId)], // Add creator as first member
+        admins: [new mongoose.Types.ObjectId(userId)], // Add creator as admin
         isPublic: isPublic !== undefined ? isPublic : false,
         joinRequests: []
       });
@@ -331,7 +332,7 @@ export class MentorNetworkingController {
           role: 'mentor'
         });
         
-        const validMentorIds = mentors.map(mentor => mentor._id);
+        const validMentorIds = mentors.map(mentor => new mongoose.Types.ObjectId(mentor._id.toString()));
         group.members = [...group.members, ...validMentorIds];
       }
 
@@ -461,7 +462,7 @@ export class MentorNetworkingController {
       }
 
       // Check if user is already a member
-      if (group.members.includes(userId)) {
+      if (group.members.some(member => (member as any).toString() === userId)) {
         res.status(400).json({
           success: false,
           message: 'You are already a member of this group'
@@ -471,11 +472,11 @@ export class MentorNetworkingController {
 
       if (group.isPublic) {
         // Directly add to members
-        group.members.push(userId);
+        group.members.push(new mongoose.Types.ObjectId(userId));
         await group.save();
       } else {
         // Add to join requests
-        const existingRequest = group.joinRequests.find(req => req.user.toString() === userId);
+        const existingRequest = group.joinRequests.find(req => (req.user as any).toString() === userId);
         if (existingRequest) {
           res.status(400).json({
             success: false,
@@ -485,7 +486,7 @@ export class MentorNetworkingController {
         }
 
         group.joinRequests.push({
-          user: userId,
+          user: new mongoose.Types.ObjectId(userId),
           status: 'pending',
           requestedAt: new Date()
         });
@@ -545,7 +546,7 @@ export class MentorNetworkingController {
           return;
         }
 
-        if (!group.members.includes(userId)) {
+        if (!group.members.some(member => (member as any).toString() === userId)) {
           res.status(403).json({
             success: false,
             message: 'You must be a member of the group to post in it'
@@ -558,8 +559,8 @@ export class MentorNetworkingController {
       const discussion = new MentorDiscussion({
         title,
         content,
-        author: userId,
-        groupId: groupId || undefined,
+        author: new mongoose.Types.ObjectId(userId),
+        groupId: groupId ? new mongoose.Types.ObjectId(groupId) : undefined,
         tags: tags || [],
         likes: [],
         replies: [],
@@ -655,14 +656,14 @@ export class MentorNetworkingController {
       }
 
       // Check if user has already liked
-      const hasLiked = discussion.likes.includes(userId);
+      const hasLiked = discussion.likes.some(like => (like as any).toString() === userId);
 
       if (hasLiked) {
         // Unlike
-        discussion.likes = discussion.likes.filter(like => like.toString() !== userId);
+        discussion.likes = discussion.likes.filter(like => (like as any).toString() !== userId);
       } else {
         // Like
-        discussion.likes.push(userId);
+        discussion.likes.push(new mongoose.Types.ObjectId(userId));
       }
 
       await discussion.save();

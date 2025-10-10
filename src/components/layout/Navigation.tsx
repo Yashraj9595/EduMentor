@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { 
   Home, 
   Users, 
@@ -12,7 +12,6 @@ import {
   Trophy,
   User,
   Search,
-  Compass,
   MessageCircle,
   Award,
   Sparkles,
@@ -39,7 +38,6 @@ export const Navigation: React.FC<NavigationProps> = ({
   isMobile 
 }) => {
   const { user, logout } = useAuth();
-  const location = useLocation();
   
   // Define navigation items based on user role
   const getNavItems = () => {

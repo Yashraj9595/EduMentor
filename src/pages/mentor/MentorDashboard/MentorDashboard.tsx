@@ -10,7 +10,6 @@ import {
   Award,
   BookOpen,
   TrendingUp,
-  AlertTriangle,
   Search,
   Filter,
   Send,

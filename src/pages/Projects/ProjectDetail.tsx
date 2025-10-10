@@ -89,11 +89,8 @@ export const ProjectDetail: React.FC = () => {
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleting, setDeleting] = useState(false);
-  const [mentorRequestLoading, setMentorRequestLoading] = useState(false);
-  const [mentorRequestSuccess, setMentorRequestSuccess] = useState(false);
   const [showMentorModal, setShowMentorModal] = useState(false);
   const [mentors, setMentors] = useState<any[]>([]);
-  const [selectedMentor, setSelectedMentor] = useState<any>(null);
 
   useEffect(() => {
     if (id) {
@@ -230,28 +227,21 @@ export const ProjectDetail: React.FC = () => {
     if (!project) return;
     
     try {
-      setMentorRequestLoading(true);
-      setSelectedMentor(mentor);
-      
       // Update the project with the selected mentor
       const response = await apiService.put(`/projects/${project._id}`, {
         mentorId: mentor.id
       });
       
       if (response.success) {
-        setMentorRequestSuccess(true);
         // Refresh the project data
         fetchProject(project._id);
         // Close modal after 2 seconds
         setTimeout(() => {
           setShowMentorModal(false);
-          setMentorRequestSuccess(false);
         }, 2000);
       }
     } catch (err) {
       console.error('Error requesting mentor:', err);
-    } finally {
-      setMentorRequestLoading(false);
     }
   };
 
@@ -801,7 +791,7 @@ export const ProjectDetail: React.FC = () => {
             </Card>
           )}
 
-          {project && project.mentorId && !mentorRequestSuccess && (
+          {project && project.mentorId && (
             <Card>
               <CardHeader>
                 <h2 className="text-lg font-semibold">Mentor Assigned</h2>
@@ -824,19 +814,6 @@ export const ProjectDetail: React.FC = () => {
             </Card>
           )}
 
-          {mentorRequestSuccess && (
-            <Card>
-              <CardBody>
-                <div className="flex items-center gap-3">
-                  <CheckCircle2 className="w-5 h-5 text-green-600" />
-                  <div>
-                    <h3 className="font-medium text-green-800">Request Sent!</h3>
-                    <p className="text-sm text-green-600">Your mentor request has been sent successfully.</p>
-                  </div>
-                </div>
-              </CardBody>
-            </Card>
-          )}
 
         </div>
       </div>

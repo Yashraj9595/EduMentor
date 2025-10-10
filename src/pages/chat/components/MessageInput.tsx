@@ -56,7 +56,7 @@ export const MessageInput: React.FC<MessageInputProps> = ({
         clearTimeout(typingTimeoutRef.current);
       }
       
-      typingTimeoutRef.current = setTimeout(() => {
+      typingTimeoutRef.current = window.setTimeout(() => {
         if (onStopTyping) {
           onStopTyping();
         }

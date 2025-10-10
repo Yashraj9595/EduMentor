@@ -3,24 +3,16 @@ import { useNavigate } from 'react-router-dom';
 import { 
   Users, 
   Search, 
-  Filter, 
-  Download, 
-  Upload, 
   UserPlus, 
   UserMinus, 
-  Mail, 
-  Phone, 
   Calendar,
   Award,
   Trophy,
   CheckCircle,
-  AlertCircle,
   Clock,
   Eye,
-  Edit,
-  Trash2
 } from 'lucide-react';
-import { Card, CardHeader, CardBody } from '../../../components/ui/Card';
+import { Card, CardBody } from '../../../components/ui/Card';
 import { Button } from '../../../components/ui/Button';
 import { Input } from '../../../components/ui/Input';
 import { Badge } from '../../../components/ui/Badge';
@@ -51,35 +43,35 @@ interface Team {
   experience: 'beginner' | 'intermediate' | 'advanced';
 }
 
-interface Participant {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  university: string;
-  major: string;
-  year: string;
-  skills: string[];
-  experience: 'beginner' | 'intermediate' | 'advanced';
-  hackathonsParticipated: number;
-  lookingForTeam: boolean;
-  preferredRole: string;
-  bio: string;
-  portfolio: string;
-  linkedin: string;
-  github: string;
-}
+// interface Participant {
+//   id: string;
+//   name: string;
+//   email: string;
+//   phone: string;
+//   university: string;
+//   major: string;
+//   year: string;
+//   skills: string[];
+//   experience: 'beginner' | 'intermediate' | 'advanced';
+//   hackathonsParticipated: number;
+//   lookingForTeam: boolean;
+//   preferredRole: string;
+//   bio: string;
+//   portfolio: string;
+//   linkedin: string;
+//   github: string;
+// }
 
 export const TeamManagement: React.FC = () => {
   const navigate = useNavigate();
   const [teams, setTeams] = useState<Team[]>([]);
-  const [participants, setParticipants] = useState<Participant[]>([]);
+  // const [participants, setParticipants] = useState<Participant[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [experienceFilter, setExperienceFilter] = useState('all');
   const [selectedTeams, setSelectedTeams] = useState<string[]>([]);
-  const [showBulkActions, setShowBulkActions] = useState(false);
+  // const [showBulkActions, setShowBulkActions] = useState(false);
 
   useEffect(() => {
     fetchTeams();
@@ -160,27 +152,27 @@ export const TeamManagement: React.FC = () => {
   const fetchParticipants = async () => {
     try {
       // Mock data - in real app, fetch from API
-      const mockParticipants: Participant[] = [
-        {
-          id: '1',
-          name: 'Alex Chen',
-          email: 'alex@example.com',
-          phone: '+1234567895',
-          university: 'Tech University',
-          major: 'Computer Science',
-          year: 'Senior',
-          skills: ['JavaScript', 'React', 'Node.js'],
-          experience: 'intermediate',
-          hackathonsParticipated: 3,
-          lookingForTeam: true,
-          preferredRole: 'Frontend Developer',
-          bio: 'Passionate about web development and user experience',
-          portfolio: 'https://alexchen.dev',
-          linkedin: 'https://linkedin.com/in/alexchen',
-          github: 'https://github.com/alexchen'
-        }
-      ];
-      setParticipants(mockParticipants);
+      // const mockParticipants: Participant[] = [
+      //   {
+      //     id: '1',
+      //     name: 'Alex Chen',
+      //     email: 'alex@example.com',
+      //     phone: '+1234567895',
+      //     university: 'Tech University',
+      //     major: 'Computer Science',
+      //     year: 'Senior',
+      //     skills: ['JavaScript', 'React', 'Node.js'],
+      //     experience: 'intermediate',
+      //     hackathonsParticipated: 3,
+      //     lookingForTeam: true,
+      //     preferredRole: 'Frontend Developer',
+      //     bio: 'Passionate about web development and user experience',
+      //     portfolio: 'https://alexchen.dev',
+      //     linkedin: 'https://linkedin.com/in/alexchen',
+      //     github: 'https://github.com/alexchen'
+      //   }
+      // ];
+      // setParticipants(mockParticipants);
     } catch (error) {
       console.error('Error fetching participants:', error);
     }
@@ -197,7 +189,7 @@ export const TeamManagement: React.FC = () => {
       selectedTeams.includes(team.id) ? { ...team, status } : team
     ));
     setSelectedTeams([]);
-    setShowBulkActions(false);
+    // setShowBulkActions(false);
   };
 
   const handleTeamSelection = (teamId: string) => {

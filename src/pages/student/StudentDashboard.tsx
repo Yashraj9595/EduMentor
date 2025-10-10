@@ -7,15 +7,12 @@ import {
   FileText, 
   Users, 
   Calendar,
-  TrendingUp,
-  Plus,
   ArrowRight,
   Clock,
   CheckCircle,
   AlertCircle,
   Target,
   Award,
-  BarChart3
 } from 'lucide-react';
 
 export const StudentDashboard: React.FC = () => {

@@ -2,16 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   UserPlus,
-  Users,
   CheckCircle,
   X,
   ArrowLeft,
   Trophy,
-  Calendar,
-  MapPin,
-  Clock,
   AlertCircle,
-  Save,
   Send
 } from 'lucide-react';
 import { Card, CardHeader, CardBody } from '../../../components/ui/Card';
@@ -20,7 +15,7 @@ import { Input } from '../../../components/ui/Input';
 import { Label } from '../../../components/ui/Label';
 import { Textarea } from '../../../components/ui/Textarea';
 import { Badge } from '../../../components/ui/Badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../components/ui/SelectNew';
+import { Select } from '../../../components/ui/SelectNew';
 import { apiService } from '../../../services/api';
 import { useAuth } from '../../../contexts/AuthContext';
 import { useToast } from '../../../contexts/ToastContext';
@@ -139,12 +134,12 @@ export const HackathonRegistration: React.FC = () => {
       if (response.success && response.data) {
         setHackathon(response.data);
       } else {
-        showToast('Hackathon not found', 'error');
+        showToast({ type: 'error', title: 'Hackathon not found' });
         navigate('/app/hackathons');
       }
     } catch (error: any) {
       console.error('Error fetching hackathon:', error);
-      showToast('Failed to load hackathon details', 'error');
+      showToast({ type: 'error', title: 'Failed to load hackathon details' });
       navigate('/app/hackathons');
     } finally {
       setLoading(false);
@@ -251,14 +246,14 @@ export const HackathonRegistration: React.FC = () => {
       const response = await apiService.registerForHackathon(id!, formData);
       
       if (response.success) {
-        showToast('Registration submitted successfully!', 'success');
+        showToast({ type: 'success', title: 'Registration submitted successfully!' });
         navigate(`/app/student/hackathons/${id}`);
       } else {
-        showToast('Failed to submit registration. Please try again.', 'error');
+        showToast({ type: 'error', title: 'Failed to submit registration. Please try again.' });
       }
     } catch (error: any) {
       console.error('Error submitting registration:', error);
-      showToast(error.message || 'Failed to submit registration. Please try again.', 'error');
+      showToast({ type: 'error', title: error.message || 'Failed to submit registration. Please try again.' });
     } finally {
       setSubmitting(false);
     }

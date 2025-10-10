@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
@@ -9,7 +9,6 @@ import {
   Briefcase,
   CheckCircle,
   ArrowRight,
-  Download,
   Eye
 } from 'lucide-react';
 
@@ -24,7 +23,7 @@ interface ReportTemplate {
 }
 
 export const ReportTemplates: React.FC = () => {
-  const [templates, setTemplates] = useState<ReportTemplate[]>([
+  const [templates] = useState<ReportTemplate[]>([
     {
       id: 'legal',
       name: 'Legal Research Report',

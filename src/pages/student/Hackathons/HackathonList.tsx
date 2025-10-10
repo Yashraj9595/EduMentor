@@ -6,21 +6,18 @@ import {
   MapPin,
   Users,
   Clock,
-  Star,
   Search,
-  Filter,
   Award,
   Target,
   Eye,
   UserPlus
 } from 'lucide-react';
-import { Card, CardHeader, CardBody } from '../../../components/ui/Card';
+import { Card, CardBody } from '../../../components/ui/Card';
 import { Button } from '../../../components/ui/Button';
 import { Input } from '../../../components/ui/Input';
 import { Badge } from '../../../components/ui/Badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../components/ui/SelectNew';
+import { Select } from '../../../components/ui/SelectNew';
 import { apiService } from '../../../services/api';
-import { useAuth } from '../../../contexts/AuthContext';
 import { useToast } from '../../../contexts/ToastContext';
 
 interface Hackathon {
@@ -63,7 +60,6 @@ interface HackathonFilters {
 
 export const HackathonList: React.FC = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
   const { showToast } = useToast();
   
   const [hackathons, setHackathons] = useState<Hackathon[]>([]);
@@ -99,7 +95,7 @@ export const HackathonList: React.FC = () => {
       }
     } catch (error: any) {
       console.error('Error fetching hackathons:', error);
-      showToast('Failed to load hackathons', 'error');
+      showToast({ type: 'error', title: 'Failed to load hackathons' });
     } finally {
       setLoading(false);
     }

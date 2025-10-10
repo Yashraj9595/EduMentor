@@ -12,12 +12,8 @@ import {
   ArrowLeft,
   Trophy,
   Clock,
-  AlertCircle,
   Save,
   Send,
-  Download,
-  Eye,
-  Edit
 } from 'lucide-react';
 import { Card, CardHeader, CardBody } from '../../../components/ui/Card';
 import { Button } from '../../../components/ui/Button';
@@ -25,7 +21,6 @@ import { Input } from '../../../components/ui/Input';
 import { Label } from '../../../components/ui/Label';
 import { Textarea } from '../../../components/ui/Textarea';
 import { Badge } from '../../../components/ui/Badge';
-import { Progress } from '../../../components/ui/Progress';
 import { apiService } from '../../../services/api';
 import { useAuth } from '../../../contexts/AuthContext';
 import { useToast } from '../../../contexts/ToastContext';
@@ -98,7 +93,6 @@ export const HackathonSubmission: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [currentStage, setCurrentStage] = useState(0);
   const [formData, setFormData] = useState<SubmissionForm>({
     projectTitle: '',
     projectDescription: '',
@@ -145,12 +139,12 @@ export const HackathonSubmission: React.FC = () => {
       if (response.success && response.data) {
         setHackathon(response.data);
       } else {
-        showToast('Hackathon not found', 'error');
+        showToast({ type: 'error', title: 'Hackathon not found' });
         navigate('/app/hackathons');
       }
     } catch (error: any) {
       console.error('Error fetching hackathon:', error);
-      showToast('Failed to load hackathon details', 'error');
+      showToast({ type: 'error', title: 'Failed to load hackathon details' });
       navigate('/app/hackathons');
     } finally {
       setLoading(false);
@@ -326,10 +320,10 @@ export const HackathonSubmission: React.FC = () => {
       setSaving(true);
       // TODO: Implement save draft API call
       console.log('Saving draft:', formData);
-      showToast('Draft saved successfully!', 'success');
+      showToast({ type: 'success', title: 'Draft saved successfully!' });
     } catch (error: any) {
       console.error('Error saving draft:', error);
-      showToast('Failed to save draft', 'error');
+      showToast({ type: 'error', title: 'Failed to save draft' });
     } finally {
       setSaving(false);
     }
@@ -337,7 +331,7 @@ export const HackathonSubmission: React.FC = () => {
 
   const handleSubmit = async () => {
     if (!validateSubmission()) {
-      showToast('Please fill in all required fields', 'error');
+      showToast({ type: 'error', title: 'Please fill in all required fields' });
       return;
     }
 
@@ -348,28 +342,19 @@ export const HackathonSubmission: React.FC = () => {
       const response = await apiService.submitProject(id!, formData);
       
       if (response.success) {
-        showToast('Project submitted successfully!', 'success');
+        showToast({ type: 'success', title: 'Project submitted successfully!' });
         navigate(`/app/student/hackathons/${id}`);
       } else {
-        showToast('Failed to submit project', 'error');
+        showToast({ type: 'error', title: 'Failed to submit project' });
       }
     } catch (error: any) {
       console.error('Error submitting project:', error);
-      showToast(error.message || 'Failed to submit project', 'error');
+      showToast({ type: 'error', title: error.message || 'Failed to submit project' });
     } finally {
       setSubmitting(false);
     }
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
 
   const getTimeUntilDeadline = () => {
     if (!hackathon?.submissionDeadline) return null;
@@ -592,7 +577,7 @@ export const HackathonSubmission: React.FC = () => {
             <h3 className="text-lg font-medium">Project Links</h3>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {hackathon.requirements.repositoryUrl && (
+              {hackathon.requirements.sourceCode && (
                 <div>
                   <Label htmlFor="repositoryUrl">Repository URL *</Label>
                   <Input
@@ -604,7 +589,7 @@ export const HackathonSubmission: React.FC = () => {
                 </div>
               )}
               
-              {hackathon.requirements.demoUrl && (
+              {hackathon.requirements.demoVideo && (
                 <div>
                   <Label htmlFor="demoUrl">Demo URL *</Label>
                   <Input
@@ -616,7 +601,7 @@ export const HackathonSubmission: React.FC = () => {
                 </div>
               )}
               
-              {hackathon.requirements.presentationUrl && (
+              {hackathon.requirements.presentation && (
                 <div>
                   <Label htmlFor="presentationUrl">Presentation URL *</Label>
                   <Input
@@ -647,7 +632,7 @@ export const HackathonSubmission: React.FC = () => {
                   className="hidden"
                   id="file-upload"
                 />
-                <Button asChild>
+                <Button>
                   <label htmlFor="file-upload" className="cursor-pointer">
                     Choose Files
                   </label>

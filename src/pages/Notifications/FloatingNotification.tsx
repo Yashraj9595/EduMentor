@@ -66,7 +66,7 @@ export const FloatingNotification: React.FC<FloatingNotificationProps> = ({
                 <div 
                   key={notification._id} 
                   className={`p-4 hover:bg-gray-50 transition-colors ${
-                    !notification.read ? 'bg-blue-50' : ''
+                    !notification.isRead ? 'bg-blue-50' : ''
                   }`}
                 >
                   <div className="flex items-start gap-3">
@@ -91,7 +91,7 @@ export const FloatingNotification: React.FC<FloatingNotificationProps> = ({
                             {new Date(notification.createdAt).toLocaleString()}
                           </span>
                         </div>
-                        {!notification.read && (
+                        {!notification.isRead && (
                           <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0 mt-1"></div>
                         )}
                       </div>

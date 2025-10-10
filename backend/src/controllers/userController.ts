@@ -1,12 +1,13 @@
 import { Request, Response } from 'express';
+import { IAuthRequest } from '../types';
 import { User } from '../models/User';
-import { IAuthRequest, IUserQuery, IPaginatedResponse } from '../types';
+import { IUserQuery, IPaginatedResponse } from '../types';
 
 export class UserController {
   /**
    * Get all users (Admin only)
    */
-  static async getAllUsers(req: Request, res: Response): Promise<void> {
+  static async getAllUsers(req: IAuthRequest, res: Response): Promise<void> {
     try {
       const {
         page = 1,
@@ -16,7 +17,7 @@ export class UserController {
         role,
         isActive,
         search
-      }: IUserQuery = req.query;
+      }: IUserQuery = req.query as any;
 
       // Build query
       const query: any = {};
@@ -80,10 +81,10 @@ export class UserController {
   /**
    * Get user by ID
    */
-  static async getUserById(req: Request, res: Response): Promise<void> {
+  static async getUserById(req: IAuthRequest, res: Response): Promise<void> {
     try {
       // Check if this is a request for the current user's own profile
-      const isOwnProfile = req.path === '/me' || req.params.id === 'me';
+      const isOwnProfile = req.path === '/me' || (req.params as any).id === 'me';
       
       if (isOwnProfile) {
         // Return the current user's own profile
@@ -104,7 +105,7 @@ export class UserController {
       }
       
       // For specific user ID requests, only allow admin access
-      const { id } = req.params;
+      const { id } = req.params as any;
 
       const user = await User.findById(id).select('-password');
       
@@ -133,10 +134,10 @@ export class UserController {
   /**
    * Update user (Admin only)
    */
-  static async updateUser(req: Request, res: Response): Promise<void> {
+  static async updateUser(req: IAuthRequest, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
-      const { firstName, lastName, email, mobile, role, isActive } = req.body;
+      const { id } = req.params as any;
+      const { firstName, lastName, email, mobile, role, isActive } = req.body as any;
 
       const updateData: any = {};
       if (firstName) updateData.firstName = firstName;
@@ -177,9 +178,9 @@ export class UserController {
   /**
    * Delete user (Admin only)
    */
-  static async deleteUser(req: Request, res: Response): Promise<void> {
+  static async deleteUser(req: IAuthRequest, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const { id } = req.params as any;
 
       const user = await User.findByIdAndDelete(id);
       
@@ -207,9 +208,9 @@ export class UserController {
   /**
    * Deactivate user (Admin only)
    */
-  static async deactivateUser(req: Request, res: Response): Promise<void> {
+  static async deactivateUser(req: IAuthRequest, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const { id } = req.params as any;
 
       const user = await User.findByIdAndUpdate(
         id,
@@ -242,9 +243,9 @@ export class UserController {
   /**
    * Activate user (Admin only)
    */
-  static async activateUser(req: Request, res: Response): Promise<void> {
+  static async activateUser(req: IAuthRequest, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const { id } = req.params as any;
 
       const user = await User.findByIdAndUpdate(
         id,
@@ -277,7 +278,7 @@ export class UserController {
   /**
    * Get user statistics (Admin only)
    */
-  static async getUserStats(req: Request, res: Response): Promise<void> {
+  static async getUserStats(req: IAuthRequest, res: Response): Promise<void> {
     try {
       const [
         totalUsers,
@@ -322,9 +323,9 @@ export class UserController {
   /**
    * Search users
    */
-  static async searchUsers(req: Request, res: Response): Promise<void> {
+  static async searchUsers(req: IAuthRequest, res: Response): Promise<void> {
     try {
-      const { q, limit = 10 } = req.query;
+      const { q, limit = 10 } = req.query as any;
 
       if (!q || typeof q !== 'string') {
         res.status(400).json({
@@ -367,7 +368,7 @@ export class UserController {
       console.log('Request user:', req.user);
       console.log('Request query:', req.query);
       
-      const { search, skills, limit = 20 } = req.query;
+      const { search, skills, limit = 20 } = req.query as any;
 
       // Build query for mentors only
       const query: any = { 

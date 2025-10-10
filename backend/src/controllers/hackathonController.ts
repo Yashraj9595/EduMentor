@@ -1,9 +1,10 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
+import { IAuthRequest } from '../types';
 import { Hackathon } from '../models/Hackathon';
 import { User } from '../models/User';
 
 // Create a new hackathon
-export const createHackathon = async (req: Request, res: Response) => {
+export const createHackathon = async (req: IAuthRequest, res: Response) => {
   try {
     const {
       title,
@@ -112,7 +113,7 @@ export const createHackathon = async (req: Request, res: Response) => {
       contactInfo: contactInfo || { email: '', phone: '', website: '', socialMedia: {} },
       submissionStages: submissionStages || [],
       volunteers: volunteers || [],
-      organizerId: req.user?.id,
+      organizerId: req.user?._id,
       status,
       participants: 0,
       teams: 0
@@ -136,7 +137,7 @@ export const createHackathon = async (req: Request, res: Response) => {
 };
 
 // Get all hackathons
-export const getAllHackathons = async (req: Request, res: Response) => {
+export const getAllHackathons = async (req: IAuthRequest, res: Response) => {
   try {
     const {
       page = 1,
@@ -196,7 +197,7 @@ export const getAllHackathons = async (req: Request, res: Response) => {
 };
 
 // Get hackathon by ID
-export const getHackathonById = async (req: Request, res: Response) => {
+export const getHackathonById = async (req: IAuthRequest, res: Response) => {
   try {
     const { id } = req.params;
 
@@ -226,7 +227,7 @@ export const getHackathonById = async (req: Request, res: Response) => {
 };
 
 // Update hackathon
-export const updateHackathon = async (req: Request, res: Response) => {
+export const updateHackathon = async (req: IAuthRequest, res: Response) => {
   try {
     const { id } = req.params;
     const updateData = req.body;
@@ -277,7 +278,7 @@ export const updateHackathon = async (req: Request, res: Response) => {
 };
 
 // Delete hackathon
-export const deleteHackathon = async (req: Request, res: Response) => {
+export const deleteHackathon = async (req: IAuthRequest, res: Response) => {
   try {
     const { id } = req.params;
 
@@ -305,7 +306,7 @@ export const deleteHackathon = async (req: Request, res: Response) => {
 };
 
 // Publish hackathon
-export const publishHackathon = async (req: Request, res: Response) => {
+export const publishHackathon = async (req: IAuthRequest, res: Response) => {
   try {
     const { id } = req.params;
 
@@ -338,7 +339,7 @@ export const publishHackathon = async (req: Request, res: Response) => {
 };
 
 // Get hackathons by organizer
-export const getHackathonsByOrganizer = async (req: Request, res: Response) => {
+export const getHackathonsByOrganizer = async (req: IAuthRequest, res: Response) => {
   try {
     const { organizerId } = req.params;
     const { page = 1, limit = 10, status } = req.query;
@@ -380,7 +381,7 @@ export const getHackathonsByOrganizer = async (req: Request, res: Response) => {
 };
 
 // Get hackathon statistics
-export const getHackathonStats = async (req: Request, res: Response) => {
+export const getHackathonStats = async (req: IAuthRequest, res: Response) => {
   try {
     const { id } = req.params;
 

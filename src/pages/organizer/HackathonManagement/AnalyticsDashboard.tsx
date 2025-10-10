@@ -1,16 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
-  BarChart3, 
   TrendingUp, 
   Users, 
   Award, 
-  Clock, 
   Target, 
   Download,
-  Filter,
-  Calendar,
-  Trophy,
   Star,
   Activity,
   Eye,
@@ -20,7 +15,6 @@ import {
 import { Card, CardHeader, CardBody } from '../../../components/ui/Card';
 import { Button } from '../../../components/ui/Button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../components/ui/SelectNew';
-import { Badge } from '../../../components/ui/Badge';
 import { Progress } from '../../../components/ui/Progress';
 
 interface AnalyticsData {
@@ -53,7 +47,7 @@ export const AnalyticsDashboard: React.FC = () => {
   const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [timeRange, setTimeRange] = useState('7d');
-  const [selectedMetric, setSelectedMetric] = useState('participation');
+  // const [selectedMetric, setSelectedMetric] = useState('participation');
 
   useEffect(() => {
     fetchAnalyticsData();

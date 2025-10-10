@@ -4,9 +4,6 @@ import {
   Plus, 
   Paperclip, 
   X, 
-  AlertCircle,
-  CheckCircle,
-  Clock
 } from 'lucide-react';
 import { Card, CardHeader, CardBody } from '../../../components/ui/Card';
 import { Button } from '../../../components/ui/Button';

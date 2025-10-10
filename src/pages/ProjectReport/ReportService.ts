@@ -146,7 +146,7 @@ export class ReportService {
    * Generate HTML content for the report
    */
   private generateHTMLContent(data: ReportData): string {
-    const template = this.getTemplate(data.template);
+    const template = this.getTemplate();
     if (!template) {
       throw new Error(`Template not found: ${data.template}`);
     }
@@ -170,7 +170,7 @@ export class ReportService {
     ${this.generateTableOfContents(data)}
     ${this.generateSections(data)}
     ${this.generateReferences(data)}
-    ${this.generateAppendices(data)}
+    ${this.generateAppendices()}
 </body>
 </html>`;
   }
@@ -344,7 +344,7 @@ export class ReportService {
   private generateSections(data: ReportData): string {
     return data.sections
       .filter(section => section.content.trim().length > 0)
-      .map((section, index) => `
+      .map((section) => `
         <div class="section">
             <h1>${section.title}</h1>
             <div class="section-content">
@@ -375,7 +375,7 @@ export class ReportService {
   /**
    * Generate appendices HTML
    */
-  private generateAppendices(data: ReportData): string {
+  private generateAppendices(): string {
     return `
     <div class="appendices-page">
         <h1>APPENDICES</h1>
@@ -530,7 +530,7 @@ export class ReportService {
   /**
    * Get template by ID
    */
-  private getTemplate(templateId: string): ReportTemplate | null {
+  private getTemplate(): ReportTemplate | null {
     // In a real implementation, you would fetch this from a database
     // For now, return null as templates are managed in the component
     return null;

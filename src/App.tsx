@@ -47,7 +47,6 @@ import { StudentDashboard } from './pages/student/Dashboard';
 import { CreateProject, EditProject, ProjectList, ProjectDetail } from './pages/Projects';
 import { MentorList, MentorChat } from './pages/student/Mentors';
 import { TeamFormation, TeamChat } from './pages/student/Teams';
-import { HackathonList, HackathonSubmission } from './pages/organizer/Hackathons';
 import { 
   HackathonList as StudentHackathonList,
   HackathonDetail,

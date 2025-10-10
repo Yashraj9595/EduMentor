@@ -5,10 +5,8 @@ import { Input } from '@/components/ui/Input';
 import { Label } from '@/components/ui/Label';
 import { Textarea } from '@/components/ui/Textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/SelectNew';
-import { Checkbox } from '@/components/ui/Checkbox';
 import { Badge } from '@/components/ui/Badge';
 import { Progress } from '@/components/ui/Progress';
-import { Separator } from '@/components/ui/Separator';
 import { 
   FileText, 
   Download, 
@@ -19,17 +17,7 @@ import {
   FileCode,
   File,
   Users,
-  Calendar,
-  Building,
-  GraduationCap,
   Scale,
-  Globe,
-  Database,
-  Shield,
-  Lock,
-  Eye,
-  Edit,
-  Trash2,
   Plus,
   Save,
   RefreshCw
@@ -99,7 +87,7 @@ export const ReportGenerator: React.FC = () => {
     citationStyle: 'bluebook'
   });
 
-  const [templates, setTemplates] = useState<ReportTemplate[]>([
+  const [templates] = useState<ReportTemplate[]>([
     {
       id: 'legal',
       name: 'Legal Research Report',
@@ -163,7 +151,6 @@ export const ReportGenerator: React.FC = () => {
   ]);
 
   const [selectedTemplate, setSelectedTemplate] = useState<ReportTemplate | null>(null);
-  const [currentSection, setCurrentSection] = useState<string>('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [progress, setProgress] = useState(0);
 
@@ -592,7 +579,7 @@ export const ReportGenerator: React.FC = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {reportData.sections.map((section, index) => (
+                {reportData.sections.map((section) => (
                   <div key={section.id} className="border rounded-lg p-4">
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-2">

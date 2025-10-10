@@ -6,12 +6,10 @@ import {
   MapPin,
   Users,
   Clock,
-  Star,
   Award,
   Target,
   UserPlus,
   CheckCircle,
-  X,
   ExternalLink,
   Phone,
   Mail,
@@ -23,9 +21,6 @@ import {
   FileText,
   Video,
   Code,
-  Camera,
-  Download,
-  Share2
 } from 'lucide-react';
 import { Card, CardHeader, CardBody } from '../../../components/ui/Card';
 import { Button } from '../../../components/ui/Button';
@@ -160,12 +155,12 @@ export const HackathonDetail: React.FC = () => {
       if (response.success && response.data) {
         setHackathon(response.data);
       } else {
-        showToast('Hackathon not found', 'error');
+        showToast({ type: 'error', title: 'Hackathon not found' });
         navigate('/app/hackathons');
       }
     } catch (error: any) {
       console.error('Error fetching hackathon:', error);
-      showToast('Failed to load hackathon details', 'error');
+      showToast({ type: 'error', title: 'Failed to load hackathon details' });
       navigate('/app/hackathons');
     } finally {
       setLoading(false);
@@ -182,11 +177,11 @@ export const HackathonDetail: React.FC = () => {
     try {
       setRegistrationLoading(true);
       // TODO: Implement registration API call
-      showToast('Registration successful!', 'success');
+      showToast({ type: 'success', title: 'Registration successful!' });
       setIsRegistered(true);
     } catch (error: any) {
       console.error('Error registering:', error);
-      showToast('Failed to register for hackathon', 'error');
+      showToast({ type: 'error', title: 'Failed to register for hackathon' });
     } finally {
       setRegistrationLoading(false);
     }
@@ -398,7 +393,7 @@ export const HackathonDetail: React.FC = () => {
               </CardHeader>
               <CardBody>
                 <div className="space-y-4">
-                  {hackathon.submissionStages.map((stage, index) => (
+                  {hackathon.submissionStages.map((stage, _index) => (
                     <div key={stage.id} className="p-4 border rounded-lg">
                       <div className="flex items-center justify-between mb-2">
                         <h3 className="font-medium">{stage.name}</h3>

@@ -1,5 +1,4 @@
 import React, { createContext, useState, useEffect, useContext, ReactNode } from 'react';
-import { apiService } from '../services/api';
 import { useAuth } from './AuthContext';
 
 interface Notification {
@@ -9,6 +8,7 @@ interface Notification {
   type: 'info' | 'success' | 'warning' | 'error' | 'mentor_request' | 'review_scheduled' | 'diary_submitted' | 'project_update';
   priority: 'low' | 'medium' | 'high';
   isRead: boolean;
+  read?: boolean; // Add read property for backward compatibility
   createdAt: string;
   relatedProjectId?: string;
   relatedEntityType?: string;
@@ -23,6 +23,7 @@ interface NotificationContextType {
   markAllAsRead: () => void;
   addNotification: (notification: Omit<Notification, '_id' | 'isRead' | 'createdAt'>) => void;
   removeNotification: (id: string) => void;
+  deleteNotification: (id: string) => void; // Add deleteNotification method
   connect: () => void;
   disconnect: () => void;
 }
@@ -33,7 +34,6 @@ export const NotificationProvider: React.FC<{ children: ReactNode }> = ({ childr
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const { user } = useAuth();
-  const [ws, setWs] = useState<WebSocket | null>(null);
 
   // Fetch initial notifications
   useEffect(() => {
@@ -177,6 +177,10 @@ export const NotificationProvider: React.FC<{ children: ReactNode }> = ({ childr
     }
   };
 
+  const deleteNotification = (id: string) => {
+    removeNotification(id);
+  };
+
   const value = {
     notifications,
     unreadCount,
@@ -184,6 +188,7 @@ export const NotificationProvider: React.FC<{ children: ReactNode }> = ({ childr
     markAllAsRead,
     addNotification,
     removeNotification,
+    deleteNotification,
     connect,
     disconnect
   };

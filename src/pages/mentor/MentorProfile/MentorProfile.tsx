@@ -6,23 +6,18 @@ import {
   MapPin, 
   Link as LinkIcon, 
   Edit3, 
-  Plus,
   Award,
   FileText,
   Github,
   Linkedin,
-  Camera,
   Trophy,
   BookOpen,
   Users,
-  Calendar,
   Star,
   CheckCircle,
   TrendingUp,
   BarChart3,
   Activity,
-  Clock,
-  Target
 } from 'lucide-react';
 import { Card, CardHeader, CardBody } from '../../../components/ui/Card';
 import { Button } from '../../../components/ui/Button';
@@ -30,7 +25,7 @@ import { Input } from '../../../components/ui/Input';
 import { Textarea } from '../../../components/ui/Textarea';
 import { useAuth } from '../../../contexts/AuthContext';
 import { apiService } from '../../../services/api';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 interface Skill {
   id: string;
@@ -112,7 +107,6 @@ interface ApiResponse<T> {
 export const MentorProfile: React.FC = () => {
   const { user } = useAuth();
   const { mentorId } = useParams<{ mentorId: string }>();
-  const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'profile' | 'activity' | 'analytics'>('profile');

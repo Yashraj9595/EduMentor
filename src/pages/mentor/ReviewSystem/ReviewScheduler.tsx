@@ -8,24 +8,16 @@ import {
   Edit,
   Trash2,
   Eye,
-  User,
   TrendingUp,
-  Send,
   Download,
   Search,
   Filter,
-  Star,
-  MessageSquare,
-  FileText,
-  Award,
-  BarChart3
 } from 'lucide-react';
 import { Card, CardBody } from '../../../components/ui/Card';
 import { Button } from '../../../components/ui/Button';
 import { Input } from '../../../components/ui/Input';
 import { Textarea } from '../../../components/ui/Textarea';
 import { apiService } from '../../../services/api';
-import { useAuth } from '../../../contexts/AuthContext';
 
 interface Review {
   _id: string;
@@ -89,7 +81,6 @@ interface ApiResponse<T> {
 }
 
 export const ReviewScheduler: React.FC = () => {
-  const { user } = useAuth();
   const [reviews, setReviews] = useState<Review[]>([]);
   const [projects, setProjects] = useState<Project[]>([]);
   const [showCreateForm, setShowCreateForm] = useState(false);

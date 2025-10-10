@@ -1,9 +1,10 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
+import { IAuthRequest } from '../types';
 import { Hackathon } from '../models/Hackathon';
 import { User } from '../models/User';
 
 // Submit project for hackathon
-export const submitProject = async (req: Request, res: Response) => {
+export const submitProject = async (req: IAuthRequest, res: Response) => {
   try {
     const { hackathonId } = req.params;
     const {
@@ -60,7 +61,7 @@ export const submitProject = async (req: Request, res: Response) => {
 
     // Check if user is registered for this hackathon
     const registration = hackathon.registrations.find(
-      (reg: any) => reg.teamLead.toString() === req.user?.id
+      (reg: any) => reg.teamLead.toString() === req.user?._id
     );
 
     if (!registration) {
@@ -72,7 +73,7 @@ export const submitProject = async (req: Request, res: Response) => {
 
     // Check if user has already submitted
     const existingSubmission = hackathon.submissions.find(
-      (sub: any) => sub.teamLead.toString() === req.user?.id
+      (sub: any) => sub.teamLead.toString() === req.user?._id
     );
 
     if (existingSubmission) {
@@ -84,7 +85,7 @@ export const submitProject = async (req: Request, res: Response) => {
 
     // Create submission
     const submission = {
-      teamLead: req.user?.id,
+      teamLead: req.user?._id,
       projectTitle,
       projectDescription,
       problemStatement,
@@ -136,9 +137,9 @@ export const submitProject = async (req: Request, res: Response) => {
 };
 
 // Get user's submissions
-export const getUserSubmissions = async (req: Request, res: Response) => {
+export const getUserSubmissions = async (req: IAuthRequest, res: Response) => {
   try {
-    const userId = req.user?.id;
+    const userId = req.user?._id;
     const { page = 1, limit = 10, status } = req.query;
 
     const query: any = {
@@ -180,7 +181,7 @@ export const getUserSubmissions = async (req: Request, res: Response) => {
 };
 
 // Update submission
-export const updateSubmission = async (req: Request, res: Response) => {
+export const updateSubmission = async (req: IAuthRequest, res: Response) => {
   try {
     const { hackathonId, submissionId } = req.params;
     const updateData = req.body;
@@ -202,7 +203,7 @@ export const updateSubmission = async (req: Request, res: Response) => {
 
     // Find the submission
     const submission = hackathon.submissions.find(
-      (sub: any) => sub._id.toString() === submissionId && sub.teamLead.toString() === req.user?.id
+      (sub: any) => sub._id.toString() === submissionId && sub.teamLead.toString() === req.user?._id
     );
 
     if (!submission) {
@@ -241,7 +242,7 @@ export const updateSubmission = async (req: Request, res: Response) => {
 };
 
 // Delete submission
-export const deleteSubmission = async (req: Request, res: Response) => {
+export const deleteSubmission = async (req: IAuthRequest, res: Response) => {
   try {
     const { hackathonId, submissionId } = req.params;
 
@@ -255,7 +256,7 @@ export const deleteSubmission = async (req: Request, res: Response) => {
 
     // Find the submission
     const submission = hackathon.submissions.find(
-      (sub: any) => sub._id.toString() === submissionId && sub.teamLead.toString() === req.user?.id
+      (sub: any) => sub._id.toString() === submissionId && sub.teamLead.toString() === req.user?._id
     );
 
     if (!submission) {
@@ -295,7 +296,7 @@ export const deleteSubmission = async (req: Request, res: Response) => {
 };
 
 // Get hackathon submissions
-export const getHackathonSubmissions = async (req: Request, res: Response) => {
+export const getHackathonSubmissions = async (req: IAuthRequest, res: Response) => {
   try {
     const { hackathonId } = req.params;
     const { page = 1, limit = 20, status } = req.query;
@@ -350,7 +351,7 @@ export const getHackathonSubmissions = async (req: Request, res: Response) => {
 };
 
 // Get submission details
-export const getSubmissionDetails = async (req: Request, res: Response) => {
+export const getSubmissionDetails = async (req: IAuthRequest, res: Response) => {
   try {
     const { hackathonId, submissionId } = req.params;
 

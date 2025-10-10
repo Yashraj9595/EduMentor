@@ -63,7 +63,7 @@ const SchedulingDashboard: React.FC = () => {
   const [showScheduleForm, setShowScheduleForm] = useState(false);
   const [showAvailabilityForm, setShowAvailabilityForm] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
-  const [availableSlots, setAvailableSlots] = useState<TimeSlot[]>([]);
+  const [availableSlots] = useState<TimeSlot[]>([]);
   
   const [scheduleForm, setScheduleForm] = useState({
     studentId: '',
@@ -134,22 +134,22 @@ const SchedulingDashboard: React.FC = () => {
     }
   };
 
-  const fetchAvailableSlots = async (mentorId: string, date: string) => {
-    try {
-      // Build query string
-      const queryParams = new URLSearchParams({
-        mentorId,
-        date
-      });
+  // const fetchAvailableSlots = async (mentorId: string, date: string) => {
+  //   try {
+  //     // Build query string
+  //     const queryParams = new URLSearchParams({
+  //       mentorId,
+  //       date
+  //     });
       
-      const response = await apiService.get<ApiResponse<TimeSlot[]>>(`/api/v1/scheduling/availability/slots?${queryParams.toString()}`);
-      if (response.data && response.data.success) {
-        setAvailableSlots(response.data.data);
-      }
-    } catch (err) {
-      console.error('Error fetching available slots:', err);
-    }
-  };
+  //     const response = await apiService.get<ApiResponse<TimeSlot[]>>(`/api/v1/scheduling/availability/slots?${queryParams.toString()}`);
+  //     if (response.data && response.data.success) {
+  //       setAvailableSlots(response.data.data);
+  //     }
+  //   } catch (err) {
+  //     console.error('Error fetching available slots:', err);
+  //   }
+  // };
 
   const handleScheduleMeeting = async () => {
     try {

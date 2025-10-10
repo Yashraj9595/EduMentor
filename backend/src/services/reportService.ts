@@ -1,5 +1,5 @@
 import { ReportData, ReportSection, ReportTemplate } from '../types/report.types';
-import { ReportDraft } from '../models/ReportDraft';
+import { ReportDraft, IReportDraft } from '../models/ReportDraft';
 import { User } from '../models/User';
 import puppeteer from 'puppeteer';
 import { Document, Packer, Paragraph, TextRun, HeadingLevel } from 'docx';
@@ -65,7 +65,7 @@ export class ReportService {
         footerTemplate: this.generateFooterTemplate()
       });
       
-      return new Blob([pdfBuffer], { type: 'application/pdf' });
+      return new Blob([new Uint8Array(pdfBuffer)], { type: 'application/pdf' });
     } finally {
       await browser.close();
     }
@@ -266,7 +266,7 @@ export class ReportService {
     });
 
     const buffer = await Packer.toBuffer(doc);
-    return new Blob([buffer], { 
+    return new Blob([new Uint8Array(buffer)], { 
       type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' 
     });
   }
@@ -702,7 +702,7 @@ export class ReportService {
   /**
    * Save report draft
    */
-  async saveDraft(data: ReportData, userId: string): Promise<ReportDraft> {
+  async saveDraft(data: ReportData, userId: string): Promise<IReportDraft> {
     const draft = new ReportDraft({
       userId,
       title: data.title,
@@ -720,14 +720,14 @@ export class ReportService {
   /**
    * Load report draft
    */
-  async loadDraft(draftId: string, userId: string): Promise<ReportDraft | null> {
+  async loadDraft(draftId: string, userId: string): Promise<IReportDraft | null> {
     return await ReportDraft.findOne({ _id: draftId, userId });
   }
 
   /**
    * Get user's report drafts
    */
-  async getUserDrafts(userId: string): Promise<ReportDraft[]> {
+  async getUserDrafts(userId: string): Promise<IReportDraft[]> {
     return await ReportDraft.find({ userId }).sort({ updatedAt: -1 });
   }
 

@@ -1,9 +1,10 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
+import { IAuthRequest } from '../types';
 import { Hackathon } from '../models/Hackathon';
 import { User } from '../models/User';
 
 // Register for a hackathon
-export const registerForHackathon = async (req: Request, res: Response) => {
+export const registerForHackathon = async (req: IAuthRequest, res: Response) => {
   try {
     const { hackathonId } = req.params;
     const {
@@ -71,7 +72,7 @@ export const registerForHackathon = async (req: Request, res: Response) => {
     // Check if user is already registered
     const existingRegistration = await Hackathon.findOne({
       _id: hackathonId,
-      'registrations.teamLead': req.user?.id
+      'registrations.teamLead': req.user?._id
     });
 
     if (existingRegistration) {
@@ -83,7 +84,7 @@ export const registerForHackathon = async (req: Request, res: Response) => {
 
     // Create registration
     const registration = {
-      teamLead: req.user?.id,
+      teamLead: req.user?._id,
       teamName,
       teamDescription,
       members: members.map((member: any) => ({
@@ -129,9 +130,9 @@ export const registerForHackathon = async (req: Request, res: Response) => {
 };
 
 // Get hackathon registrations for a user
-export const getUserRegistrations = async (req: Request, res: Response) => {
+export const getUserRegistrations = async (req: IAuthRequest, res: Response) => {
   try {
-    const userId = req.user?.id;
+    const userId = req.user?._id;
     const { page = 1, limit = 10, status } = req.query;
 
     const query: any = {
@@ -173,7 +174,7 @@ export const getUserRegistrations = async (req: Request, res: Response) => {
 };
 
 // Cancel hackathon registration
-export const cancelRegistration = async (req: Request, res: Response) => {
+export const cancelRegistration = async (req: IAuthRequest, res: Response) => {
   try {
     const { hackathonId } = req.params;
 
@@ -187,7 +188,7 @@ export const cancelRegistration = async (req: Request, res: Response) => {
 
     // Find and remove the registration
     const registration = hackathon.registrations.find(
-      (reg: any) => reg.teamLead.toString() === req.user?.id
+      (reg: any) => reg.teamLead.toString() === req.user?._id
     );
 
     if (!registration) {
@@ -208,7 +209,7 @@ export const cancelRegistration = async (req: Request, res: Response) => {
 
     // Remove registration and update counts
     await Hackathon.findByIdAndUpdate(hackathonId, {
-      $pull: { registrations: { teamLead: req.user?.id } },
+      $pull: { registrations: { teamLead: req.user?._id } },
       $inc: { participants: -registration.members.length, teams: -1 }
     });
 
@@ -227,7 +228,7 @@ export const cancelRegistration = async (req: Request, res: Response) => {
 };
 
 // Get hackathon participants
-export const getHackathonParticipants = async (req: Request, res: Response) => {
+export const getHackathonParticipants = async (req: IAuthRequest, res: Response) => {
   try {
     const { hackathonId } = req.params;
     const { page = 1, limit = 20 } = req.query;

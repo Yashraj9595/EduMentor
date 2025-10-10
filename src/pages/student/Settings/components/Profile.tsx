@@ -5,7 +5,7 @@ import { Button } from '../../../../components/ui/Button';
 import { Select } from '../../../../components/ui/Select';
 import { useAuth } from '../../../../contexts/AuthContext';
 import { useToast } from '../../../../contexts/ToastContext';
-import { GraduationCap, MapPin, Calendar, Award, BookOpen, Users, TrendingUp } from 'lucide-react';
+import { GraduationCap, MapPin, Award, BookOpen, Users, TrendingUp } from 'lucide-react';
 
 export const Profile: React.FC = () => {
   const { user, setUser } = useAuth();
@@ -227,7 +227,7 @@ export const Profile: React.FC = () => {
   const removeSkill = (index: number) => {
     setFormData(prev => ({
       ...prev,
-      skills: prev.skills.filter((_, i) => i !== index)
+      skills: prev.skills.filter((_: any, i: number) => i !== index)
     }));
   };
 
@@ -243,7 +243,7 @@ export const Profile: React.FC = () => {
   const removeInterest = (index: number) => {
     setFormData(prev => ({
       ...prev,
-      interests: prev.interests.filter((_, i) => i !== index)
+      interests: prev.interests.filter((_: any, i: number) => i !== index)
     }));
   };
 
@@ -455,7 +455,7 @@ export const Profile: React.FC = () => {
             <div>
               <label className="block text-sm font-medium text-foreground mb-2">Technical Skills</label>
               <div className="flex flex-wrap gap-2 mb-3">
-                {formData.skills.map((skill, index) => (
+                {formData.skills.map((skill: any, index: number) => (
                   <span
                     key={index}
                     className="inline-flex items-center gap-1 px-3 py-1 bg-primary/10 text-primary rounded-full text-sm"
@@ -500,7 +500,7 @@ export const Profile: React.FC = () => {
             <div>
               <label className="block text-sm font-medium text-foreground mb-2">Areas of Interest</label>
               <div className="flex flex-wrap gap-2 mb-3">
-                {formData.interests.map((interest, index) => (
+                {formData.interests.map((interest: any, index: number) => (
                   <span
                     key={index}
                     className="inline-flex items-center gap-1 px-3 py-1 bg-green-500/10 text-green-600 rounded-full text-sm"

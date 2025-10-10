@@ -8,12 +8,10 @@ import {
   Download, 
   Edit, 
   Trash2, 
-  Eye,
   Calendar,
   Clock,
   User,
   Search,
-  Filter,
   MoreVertical
 } from 'lucide-react';
 

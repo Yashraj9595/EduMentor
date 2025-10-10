@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import { Navigation } from './Navigation';
 import { MobileHeader } from './MobileHeader';
 import { useAuth } from '../../contexts/AuthContext';
@@ -12,7 +12,6 @@ interface MainLayoutProps {
 export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   const { user } = useAuth();
   const location = useLocation();
-  const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   // Don't show layout on auth pages

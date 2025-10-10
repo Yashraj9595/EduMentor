@@ -1,5 +1,5 @@
 import apiService from './api';
-import { InstitutionUser, BulkUploadResult } from '../pages/institution/InstitutionDashboard/InstitutionDashboard.types';
+import { InstitutionUser } from '../pages/institution/InstitutionDashboard/InstitutionDashboard.types';
 import { ApiResponse } from './api';
 
 const INSTITUTION_API_PREFIX = '/institutions';

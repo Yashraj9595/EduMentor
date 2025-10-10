@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Bell, X, CheckCircle, AlertCircle, Info } from 'lucide-react';
+import { Bell, X, CheckCircle, AlertCircle, Info, Calendar, FileText } from 'lucide-react';
 import { Card, CardHeader, CardBody } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { useNotifications } from '../../contexts/NotificationContext';
@@ -16,23 +16,27 @@ export const Notifications: React.FC<NotificationsProps> = ({ className, id }) =
 
   const [filter, setFilter] = useState<'all' | 'unread' | 'read'>('all');
 
-  const getIconByType = (type: 'info' | 'success' | 'warning' | 'error' | 'mentor_request' | 'project_update') => {
+  const getIconByType = (type: 'info' | 'success' | 'warning' | 'error' | 'mentor_request' | 'review_scheduled' | 'diary_submitted' | 'project_update') => {
     switch (type) {
       case 'success': return <CheckCircle className="text-green-500" size={20} />;
       case 'warning': return <AlertCircle className="text-yellow-500" size={20} />;
       case 'error': return <AlertCircle className="text-red-500" size={20} />;
       case 'mentor_request': return <Bell className="text-purple-500" size={20} />;
+      case 'review_scheduled': return <Calendar className="text-orange-500" size={20} />;
+      case 'diary_submitted': return <FileText className="text-indigo-500" size={20} />;
       case 'project_update': return <Info className="text-blue-500" size={20} />;
       default: return <Info className="text-blue-500" size={20} />;
     }
   };
 
-  const getTypeClass = (type: 'info' | 'success' | 'warning' | 'error' | 'mentor_request' | 'project_update') => {
+  const getTypeClass = (type: 'info' | 'success' | 'warning' | 'error' | 'mentor_request' | 'review_scheduled' | 'diary_submitted' | 'project_update') => {
     switch (type) {
       case 'success': return 'border-l-green-500';
       case 'warning': return 'border-l-yellow-500';
       case 'error': return 'border-l-red-500';
       case 'mentor_request': return 'border-l-purple-500';
+      case 'review_scheduled': return 'border-l-orange-500';
+      case 'diary_submitted': return 'border-l-indigo-500';
       case 'project_update': return 'border-l-blue-500';
       default: return 'border-l-blue-500';
     }
@@ -49,8 +53,8 @@ export const Notifications: React.FC<NotificationsProps> = ({ className, id }) =
   };
 
   const filteredNotifications = notifications.filter(notification => {
-    if (filter === 'unread') return !notification.read;
-    if (filter === 'read') return notification.read;
+    if (filter === 'unread') return !notification.isRead;
+    if (filter === 'read') return notification.isRead;
     return true;
   });
 
@@ -140,7 +144,7 @@ export const Notifications: React.FC<NotificationsProps> = ({ className, id }) =
                 <div 
                   key={notification._id} 
                   className={`p-4 flex gap-3 hover:bg-accent/50 transition-colors ${
-                    !notification.read ? 'bg-accent/30' : ''
+                    !notification.isRead ? 'bg-accent/30' : ''
                   } border-l-4 ${getTypeClass(notification.type)}`}
                 >
                   <div className="flex-shrink-0 pt-0.5">
@@ -148,7 +152,7 @@ export const Notifications: React.FC<NotificationsProps> = ({ className, id }) =
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between">
-                      <h4 className={`text-sm font-medium ${!notification.read ? 'text-foreground' : 'text-muted-foreground'}`}>
+                      <h4 className={`text-sm font-medium ${!notification.isRead ? 'text-foreground' : 'text-muted-foreground'}`}>
                         {notification.title}
                       </h4>
                       <button 
@@ -165,14 +169,14 @@ export const Notifications: React.FC<NotificationsProps> = ({ className, id }) =
                       <span className="text-xs text-muted-foreground">
                         {new Date(notification.createdAt).toLocaleString()}
                       </span>
-                      {!notification.read && (
+                      {!notification.isRead && (
                         <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary">
                           New
                         </span>
                       )}
                     </div>
                   </div>
-                  {!notification.read && (
+                  {!notification.isRead && (
                     <button 
                       onClick={() => markAsRead(notification._id)}
                       className="self-start text-xs text-primary hover:underline"

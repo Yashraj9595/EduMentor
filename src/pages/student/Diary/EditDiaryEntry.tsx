@@ -4,9 +4,6 @@ import {
   Save, 
   Paperclip, 
   X, 
-  AlertCircle,
-  CheckCircle,
-  Clock
 } from 'lucide-react';
 import { Card, CardHeader, CardBody } from '../../../components/ui/Card';
 import { Button } from '../../../components/ui/Button';
@@ -20,15 +17,15 @@ interface Project {
   description: string;
 }
 
-interface DiaryEntry {
-  _id: string;
-  projectId: string;
-  entryType: 'daily' | 'weekly' | 'milestone' | 'review';
-  title: string;
-  content: string;
-  attachments: string[];
-  status: 'draft' | 'submitted' | 'approved' | 'rejected';
-}
+// interface DiaryEntry {
+//   _id: string;
+//   projectId: string;
+//   entryType: 'daily' | 'weekly' | 'milestone' | 'review';
+//   title: string;
+//   content: string;
+//   attachments: string[];
+//   status: 'draft' | 'submitted' | 'approved' | 'rejected';
+// }
 
 interface Attachment {
   id: string;

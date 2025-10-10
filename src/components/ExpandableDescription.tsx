@@ -8,7 +8,6 @@ interface ExpandableDescriptionProps {
 
 export const ExpandableDescription: React.FC<ExpandableDescriptionProps> = ({ 
   description, 
-  maxLines = 2,
   className = ""
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
