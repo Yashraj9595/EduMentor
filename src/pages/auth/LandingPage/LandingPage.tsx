@@ -58,13 +58,13 @@ export const LandingPage: React.FC = () => {
             <div className="flex items-center gap-4">
               <Link
                 to="/select-role"
-                className="text-muted-foreground hover:text-primary font-medium transition-colors hidden sm:block"
+                className="text-muted-foreground hover:text-primary font-medium transition-colors hidden sm:block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:ring-primary/40 rounded-md"
               >
                 Create Account
               </Link>
               <Link
                 to="/login"
-                className="px-6 py-2.5 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 font-medium transition-all shadow-sm hover:shadow-md"
+                className="px-6 py-2.5 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 font-medium transition-all shadow-sm hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:ring-primary/60"
               >
                 Sign In
               </Link>
@@ -91,14 +91,14 @@ export const LandingPage: React.FC = () => {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
               to="/login"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 font-semibold text-lg transition-all shadow-lg hover:shadow-xl w-full sm:w-auto justify-center"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 font-semibold text-lg transition-all shadow-lg hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:ring-primary/60 w-full sm:w-auto justify-center"
             >
               Sign In
               <ArrowRight className="w-5 h-5" />
             </Link>
             <Link
               to="/select-role"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-card text-card-foreground rounded-lg hover:bg-accent font-semibold text-lg transition-all border-2 border-border w-full sm:w-auto justify-center"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-card text-card-foreground rounded-lg hover:bg-accent font-semibold text-lg transition-all border-2 border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:ring-primary/40 w-full sm:w-auto justify-center"
             >
               Create Account
             </Link>
@@ -151,7 +151,7 @@ export const LandingPage: React.FC = () => {
                 </p>
           <Link
             to="/login"
-            className="inline-flex items-center gap-2 text-primary hover:text-primary/80 font-semibold"
+            className="inline-flex items-center gap-2 text-primary hover:text-primary/80 font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:ring-primary/40 rounded-md"
           >
             Sign in now
             <ArrowRight className="w-4 h-4" />
@@ -183,7 +183,7 @@ export const LandingPage: React.FC = () => {
           </p>
           <Link
             to="/login"
-            className="inline-flex items-center gap-2 px-8 py-4 bg-background text-primary rounded-lg hover:bg-background/90 font-semibold text-lg transition-all shadow-lg w-full sm:w-auto justify-center"
+            className="inline-flex items-center gap-2 px-8 py-4 bg-background text-primary rounded-lg hover:bg-background/90 font-semibold text-lg transition-all shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:ring-primary/50 w-full sm:w-auto justify-center"
           >
             Sign In Now
             <ArrowRight className="w-5 h-5" />
