@@ -24,9 +24,13 @@ export class ReportApiService {
     options: RequestInit = {}
   ): Promise<ApiResponse<T>> {
     try {
+      // Get auth token from localStorage
+      const token = localStorage.getItem('token');
+      
       const response = await fetch(`${API_BASE_URL}${endpoint}`, {
         headers: {
           'Content-Type': 'application/json',
+          ...(token && { 'Authorization': `Bearer ${token}` }),
           ...options.headers,
         },
         ...options,
@@ -51,10 +55,14 @@ export class ReportApiService {
    */
   async generateReport(data: ReportData, format: 'pdf' | 'docx' | 'html'): Promise<Blob | null> {
     try {
+      // Get auth token from localStorage
+      const token = localStorage.getItem('token');
+      
       const response = await fetch(`${API_BASE_URL}/reports/generate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          ...(token && { 'Authorization': `Bearer ${token}` }),
         },
         body: JSON.stringify({ data, format }),
       });

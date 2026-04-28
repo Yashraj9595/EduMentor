@@ -210,33 +210,56 @@ export const ReportGenerator: React.FC = () => {
   const generateReport = async (format: 'pdf' | 'docx' | 'html') => {
     setIsGenerating(true);
     setProgress(0);
+    let progressInterval: number | null = null;
 
     try {
       // Simulate report generation progress
-      const progressInterval = setInterval(() => {
+      progressInterval = setInterval(() => {
         setProgress(prev => {
-          if (prev >= 100) {
-            clearInterval(progressInterval);
-            setIsGenerating(false);
-            return 100;
+          if (prev >= 90) {
+            if (progressInterval) clearInterval(progressInterval);
+            return 90;
           }
           return prev + 10;
         });
       }, 200);
 
-      // Here you would implement actual report generation
-      // This could involve calling a backend service that generates the report
-      // in the requested format using libraries like Puppeteer (PDF) or docx (Word)
-      
       console.log('Generating report in format:', format);
       console.log('Report data:', reportData);
       
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Call the actual API to generate the report
+      const reportApiService = new (await import('../../services/reportApi')).ReportApiService();
+      const blob = await reportApiService.generateReport(reportData, format);
+      
+      if (blob) {
+        // Create download link
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        
+        // Set filename based on format
+        const timestamp = new Date().toISOString().split('T')[0];
+        const filename = `${reportData.title.replace(/[^a-zA-Z0-9]/g, '_')}_${timestamp}.${format === 'docx' ? 'docx' : format}`;
+        link.download = filename;
+        
+        // Trigger download
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        
+        setProgress(100);
+        setIsGenerating(false);
+        if (progressInterval) clearInterval(progressInterval);
+      } else {
+        throw new Error('Failed to generate report');
+      }
       
     } catch (error) {
       console.error('Error generating report:', error);
       setIsGenerating(false);
+      if (progressInterval) clearInterval(progressInterval);
+      alert('Failed to generate report. Please try again.');
     }
   };
 

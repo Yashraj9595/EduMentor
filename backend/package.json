@@ -4,7 +4,7 @@
   "description": "Node.js Express TypeScript backend with MongoDB and role-based authentication",
   "main": "dist/server.js",
   "scripts": {
-    "dev": "cross-env NODE_ENV=production node --max-old-space-size=512 dist/server.js",
+    "dev": "cross-env NODE_ENV=development nodemon --exec ts-node src/server.ts",
     "build": "tsc",
     "start": "cross-env NODE_ENV=production node --max-old-space-size=512 dist/server.js",
     "start:prod": "cross-env NODE_ENV=production node --max-old-space-size=512 dist/server.js",
@@ -13,6 +13,8 @@
     "lint:fix": "eslint src/**/*.ts --fix",
     "seed": "ts-node src/seed/seedUsers.ts",
     "seed:build": "npm run build && node dist/seed/seedUsers.js",
+    "seed:diary": "ts-node src/seed/seedDiaryData.ts",
+    "seed:diary:build": "npm run build && node dist/seed/seedDiaryData.js",
     "seed:test": "ts-node src/seed/testSeed.ts",
     "create:institution": "ts-node src/seed/createInstitutionAccount.ts",
     "create:institution:full": "ts-node src/seed/createInstitutionWithAccounts.ts",
@@ -23,6 +25,7 @@
     "verify:institution": "ts-node src/seed/verifyInstitutionAccounts.ts",
     "delete:institution": "ts-node src/seed/deleteInstitutionAccounts.ts"
   },
+  
   "keywords": [
     "nodejs",
     "express",
@@ -57,6 +60,7 @@
     "multer": "^2.0.2",
     "nodemailer": "^7.0.9",
     "puppeteer": "^24.23.0",
+    "resend": "^6.1.2",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {

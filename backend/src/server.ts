@@ -33,6 +33,7 @@ import schedulingRoutes from './routes/scheduling';
 import hackathonRoutes from './routes/hackathons';
 import hackathonRegistrationRoutes from './routes/hackathonRegistration';
 import hackathonSubmissionRoutes from './routes/hackathonSubmission';
+import reportRoutes from './routes/reports';
 
 const app = express();
 
@@ -133,6 +134,7 @@ const startServer = async () => {
     app.use(`${config.API_PREFIX}/${config.API_VERSION}/hackathons`, hackathonRoutes);
     app.use(`${config.API_PREFIX}/${config.API_VERSION}/hackathon-registrations`, hackathonRegistrationRoutes);
     app.use(`${config.API_PREFIX}/${config.API_VERSION}/hackathon-submissions`, hackathonSubmissionRoutes);
+    app.use(`${config.API_PREFIX}/${config.API_VERSION}/reports`, reportRoutes);
 
     // 404 handler
     app.use('*', (req, res) => {
